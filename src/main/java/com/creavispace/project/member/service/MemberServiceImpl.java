@@ -3,6 +3,7 @@ package com.creavispace.project.member.service;
 import com.creavispace.project.member.Member;
 import com.creavispace.project.member.MemberUpdateDto;
 import com.creavispace.project.member.repository.MemberRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,5 +43,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean emailExsists(String memberEmail) {
         return repository.existsByMemberEmail(memberEmail);
+    }
+
+    @Override
+    public List<Member> findAllMembers() {
+        return repository.findAll();
     }
 }
