@@ -2,6 +2,7 @@ package com.creavispace.project.member.service;
 
 import com.creavispace.project.member.Member;
 import com.creavispace.project.member.MemberUpdateDto;
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberService {
@@ -14,4 +15,6 @@ public interface MemberService {
     Optional<Member> findById(Long memberId);
 
     boolean emailExsists(String memberEmail);
+
+    List<Member> findAllMembers();
 }
