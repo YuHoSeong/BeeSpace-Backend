@@ -6,10 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 //이메일
 //비밀번호
@@ -25,6 +24,7 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "member")
+@NoArgsConstructor
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
