@@ -5,10 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 //이메일
@@ -37,18 +37,31 @@ public class Member {
     private String memberPassword;
 
     @Column(nullable = false)
-    private String userName;
+    private String memberName;
 
     @Column(nullable = false, unique = true)
     private String memberNickname;
 
     private String role;
 
-    private String introduce;
+    private String memberIntroduce;
 
-    private Date createdDate;
-    private Date modifiedDate;
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
     private boolean expired;
     private boolean enabled;
     private boolean emailConfirmed;
+
+    public Member(String memberEmail, String memberPassword, String memberName, String memberNickname) {
+        this.memberEmail = memberEmail;
+        this.memberPassword = memberPassword;
+        this.memberName = memberName;
+        this.memberNickname = memberNickname;
+        createdDate = LocalDateTime.now();
+        modifiedDate = LocalDateTime.now();
+        expired = false;
+        enabled = true;
+        emailConfirmed = false;
+    }
+
 }
