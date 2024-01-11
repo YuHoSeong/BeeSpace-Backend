@@ -11,17 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository repository;
 
+    @Transactional
     @Override
     public Member save(Member member) {
         System.out.println(repository.existsByMemberEmail(member.getMemberEmail()));
         return repository.save(member);
     }
 
+    @Transactional
     @Override
     public void update(Long memberId, MemberUpdateDto updateParam) {
         Member member = repository.findById(memberId).orElseThrow();
