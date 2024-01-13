@@ -13,22 +13,22 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-    private final MemberRepository repository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     @Override
     public Member save(Member member) {
-        System.out.println(repository.existsByMemberEmail(member.getMemberEmail()));
-        return repository.save(member);
+        System.out.println(memberRepository.existsByMemberEmail(member.getMemberEmail()));
+        return memberRepository.save(member);
     }
 
     @Transactional
     @Override
     public void update(Long memberId, MemberUpdateDto updateParam) {
-        Member member = repository.findById(memberId).orElseThrow();
+        Member member = memberRepository.findById(memberId).orElseThrow();
         member.setMemberNickname(updateParam.getMemberNickname());
         member.setMemberPassword(updateParam.getMemberPassword());
-        repository.save(member);
+        memberRepository.save(member);
     }
 
     @Override
@@ -38,16 +38,16 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Optional<Member> findById(Long memberId) {
-        return repository.findById(memberId);
+        return memberRepository.findById(memberId);
     }
 
     @Override
     public boolean emailExsists(String memberEmail) {
-        return repository.existsByMemberEmail(memberEmail);
+        return memberRepository.existsByMemberEmail(memberEmail);
     }
 
     @Override
     public List<Member> findAllMembers() {
-        return repository.findAll();
+        return memberRepository.findAll();
     }
 }
