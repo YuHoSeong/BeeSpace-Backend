@@ -1,4 +1,4 @@
-package com.creavispace.project.member.position;
+package com.creavispace.project.position;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -10,6 +10,6 @@ class PositionsTest {
     @Test
     void positions() {
         List<Positions> positions = Positions.positions();
-        assertThat(positions.toString()).isEqualTo("[Backend, Frontend, Design, PM, DevOps]");
+        assertThat(positions.toString()).isEqualTo("[Backend, Frontend, FullStack, Design, PM, DevOps]");
     }
 }
