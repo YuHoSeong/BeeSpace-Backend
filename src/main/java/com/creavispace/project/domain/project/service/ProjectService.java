@@ -13,6 +13,5 @@ public interface ProjectService {
     public ResponseEntity deleteProject(long projectId);
     public ResponseEntity readPopularProjectList();
     public ResponseEntity readProjectList(int size, int pageNumber);
-    // public ResponseEntity readProject(Long projectId);
-    // 주간조회수가 높은 순으로
+    public ResponseEntity readProject(long projectId);
 }

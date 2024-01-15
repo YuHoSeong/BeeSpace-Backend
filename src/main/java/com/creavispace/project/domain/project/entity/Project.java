@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.creavispace.project.domain.Member;
 import com.creavispace.project.domain.bookmark.entity.ProjectBookmark;
+import com.creavispace.project.domain.comment.entity.ProjectComment;
 import com.creavispace.project.domain.like.entity.ProjectLike;
 import com.creavispace.project.domain.project.dto.request.ProjectCreateRequestDto;
 import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDto;

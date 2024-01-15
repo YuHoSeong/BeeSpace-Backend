@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.creavispace.project.domain.project.entity.Project;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class ProjectListReadResponseDto {
     private Long id;
     private String kind;
@@ -35,13 +35,5 @@ public class ProjectListReadResponseDto {
             list.add(new ProjectListReadResponseDto(project));
         }
         return list;
-    }
-    
-    public void patchLike(boolean like){
-        this.like = like;
-    }
-
-    public void patchBookmark(boolean bookmark){
-        this.bookmark = bookmark;
     }
 }

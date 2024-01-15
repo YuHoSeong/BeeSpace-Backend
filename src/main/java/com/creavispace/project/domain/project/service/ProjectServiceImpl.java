@@ -19,6 +19,7 @@ import com.creavispace.project.domain.project.dto.response.PopularProjectReadRes
 import com.creavispace.project.domain.project.dto.response.ProjectCreateResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectModifyResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectReadResponseDto;
 import com.creavispace.project.domain.project.entity.Project;
 import com.creavispace.project.domain.project.entity.ProjectMember;
 import com.creavispace.project.domain.project.entity.ProjectLink;
@@ -77,6 +78,9 @@ public class ProjectServiceImpl implements ProjectService{
         List<ProjectLinkDto> linkDtoList = dto.getLinkList();
 
         Project project = projectRepository.findById(projectId).orElse(null);
+        if(project == null)
+            return ResponseEntity.status(404).body("게시글이 존재하지 않습니다.");
+            // return ResponseEntity.status(404).body(new FailResponseDto(false,"게시글이 존재하지 않습니다.", 404));
         
         // if(memberId != project.getMemberId() && !member.getRole().equals("Administrator")){
         //     return ResponseEntity.status(401).body(new FailResponseDto(false,"프로젝트 게시글을 삭제할 수 있는 권한이 없습니다.", 401));
@@ -124,6 +128,9 @@ public class ProjectServiceImpl implements ProjectService{
         // long memberId = "토큰정보";
 
         Project project = projectRepository.findById(projectId).orElse(null);
+        if(project == null)
+            return ResponseEntity.status(404).body("게시글이 존재하지 않습니다.");
+            // return ResponseEntity.status(404).body(new FailResponseDto(false,"게시글이 존재하지 않습니다.", 404));
         
         // if(memberId != project.getMemberId() && !member.getRole().equals("Administrator")){
         //     return ResponseEntity.status(401).body(new FailResponseDto(false,"프로젝트 게시글을 삭제할 수 있는 권한이 없습니다.", 401));
@@ -157,12 +164,29 @@ public class ProjectServiceImpl implements ProjectService{
         // if(isJwt){
         //     for(ProjectListReadResponseDto read : readList){
         //         Long projectId = read.getId();
-        //         read.patchLike(projectLikeRepository.existsByProjectIdAndMemberId());
-        //         read.patchBookmark(projectBookmarkRepository.existsByProjectIdAndMemberId());
+        //         read.setLike(projectLikeRepository.existsByProjectIdAndMemberId());
+        //         read.setBookmark(projectBookmarkRepository.existsByProjectIdAndMemberId());
         //     }
         // }
 
         return ResponseEntity.ok().body("프로젝트 게시글 리스트 조회가 완료되었습니다.");
+    }
+
+    @Override
+    public ResponseEntity readProject(long projectId) {
+        Project project = projectRepository.findById(projectId).orElse(null);
+        if(project == null)
+            return ResponseEntity.status(404).body("게시글이 존재하지 않습니다.");
+            // return ResponseEntity.status(404).body(new FailResponseDto(false,"게시글이 존재하지 않습니다.", 404));
+        
+        ProjectReadResponseDto read = new ProjectReadResponseDto(project);
+        // todo : JWT 토큰이 있다면
+        // if(isJwt){
+        //     read.setLike(projectLikeRepository.existsByProjectIdAndMemberId());
+        //     read.setBookmark(projectBookmarkRepository.existsByProjectIdAndMemberId());
+        // }
+
+        return ResponseEntity.ok().body("프로젝트 게시글 상세 조회가 완료되었습니다.");
     }
 
 
