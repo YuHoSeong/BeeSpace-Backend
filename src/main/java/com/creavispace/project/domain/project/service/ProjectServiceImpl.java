@@ -36,12 +36,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService{
 
-    private ProjectRepository projectRepository;
-    private ProjectMemberRepository projectMemberRepository;
-    private ProjectTechStackRepository projectTechStackRepository;
-    private ProjectLinkRepository projectLinkRepository;
-    private ProjectLikeRepository projectLikeRepository;
-    private ProjectBookmarkRepository projectBookmarkRepository;
+    private final ProjectRepository projectRepository;
+    private final ProjectMemberRepository projectMemberRepository;
+    private final ProjectTechStackRepository projectTechStackRepository;
+    private final ProjectLinkRepository projectLinkRepository;
+    private final ProjectLikeRepository projectLikeRepository;
+    private final ProjectBookmarkRepository projectBookmarkRepository;
     
     @Override
     @Transactional
@@ -153,8 +153,8 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    public ResponseEntity readProjectList(int size, int pageNumber) {
-        Pageable pageRequest = PageRequest.of(pageNumber, size);
+    public ResponseEntity readProjectList(int size, int page) {
+        Pageable pageRequest = PageRequest.of(page, size);
         Page<Project> pageable = projectRepository.findAllOrderByCreatedDateDesc(pageRequest);
         List<Project> projectList = pageable.getContent();
 
