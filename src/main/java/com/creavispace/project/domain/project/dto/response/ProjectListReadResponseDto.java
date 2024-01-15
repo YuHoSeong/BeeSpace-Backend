@@ -31,6 +31,7 @@ public class ProjectListReadResponseDto {
 
     public static List<ProjectListReadResponseDto> copyList(List<Project> projectList){
         List<ProjectListReadResponseDto> list = new ArrayList<>();
+        if(projectList == null) return list;
         for(Project project : projectList){
             list.add(new ProjectListReadResponseDto(project));
         }

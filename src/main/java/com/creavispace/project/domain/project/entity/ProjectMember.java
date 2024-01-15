@@ -48,6 +48,7 @@ public class ProjectMember {
 
     public static List<ProjectMember> copyList(List<ProjectMemberDto> memberList, Long projectId){
         List<ProjectMember> list = new ArrayList<>();
+        if(memberList == null) return list;
         for(ProjectMemberDto dto : memberList){
             list.add(new ProjectMember(dto, projectId));
         }

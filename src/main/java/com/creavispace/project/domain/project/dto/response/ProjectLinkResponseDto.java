@@ -21,6 +21,7 @@ public class ProjectLinkResponseDto {
 
     public static List<ProjectLinkResponseDto> copyList(List<ProjectLink> LinkList){
         List<ProjectLinkResponseDto> list = new ArrayList<>();
+        if(LinkList == null) return list;
         for(ProjectLink projectLink : LinkList){
             list.add(new ProjectLinkResponseDto(projectLink));
         }

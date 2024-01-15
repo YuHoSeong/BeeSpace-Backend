@@ -29,6 +29,7 @@ public class ProjectCommentResponseDto {
 
     public static List<ProjectCommentResponseDto> copyList(List<ProjectComment> commentList){
         List<ProjectCommentResponseDto> list = new ArrayList<>();
+        if(commentList == null) return list;
         for(ProjectComment projectComment : commentList){
             list.add(new ProjectCommentResponseDto(projectComment));
         }

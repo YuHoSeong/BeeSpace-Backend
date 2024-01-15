@@ -25,6 +25,7 @@ public class PopularProjectReadResponseDto {
 
     public static List<PopularProjectReadResponseDto> copyList(List<Project> projectList){
         List<PopularProjectReadResponseDto> list = new ArrayList<>();
+        if(projectList == null) return list;
         for(Project project : projectList){
             list.add(new PopularProjectReadResponseDto(project));
         }

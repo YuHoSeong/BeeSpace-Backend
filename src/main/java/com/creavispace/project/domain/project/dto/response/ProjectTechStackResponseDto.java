@@ -24,6 +24,7 @@ public class ProjectTechStackResponseDto {
 
     public static List<ProjectTechStackResponseDto> copyList(List<ProjectTechStack> techStackList){
         List<ProjectTechStackResponseDto> list = new ArrayList<>();
+        if(techStackList == null) return list;
         for(ProjectTechStack projectTechStack : techStackList){
             list.add(new ProjectTechStackResponseDto(projectTechStack));
         }

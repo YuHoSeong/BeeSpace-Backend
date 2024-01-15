@@ -26,6 +26,7 @@ public class ProjectMemberResponseDto {
 
     public static List<ProjectMemberResponseDto> copyList(List<ProjectMember> projectMemberList){
         List<ProjectMemberResponseDto> list = new ArrayList<>();
+        if(projectMemberList == null) return list;
         for(ProjectMember projectMember : projectMemberList){
             list.add(new ProjectMemberResponseDto(projectMember));
         }

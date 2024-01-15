@@ -22,15 +22,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 @RequestMapping("/project")
 public class ProjectController {
+
+    private final ProjectService projectService;
     
     private static final String CREATE_PROJECT = "/";
     private static final String MODIFY_PROJECT = "/";
     private static final String DELETE_PROJECT = "/{projectId}";
-    private static final String READ_POPULAR_PROJECT = "/";
+    private static final String READ_POPULAR_PROJECT = "/popular";
     private static final String READ_PROJECT_LIST = "/";
     private static final String READ_PROJECT = "/{projectId}";
-
-    private final ProjectService projectService;
 
     @PostMapping(CREATE_PROJECT)
     public ResponseEntity createProject(@RequestBody ProjectCreateRequestDto dto) {
@@ -43,7 +43,7 @@ public class ProjectController {
     }
     
     @DeleteMapping(DELETE_PROJECT)
-    public ResponseEntity deleteProject(@PathVariable long projectId){
+    public ResponseEntity deleteProject(@PathVariable("projectId") long projectId){
         return projectService.deleteProject(projectId);
     }
 
@@ -61,7 +61,7 @@ public class ProjectController {
     }
 
     @GetMapping(READ_PROJECT)
-    public ResponseEntity readProject(@PathVariable long projectId) {
+    public ResponseEntity readProject(@PathVariable("projectId") long projectId) {
         return projectService.readProject(projectId);
     }
     

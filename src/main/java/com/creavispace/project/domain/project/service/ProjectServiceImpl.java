@@ -46,11 +46,13 @@ public class ProjectServiceImpl implements ProjectService{
     @Override
     @Transactional
     public ResponseEntity createProject(ProjectCreateRequestDto dto) {
-        Project createProject = new Project(dto);
+        // todo : JWT의 MemberId를 작성자로 변경
+        long memberId = 1;
+        Project createProject = new Project(dto, memberId);
 
         projectRepository.save(createProject);
 
-        Long projectId = createProject.getId();
+        final Long projectId = createProject.getId();
         List<ProjectMember> memberList = ProjectMember.copyList(dto.getMemberList(), projectId);
         List<ProjectTechStack> techStackList = ProjectTechStack.copyList(dto.getTechStackList(), projectId);
         List<ProjectLink> linkList = ProjectLink.copyList(dto.getLinkList(), projectId);
@@ -64,7 +66,7 @@ public class ProjectServiceImpl implements ProjectService{
 
         ProjectCreateResponseDto create = new ProjectCreateResponseDto(createProject);
 
-        return ResponseEntity.ok().body("프로젝트 게시글 생성이 완료되었습니다.");
+        return ResponseEntity.ok().body(create);
     }
 
     @Override
@@ -89,25 +91,22 @@ public class ProjectServiceImpl implements ProjectService{
         project.modify(dto);
         projectRepository.save(project);
 
-        // 삭제된 맴버
-        List<Long> modifyMemberIdList = ProjectMemberDto.modifyIdList(memberDtoList);
-        projectMemberRepository.deleteByNotModifyMemberIdList(projectId, modifyMemberIdList);
+        // 맴버 삭제
+        projectMemberRepository.deleteByProjectId(projectId);
         // 맴버 수정 저장
         List<ProjectMember> memberList = ProjectMember.copyList(memberDtoList, projectId);
         if(memberList != null)
             projectMemberRepository.saveAll(memberList);
             
-        // 삭제된 기술스택
-        List<Long> modifyTechStackIdList = ProjectTechStackDto.modifyIdList(techStackDtoList);
-        projectTechStackRepository.deleteByNotModifyTechStackIdList(projectId, modifyTechStackIdList);
+        // 기술스택 삭제
+        projectTechStackRepository.deleteByProjectId(projectId);
         // 기술스택 수정 저장
         List<ProjectTechStack> techStackList = ProjectTechStack.copyList(techStackDtoList, projectId);
         if(techStackList != null)
             projectTechStackRepository.saveAll(techStackList);
 
-        // 삭제된 링크
-        List<Long> modifyLinkIdList = ProjectLinkDto.modifyIdList(linkDtoList);
-        projectLinkRepository.deleteByNotModifyLinkIdList(projectId, modifyLinkIdList);
+        // 링크 삭제
+        projectLinkRepository.deleteByProjectId(projectId);
         // 링크 수정 저장
         List<ProjectLink> linkList = ProjectLink.copyList(linkDtoList, projectId);
         if(linkList != null)
@@ -115,7 +114,7 @@ public class ProjectServiceImpl implements ProjectService{
 
         ProjectModifyResponseDto modify = new ProjectModifyResponseDto(project);
 
-        return ResponseEntity.ok().body("프로젝트 게시글 수정이 완료되었습니다.");
+        return ResponseEntity.ok().body(modify);
     }
 
     /** 
@@ -145,17 +144,17 @@ public class ProjectServiceImpl implements ProjectService{
     @Override
     public ResponseEntity readPopularProjectList() {
 
-        List<Project> projectList = projectRepository.findTop5ByOrderByWeekViewCountDesc();
+        List<Project> projectList = projectRepository.findTop5ByStatusTrueOrderByWeekViewCountDesc();
 
         List<PopularProjectReadResponseDto> readPopularList = PopularProjectReadResponseDto.copyList(projectList);
 
-        return ResponseEntity.ok().body("인기프로젝트 게시글 리스트 조회가 완료되었습니다.");
+        return ResponseEntity.ok().body(readPopularList);
     }
 
     @Override
     public ResponseEntity readProjectList(int size, int page) {
-        Pageable pageRequest = PageRequest.of(page, size);
-        Page<Project> pageable = projectRepository.findAllOrderByCreatedDateDesc(pageRequest);
+        Pageable pageRequest = PageRequest.of(page-1, size);
+        Page<Project> pageable = projectRepository.findAllByStatusTrue(pageRequest);
         List<Project> projectList = pageable.getContent();
 
         List<ProjectListReadResponseDto> readList = ProjectListReadResponseDto.copyList(projectList);
@@ -164,17 +163,17 @@ public class ProjectServiceImpl implements ProjectService{
         // if(isJwt){
         //     for(ProjectListReadResponseDto read : readList){
         //         Long projectId = read.getId();
-        //         read.setLike(projectLikeRepository.existsByProjectIdAndMemberId());
-        //         read.setBookmark(projectBookmarkRepository.existsByProjectIdAndMemberId());
+        //         read.setLike(projectLikeRepository.existsByProjectIdAndMemberId(projectId, memberId));
+        //         read.setBookmark(projectBookmarkRepository.existsByProjectIdAndMemberId(projectId, memberId));
         //     }
         // }
 
-        return ResponseEntity.ok().body("프로젝트 게시글 리스트 조회가 완료되었습니다.");
+        return ResponseEntity.ok().body(readList);
     }
 
     @Override
     public ResponseEntity readProject(long projectId) {
-        Project project = projectRepository.findById(projectId).orElse(null);
+        Project project = projectRepository.findByIdAndStatusTrue(projectId);
         if(project == null)
             return ResponseEntity.status(404).body("게시글이 존재하지 않습니다.");
             // return ResponseEntity.status(404).body(new FailResponseDto(false,"게시글이 존재하지 않습니다.", 404));
@@ -182,11 +181,11 @@ public class ProjectServiceImpl implements ProjectService{
         ProjectReadResponseDto read = new ProjectReadResponseDto(project);
         // todo : JWT 토큰이 있다면
         // if(isJwt){
-        //     read.setLike(projectLikeRepository.existsByProjectIdAndMemberId());
-        //     read.setBookmark(projectBookmarkRepository.existsByProjectIdAndMemberId());
+        //     read.setLike(projectLikeRepository.existsByProjectIdAndMemberId(projectId, memberId));
+        //     read.setBookmark(projectBookmarkRepository.existsByProjectIdAndMemberId(projectId, memberId));
         // }
 
-        return ResponseEntity.ok().body("프로젝트 게시글 상세 조회가 완료되었습니다.");
+        return ResponseEntity.ok().body(read);
     }
 
 

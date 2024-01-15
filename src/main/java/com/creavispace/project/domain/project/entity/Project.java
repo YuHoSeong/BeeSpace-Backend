@@ -57,29 +57,29 @@ public class Project {
 
     private Boolean status;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "projectId")
     private List<ProjectImage> imageList;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "projectId")
     private List<ProjectLink> linkList;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "projectId")
     private List<ProjectComment> commentList;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "projectId")
     private List<ProjectBookmark> bookmarkList;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "projectId")
     private List<ProjectLike> likeList;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "projectId")
     private List<ProjectMember> memberList;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "projectId")
     private List<ProjectTechStack> techStackList;
 
-    public Project(ProjectCreateRequestDto dto){
-        // this.memberId = memberId;
+    public Project(ProjectCreateRequestDto dto, long memberId){
+        this.memberId = memberId;
         this.field = dto.getField();
         this.title = dto.getTitle();
         this.content = dto.getContent();

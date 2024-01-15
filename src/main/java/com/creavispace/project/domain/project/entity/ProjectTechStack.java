@@ -45,6 +45,7 @@ public class ProjectTechStack {
 
     public static List<ProjectTechStack> copyList(List<ProjectTechStackDto> techStackList, Long projectId){
         List<ProjectTechStack> list = new ArrayList<>();
+        if(techStackList == null) return list;
         for(ProjectTechStackDto dto : techStackList){
             list.add(new ProjectTechStack(dto, projectId));
         }

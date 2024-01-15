@@ -39,6 +39,7 @@ public class ProjectLink {
 
     public static List<ProjectLink> copyList(List<ProjectLinkDto> urlList, Long projectId){
         List<ProjectLink> list = new ArrayList<>();
+        if(urlList == null) return list;
         for(ProjectLinkDto dto : urlList){
             list.add(new ProjectLink(dto, projectId));
         }
