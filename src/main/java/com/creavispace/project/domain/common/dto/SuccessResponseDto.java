@@ -1,4 +1,4 @@
-package creavispace.project.domain.common.dto;
+package com.creavispace.project.domain.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

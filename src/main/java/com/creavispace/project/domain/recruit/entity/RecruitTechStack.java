@@ -1,7 +1,7 @@
 package com.creavispace.project.domain.recruit.entity;
 
-import creavispace.project.domain.common.entity.BaseTimeEntity;
-import creavispace.project.domain.common.entity.TechStack;
+import com.creavispace.project.domain.common.entity.BaseTimeEntity;
+import com.creavispace.project.domain.common.entity.TechStack;
 import jakarta.persistence.*;
 import lombok.*;
 

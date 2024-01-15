@@ -1,4 +1,4 @@
-package creavispace.project.domain.common.entity;
+package com.creavispace.project.domain.common.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

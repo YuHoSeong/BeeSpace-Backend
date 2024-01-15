@@ -1,9 +1,10 @@
 package com.creavispace.project.domain.recruit.service;
 
+import com.creavispace.project.domain.common.dto.FailResponseDto;
+import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.recruit.dto.request.RecruitModifyRequestDto;
+import com.creavispace.project.domain.recruit.entity.Recruit;
 import com.creavispace.project.domain.recruit.repository.RecruitRepository;
-import creavispace.project.domain.common.dto.FailResponseDto;
-import creavispace.project.domain.common.dto.SuccessResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
