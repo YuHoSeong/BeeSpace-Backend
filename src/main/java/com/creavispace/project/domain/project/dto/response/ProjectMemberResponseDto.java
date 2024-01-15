@@ -3,7 +3,6 @@ package com.creavispace.project.domain.project.dto.response;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.creavispace.project.domain.Member;
 import com.creavispace.project.domain.project.entity.ProjectMember;
 
 import lombok.Data;
@@ -17,9 +16,9 @@ public class ProjectMemberResponseDto {
     private String position;
 
     public ProjectMemberResponseDto(ProjectMember projectMember){
-        Member member = projectMember.getMember();
+        // Member member = projectMember.getMember();
         this.id = projectMember.getId();
-        this.memberId = member.getId();
+        // this.memberId = member.getId();
         // this.memberEmail = member.getMemberEmail();
         // this.memberImage = member.getMemberImage();
         this.position = projectMember.getPosition();

@@ -3,7 +3,6 @@ package com.creavispace.project.domain.project.dto.response;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.creavispace.project.domain.TechStack;
 import com.creavispace.project.domain.project.entity.ProjectTechStack;
 
 import lombok.Data;
@@ -16,9 +15,9 @@ public class ProjectTechStackResponseDto {
     private String url;
 
     public ProjectTechStackResponseDto(ProjectTechStack projectTechStack){
-        TechStack techStack = projectTechStack.getTechStack();
+        // TechStack techStack = projectTechStack.getTechStack();
         this.id = projectTechStack.getId();
-        this.techStackId = techStack.getId();
+        // this.techStackId = techStack.getId();
         // this.techStackName = techStack.getTechStackName();
         // this.url = techStack.getUrl();
     }

@@ -1,7 +1,5 @@
 package com.creavispace.project.domain.comment.entity;
 
-import com.creavispace.project.domain.Member;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,9 +21,9 @@ public class ProjectComment {
     @Column(name = "project_id", nullable = false)
     private Long projectId;
 
-    @ManyToOne(targetEntity = Member.class)
-    @JoinColumn(name = "member_id", nullable = false, insertable = false, updatable = false)
-    private Member member;
+    // @ManyToOne(targetEntity = Member.class)
+    // @JoinColumn(name = "member_id", nullable = false, insertable = false, updatable = false)
+    // private Member member;
 
     @Column(name = "member_id", nullable = false)
     private Long memberId;

@@ -2,7 +2,6 @@ package com.creavispace.project.domain.project.entity;
 
 import java.util.List;
 
-import com.creavispace.project.domain.Member;
 import com.creavispace.project.domain.bookmark.entity.ProjectBookmark;
 import com.creavispace.project.domain.comment.entity.ProjectComment;
 import com.creavispace.project.domain.like.entity.ProjectLike;
@@ -28,9 +27,9 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(targetEntity = Member.class)
-    @JoinColumn(name = "member_id", nullable = false, insertable = false, updatable = false)
-    private Member member;
+    // @ManyToOne(targetEntity = Member.class)
+    // @JoinColumn(name = "member_id", nullable = false, insertable = false, updatable = false)
+    // private Member member;
 
     @Column(name = "member_id", nullable = false)
     private Long memberId;

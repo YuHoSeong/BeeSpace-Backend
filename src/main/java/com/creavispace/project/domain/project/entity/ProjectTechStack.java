@@ -3,7 +3,6 @@ package com.creavispace.project.domain.project.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.creavispace.project.domain.TechStack;
 import com.creavispace.project.domain.project.dto.request.ProjectTechStackDto;
 
 import jakarta.persistence.Column;
@@ -24,9 +23,9 @@ public class ProjectTechStack {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(targetEntity = TechStack.class)
-    @JoinColumn(name = "tech_stack_id", nullable = false, insertable = false, updatable = false)
-    private TechStack techStack;
+    // @ManyToOne(targetEntity = TechStack.class)
+    // @JoinColumn(name = "tech_stack_id", nullable = false, insertable = false, updatable = false)
+    // private TechStack techStack;
 
     @Column(name = "tech_stack_id", nullable = false)
     private Long techStackId;
