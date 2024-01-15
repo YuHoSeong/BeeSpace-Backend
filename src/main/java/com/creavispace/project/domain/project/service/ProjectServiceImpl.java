@@ -10,6 +10,9 @@ import com.creavispace.project.domain.project.dto.request.ProjectLinkDto;
 import com.creavispace.project.domain.project.dto.request.ProjectMemberDto;
 import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDto;
 import com.creavispace.project.domain.project.dto.request.ProjectTechStackDto;
+import com.creavispace.project.domain.project.dto.response.PopularProjectReadResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectCreateResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectModifyResponseDto;
 import com.creavispace.project.domain.project.entity.Project;
 import com.creavispace.project.domain.project.entity.ProjectMember;
 import com.creavispace.project.domain.project.entity.ProjectLink;
@@ -50,7 +53,7 @@ public class ProjectServiceImpl implements ProjectService{
         if(linkList != null)
             projectLinkRepository.saveAll(linkList);
 
-        // ProjectCreateResponseDto create = new ProjectCreateResponseDto(createProject);
+        ProjectCreateResponseDto create = new ProjectCreateResponseDto(createProject);
 
         return ResponseEntity.ok().body("프로젝트 게시글 생성이 완료되었습니다.");
     }
@@ -58,14 +61,20 @@ public class ProjectServiceImpl implements ProjectService{
     @Override
     @Transactional
     public ResponseEntity modifyProject(ProjectModifyRequestDto dto) {
+        // todo : JWT의 정보로 project작성자와 관리자권한에 대한 확인 로직 필요
+        // long memberId = "토큰정보";
         long projectId = dto.getId();
         List<ProjectMemberDto> memberDtoList = dto.getMemberList();
         List<ProjectTechStackDto> techStackDtoList = dto.getTechStackList();
         List<ProjectLinkDto> linkDtoList = dto.getLinkList();
 
         Project project = projectRepository.findById(projectId).orElse(null);
+        
+        // if(memberId != project.getMemberId() && !member.getRole().equals("Administrator")){
+        //     return ResponseEntity.status(401).body(new FailResponseDto(false,"프로젝트 게시글을 삭제할 수 있는 권한이 없습니다.", 401));
+        // }
+        
         project.modify(dto);
-
         projectRepository.save(project);
 
         // 삭제된 맴버
@@ -92,7 +101,7 @@ public class ProjectServiceImpl implements ProjectService{
         if(linkList != null)
             projectLinkRepository.saveAll(linkList);
 
-        // ProjectModifyResponseDto modify = new ProjectModifyResponseDto(project);
+        ProjectModifyResponseDto modify = new ProjectModifyResponseDto(project);
 
         return ResponseEntity.ok().body("프로젝트 게시글 수정이 완료되었습니다.");
     }
@@ -104,8 +113,8 @@ public class ProjectServiceImpl implements ProjectService{
     @Transactional
     public ResponseEntity deleteProject(long projectId) {
         // todo : JWT의 정보로 project작성자와 관리자권한에 대한 확인 로직 필요
-        // long memberId = 1;
-        
+        // long memberId = "토큰정보";
+
         Project project = projectRepository.findById(projectId).orElse(null);
         
         // if(memberId != project.getMemberId() && !member.getRole().equals("Administrator")){
@@ -117,5 +126,16 @@ public class ProjectServiceImpl implements ProjectService{
 
         return ResponseEntity.ok().body("프로젝트 게시글 삭제가 완료되었습니다.");
     }
+
+    @Override
+    public ResponseEntity readPopularProjectList() {
+
+        List<Project> projectList = projectRepository.findTop5ByOrderByWeekViewCountDesc();
+
+        List<PopularProjectReadResponseDto> popularProjectList = PopularProjectReadResponseDto.copyList(projectList);
+
+        return ResponseEntity.ok().body("인기프로젝트 게시글 리스트 조회가 완료되었습니다.");
+    }
+
 
 }
