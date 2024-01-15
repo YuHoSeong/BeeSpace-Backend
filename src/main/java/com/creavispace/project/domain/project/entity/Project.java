@@ -77,12 +77,16 @@ public class Project {
     private List<ProjectTechStack> techStackList;
 
     public Project(ProjectCreateRequestDto dto){
+        // this.memberId = memberId;
         this.field = dto.getField();
         this.title = dto.getTitle();
         this.content = dto.getContent();
         this.thumbnail = dto.getThumbnail();
         this.bannerContent = dto.getBannerContent();
         this.kind = dto.getKind();
+        this.status = true;
+        this.viewCount = 0;
+        this.weekViewCount = 0;
     }
 
     public void modify(ProjectModifyRequestDto dto){
