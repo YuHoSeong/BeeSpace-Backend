@@ -13,14 +13,16 @@ public class ProjectCommentResponseDto {
     private Long id;
     private Long memberId;
     private String memberName;
-    private String memberImage;
+    private String memberProfile;
     private String content;
     private LocalDateTime modifiedDate;
 
     public ProjectCommentResponseDto(ProjectComment projectComment){
+        // Member member - projectComment.getMember();
         this.id = projectComment.getId();
         this.memberId = projectComment.getMemberId();
-        // this.memberName = projectComment.getMember().getMemberName();
+        // this.memberName = member.getMemberName();
+        // this.memberProfile = member.getMemberProfile();
         this.content = projectComment.getContent();
         // this.modifiedDate = projectComment.getModifiedDate();
     }

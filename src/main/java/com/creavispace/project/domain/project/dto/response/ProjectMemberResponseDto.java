@@ -12,7 +12,7 @@ public class ProjectMemberResponseDto {
     private Long id;
     private Long memberId;
     private String memberEmail;
-    private String memberImage;
+    private String memberProfile;
     private String position;
 
     public ProjectMemberResponseDto(ProjectMember projectMember){
@@ -20,7 +20,7 @@ public class ProjectMemberResponseDto {
         this.id = projectMember.getId();
         // this.memberId = member.getId();
         // this.memberEmail = member.getMemberEmail();
-        // this.memberImage = member.getMemberImage();
+        // this.memberProfile = member.getMemberProfile();
         this.position = projectMember.getPosition();
     }
 
