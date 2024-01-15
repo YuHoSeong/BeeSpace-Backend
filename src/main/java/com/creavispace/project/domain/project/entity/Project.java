@@ -3,6 +3,8 @@ package com.creavispace.project.domain.project.entity;
 import java.util.List;
 
 import com.creavispace.project.domain.Member;
+import com.creavispace.project.domain.bookmark.entity.ProjectBookmark;
+import com.creavispace.project.domain.like.entity.ProjectLike;
 import com.creavispace.project.domain.project.dto.request.ProjectCreateRequestDto;
 import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDto;
 
@@ -65,10 +67,10 @@ public class Project {
     private List<ProjectComment> commentList;
 
     @OneToMany(mappedBy = "project")
-    private List<ProjectBookMark> bookmarkList;
+    private List<ProjectBookmark> bookmarkList;
 
     @OneToMany(mappedBy = "project")
-    private List<ProjectGood> goodList;
+    private List<ProjectLike> likeList;
 
     @OneToMany(mappedBy = "project")
     private List<ProjectMember> memberList;

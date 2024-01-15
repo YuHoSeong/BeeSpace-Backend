@@ -1,4 +1,6 @@
-package com.creavispace.project.domain.project.entity;
+package com.creavispace.project.domain.like.entity;
+
+import com.creavispace.project.domain.project.entity.Project;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,13 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "project_good")
-public class ProjectGood {
+public class ProjectLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,5 +27,4 @@ public class ProjectGood {
 
     @Column(name = "projcet_id", nullable = false)
     private Long projectId;
-
 }

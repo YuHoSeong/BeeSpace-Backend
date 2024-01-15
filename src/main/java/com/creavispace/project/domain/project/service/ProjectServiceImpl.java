@@ -2,9 +2,14 @@ package com.creavispace.project.domain.project.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.creavispace.project.domain.bookmark.repository.ProjectBookmarkRepository;
+import com.creavispace.project.domain.like.repository.ProjectLikeRepository;
 import com.creavispace.project.domain.project.dto.request.ProjectCreateRequestDto;
 import com.creavispace.project.domain.project.dto.request.ProjectLinkDto;
 import com.creavispace.project.domain.project.dto.request.ProjectMemberDto;
@@ -12,6 +17,7 @@ import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDt
 import com.creavispace.project.domain.project.dto.request.ProjectTechStackDto;
 import com.creavispace.project.domain.project.dto.response.PopularProjectReadResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectCreateResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectModifyResponseDto;
 import com.creavispace.project.domain.project.entity.Project;
 import com.creavispace.project.domain.project.entity.ProjectMember;
@@ -33,6 +39,8 @@ public class ProjectServiceImpl implements ProjectService{
     private ProjectMemberRepository projectMemberRepository;
     private ProjectTechStackRepository projectTechStackRepository;
     private ProjectLinkRepository projectLinkRepository;
+    private ProjectLikeRepository projectLikeRepository;
+    private ProjectBookmarkRepository projectBookmarkRepository;
     
     @Override
     @Transactional
@@ -132,9 +140,29 @@ public class ProjectServiceImpl implements ProjectService{
 
         List<Project> projectList = projectRepository.findTop5ByOrderByWeekViewCountDesc();
 
-        List<PopularProjectReadResponseDto> popularProjectList = PopularProjectReadResponseDto.copyList(projectList);
+        List<PopularProjectReadResponseDto> readPopularList = PopularProjectReadResponseDto.copyList(projectList);
 
         return ResponseEntity.ok().body("인기프로젝트 게시글 리스트 조회가 완료되었습니다.");
+    }
+
+    @Override
+    public ResponseEntity readProjectList(int size, int pageNumber) {
+        Pageable pageRequest = PageRequest.of(pageNumber, size);
+        Page<Project> pageable = projectRepository.findAllOrderByCreatedDateDesc(pageRequest);
+        List<Project> projectList = pageable.getContent();
+
+        List<ProjectListReadResponseDto> readList = ProjectListReadResponseDto.copyList(projectList);
+
+        // todo : JWT 토큰이 있다면 
+        // if(isJwt){
+        //     for(ProjectListReadResponseDto read : readList){
+        //         Long projectId = read.getId();
+        //         read.patchLike(projectLikeRepository.existsByProjectIdAndMemberId());
+        //         read.patchBookmark(projectBookmarkRepository.existsByProjectIdAndMemberId());
+        //     }
+        // }
+
+        return ResponseEntity.ok().body("프로젝트 게시글 리스트 조회가 완료되었습니다.");
     }
 
 
