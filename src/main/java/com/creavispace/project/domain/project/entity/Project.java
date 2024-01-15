@@ -98,4 +98,8 @@ public class Project {
         this.kind = dto.getKind();
     }
 
+    public void disable(){
+        this.status = false;
+    }
+
 }

@@ -34,11 +34,11 @@ public class ProjectServiceImpl implements ProjectService{
     @Override
     @Transactional
     public ResponseEntity createProject(ProjectCreateRequestDto dto) {
-        Project projectEntity = new Project(dto);
+        Project createProject = new Project(dto);
 
-        projectRepository.save(projectEntity);
+        projectRepository.save(createProject);
 
-        Long projectId = projectEntity.getId();
+        Long projectId = createProject.getId();
         List<ProjectMember> memberList = ProjectMember.copyList(dto.getMemberList(), projectId);
         List<ProjectTechStack> techStackList = ProjectTechStack.copyList(dto.getTechStackList(), projectId);
         List<ProjectLink> linkList = ProjectLink.copyList(dto.getLinkList(), projectId);
@@ -50,7 +50,7 @@ public class ProjectServiceImpl implements ProjectService{
         if(linkList != null)
             projectLinkRepository.saveAll(linkList);
 
-        // ProjectCreateResponseDto create = new ProjectCreateResponseDto(projectEntity);
+        // ProjectCreateResponseDto create = new ProjectCreateResponseDto(createProject);
 
         return ResponseEntity.ok().body("프로젝트 게시글 생성이 완료되었습니다.");
     }
@@ -96,4 +96,26 @@ public class ProjectServiceImpl implements ProjectService{
 
         return ResponseEntity.ok().body("프로젝트 게시글 수정이 완료되었습니다.");
     }
+
+    /** 
+     * 프로젝트 게시글을 비활성화 하는 기능
+     */
+    @Override
+    @Transactional
+    public ResponseEntity deleteProject(long projectId) {
+        // todo : JWT의 정보로 project작성자와 관리자권한에 대한 확인 로직 필요
+        // long memberId = 1;
+        
+        Project project = projectRepository.findById(projectId).orElse(null);
+        
+        // if(memberId != project.getMemberId() && !member.getRole().equals("Administrator")){
+        //     return ResponseEntity.status(401).body(new FailResponseDto(false,"프로젝트 게시글을 삭제할 수 있는 권한이 없습니다.", 401));
+        // }
+
+        project.disable();
+        projectRepository.save(project);
+
+        return ResponseEntity.ok().body("프로젝트 게시글 삭제가 완료되었습니다.");
+    }
+
 }
