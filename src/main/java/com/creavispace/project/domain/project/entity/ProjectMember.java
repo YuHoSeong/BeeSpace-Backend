@@ -41,6 +41,7 @@ public class ProjectMember {
     private String position;
 
     public ProjectMember(ProjectMemberDto dto, Long projectId){
+        this.id = dto.getId();
         this.memberId = dto.getMemberId();
         this.projectId = projectId;
         this.position = dto.getPosition();

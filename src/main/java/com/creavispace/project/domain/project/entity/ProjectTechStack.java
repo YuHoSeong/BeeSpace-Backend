@@ -1,6 +1,5 @@
 package com.creavispace.project.domain.project.entity;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,12 +37,6 @@ public class ProjectTechStack {
 
     @Column(name = "project_id", nullable = false)
     private Long projectId;
-
-    @Column(name = "created_date", nullable = false)
-    private LocalDateTime createdDate;
-
-    @Column(name = "modified_date", nullable = false)
-    private LocalDateTime modifiedDate;
 
     public ProjectTechStack(ProjectTechStackDto dto, Long projectId){
         this.id = dto.getId();

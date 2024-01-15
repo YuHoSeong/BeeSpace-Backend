@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.creavispace.project.domain.Member;
 import com.creavispace.project.domain.project.dto.request.ProjectCreateRequestDto;
+import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -75,6 +77,15 @@ public class Project {
     private List<ProjectTechStack> techStackList;
 
     public Project(ProjectCreateRequestDto dto){
+        this.field = dto.getField();
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.thumbnail = dto.getThumbnail();
+        this.bannerContent = dto.getBannerContent();
+        this.kind = dto.getKind();
+    }
+
+    public void modify(ProjectModifyRequestDto dto){
         this.field = dto.getField();
         this.title = dto.getTitle();
         this.content = dto.getContent();

@@ -8,7 +8,7 @@ import com.creavispace.project.domain.project.entity.Project;
 import lombok.Getter;
 
 @Getter
-public class ProjectCreateResponseDto {
+public class ProjectModifyResponseDto {
     private Long id;
     private String kind;
     private String field;
@@ -23,7 +23,7 @@ public class ProjectCreateResponseDto {
     private List<ProjectTechStackResponseDto> techStackList;
     private List<ProjectLinkResponseDto> linkList;
 
-    public ProjectCreateResponseDto(Project project){
+    public ProjectModifyResponseDto(Project project){
         this.id = project.getId();
         this.kind = project.getKind();
         this.field = project.getField();
