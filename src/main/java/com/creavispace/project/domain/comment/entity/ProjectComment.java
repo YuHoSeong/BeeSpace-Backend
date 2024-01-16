@@ -1,6 +1,7 @@
 package com.creavispace.project.domain.comment.entity;
 
 import com.creavispace.project.domain.comment.dto.request.ProjectCommentCreateRequestDto;
+import com.creavispace.project.domain.comment.dto.request.ProjectCommentModifyRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +37,10 @@ public class ProjectComment {
     public ProjectComment(ProjectCommentCreateRequestDto dto, Long memberId){
         this.projectId = dto.getProjectId();
         this.memberId = memberId;
+        this.content = dto.getContent();
+    }
+
+    public void modify(ProjectCommentModifyRequestDto dto){
         this.content = dto.getContent();
     }
 

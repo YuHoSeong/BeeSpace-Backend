@@ -7,7 +7,7 @@ import com.creavispace.project.domain.comment.entity.ProjectComment;
 import lombok.Getter;
 
 @Getter
-public class ProjectCommentCreateResponseDto {
+public class ProjectCommentModifyResponseDto {
     private Long id;
     private Long projectId;
     private Long memberId;
@@ -16,7 +16,7 @@ public class ProjectCommentCreateResponseDto {
     private LocalDateTime modifiedDate;
     private String content;
 
-    public ProjectCommentCreateResponseDto(ProjectComment projectComment){
+    public ProjectCommentModifyResponseDto(ProjectComment projectComment){
         // Member member = projectComment.getMember();
         this.id = projectComment.getId();
         this.projectId = projectComment.getProjectId();
