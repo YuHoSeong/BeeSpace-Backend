@@ -8,4 +8,5 @@ import com.creavispace.project.domain.bookmark.entity.ProjectBookmark;
 @Repository
 public interface ProjectBookmarkRepository extends JpaRepository<ProjectBookmark, Long>{
     public Boolean existsByProjectIdAndMemberId(Long projectId, Long memberId);
+    public ProjectBookmark findByProjectIdAndMemberId(Long projectId, Long memberId);
 }
