@@ -1,5 +1,6 @@
-package com.creavispace.project.member;
+package com.creavispace.project.domain.member.entity;
 
+import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -29,39 +31,34 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false, unique = true)
     private String memberEmail;
-
     @Column(nullable = false)
     private String memberPassword;
-
-    @Column(nullable = false)
-    private String memberName;
-
     @Column(nullable = false, unique = true)
     private String memberNickname;
-
+    private String profileUrl;
     private String role;
-
     private String memberIntroduce;
-
+    private String memberPosition;
+    private List<String> memberInterested;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+
     private boolean expired;
     private boolean enabled;
-    private boolean emailConfirmed;
 
-    public Member(String memberEmail, String memberPassword, String memberName, String memberNickname) {
-        this.memberEmail = memberEmail;
-        this.memberPassword = memberPassword;
-        this.memberName = memberName;
-        this.memberNickname = memberNickname;
+    public Member(MemberSaveRequestDto memberSaveRequestDto) {
+        this.memberEmail = memberSaveRequestDto.getMemberEmail();
+        this.memberPassword = memberSaveRequestDto.getMemberPassword();
+        this.memberNickname = memberSaveRequestDto.getMemberNickname();
+        this.memberInterested = memberSaveRequestDto.getMemberInterested();
+        this.memberPosition = memberSaveRequestDto.getMemberPosition();
+        role = "default";
         createdDate = LocalDateTime.now();
         modifiedDate = LocalDateTime.now();
         expired = false;
         enabled = true;
-        emailConfirmed = false;
     }
 
 }
