@@ -5,9 +5,13 @@ import java.util.List;
 
 import com.creavispace.project.domain.project.entity.ProjectTechStack;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProjectTechStackResponseDto {
     private Long id;
     private Long techStackId;

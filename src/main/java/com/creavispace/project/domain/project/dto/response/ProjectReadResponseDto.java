@@ -3,12 +3,15 @@ package com.creavispace.project.domain.project.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.creavispace.project.domain.comment.dto.ProjectCommentResponseDto;
 import com.creavispace.project.domain.project.entity.Project;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProjectReadResponseDto {
     private Long id;
     private String field;

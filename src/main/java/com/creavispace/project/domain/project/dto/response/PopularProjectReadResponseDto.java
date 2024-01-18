@@ -5,9 +5,13 @@ import java.util.List;
 
 import com.creavispace.project.domain.project.entity.Project;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PopularProjectReadResponseDto {
     private Long id;
     private String title;

@@ -5,9 +5,13 @@ import java.util.List;
 
 import com.creavispace.project.domain.project.entity.ProjectMember;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProjectMemberResponseDto {
     private Long id;
     private Long memberId;

@@ -1,4 +1,4 @@
-package com.creavispace.project.domain.comment.dto;
+package com.creavispace.project.domain.project.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -6,9 +6,13 @@ import java.util.List;
 
 import com.creavispace.project.domain.comment.entity.ProjectComment;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProjectCommentResponseDto {
     private Long id;
     private Long memberId;
