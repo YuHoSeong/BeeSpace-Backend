@@ -9,10 +9,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProjectLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +31,9 @@ public class ProjectLike {
 
     @Column(name = "projcet_id", nullable = false)
     private Long projectId;
+
+    public ProjectLike(Long projectId, Long memberId){
+        this.projectId = projectId;
+        this.memberId = memberId;
+    }
 }
