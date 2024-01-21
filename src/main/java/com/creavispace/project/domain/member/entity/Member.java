@@ -29,6 +29,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Member {
     @Id
+    @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, unique = true)
@@ -40,7 +41,6 @@ public class Member {
     private String profileUrl;
     private String role;
     private String memberIntroduce;
-    private String memberPosition;
     private List<String> memberInterested;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
@@ -53,7 +53,6 @@ public class Member {
         this.memberPassword = memberSaveRequestDto.getMemberPassword();
         this.memberNickname = memberSaveRequestDto.getMemberNickname();
         this.memberInterested = memberSaveRequestDto.getMemberInterested();
-        this.memberPosition = memberSaveRequestDto.getMemberPosition();
         role = "default";
         createdDate = LocalDateTime.now();
         modifiedDate = LocalDateTime.now();
