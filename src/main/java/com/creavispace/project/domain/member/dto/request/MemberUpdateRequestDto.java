@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
  * 사용자가 수정할 수 있는 데이터
  * 비밀번호
  * 닉네임
- * 직무
- * 관심 기술
  * 자기소개
  * 프로필*/
 @Data

@@ -9,8 +9,6 @@ import lombok.Data;
  * 이메일
  * 비밀번호
  * 닉네임
- * 직무
- * 관심 기술
  */
 @Data
 @Builder
