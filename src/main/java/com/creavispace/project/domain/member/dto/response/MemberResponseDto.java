@@ -8,8 +8,7 @@ import lombok.Data;
  * 비밀번호
  * 닉네임
  * 자기소개
- * 직무
- * 관심 기술*/
+ * */
 @Data
 public class MemberResponseDto {
     private String memberEmail;
