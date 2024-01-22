@@ -41,7 +41,6 @@ public class Member {
     private String profileUrl;
     private String role;
     private String memberIntroduce;
-    private List<String> memberInterested;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
@@ -52,7 +51,6 @@ public class Member {
         this.memberEmail = memberSaveRequestDto.getMemberEmail();
         this.memberPassword = memberSaveRequestDto.getMemberPassword();
         this.memberNickname = memberSaveRequestDto.getMemberNickname();
-        this.memberInterested = memberSaveRequestDto.getMemberInterested();
         role = "default";
         createdDate = LocalDateTime.now();
         modifiedDate = LocalDateTime.now();

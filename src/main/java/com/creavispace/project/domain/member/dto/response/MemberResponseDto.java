@@ -15,7 +15,5 @@ public class MemberResponseDto {
     private String memberEmail;
     private String memberPassword;
     private String memberNickname;
-    private String memberPosition;
-    private List<String> memberInterested;
     private String introduce;
 }

@@ -25,8 +25,8 @@ class MemberRepositoryTest {
     void testSave() {
         MemberSaveRequestDto dto = MemberSaveRequestDto.builder()
                 .memberEmail("123@naver.com")
-                .memberPassword("12345")
-                .memberNickname("rlarbdud")
+                .memberPassword("12455")
+                .memberNickname("rlardud1")
                 .memberInterested(List.of("스프링", "안드로이드"))
                 .build();
 
