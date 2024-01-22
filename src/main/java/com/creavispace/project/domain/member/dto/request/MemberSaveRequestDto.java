@@ -18,6 +18,4 @@ public class MemberSaveRequestDto {
     String memberEmail;
     String memberPassword;
     String memberNickname;
-    String memberPosition;
-    List<String> memberInterested;
 }
