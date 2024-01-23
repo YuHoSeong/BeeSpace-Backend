@@ -6,7 +6,6 @@ import com.creavispace.project.domain.member.dto.request.MemberUpdateRequestDto;
 import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
 import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.member.repository.MemberRepository;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,12 +26,10 @@ class MemberRepositoryTest {
                 .memberEmail("123@naver.com")
                 .memberPassword("12455")
                 .memberNickname("rlardud1")
-                .memberInterested(List.of("스프링", "안드로이드"))
                 .build();
 
         Member member = new Member(dto);
         repository.save(member);
-        System.out.println(repository.findById(member.getId()));
         assertThat(member).isEqualTo(repository.findById(member.getId()).orElseThrow());
     }
 
