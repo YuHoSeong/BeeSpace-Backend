@@ -36,20 +36,18 @@ public class MemberServiceImpl implements MemberService {
     public void update(Long memberId, MemberUpdateRequestDto updateParam) {
         Member member = memberRepository.findById(memberId).orElseThrow();
         member.setMemberNickname(updateParam.getMemberNickname());
-        member.setMemberPassword(updateParam.getMemberPassword());
         memberRepository.save(member);
     }
 
     @Override
     public Optional<Member> findByEmail(String email) {
-        return Optional.empty();
+        return memberRepository.findByMemberEmail(email);
     }
 
     @Override
     public MemberResponseDto findById(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow();
         MemberResponseDto dto = new MemberResponseDto();
-        dto.setMemberPassword(member.getMemberPassword());
         dto.setMemberNickname(member.getMemberNickname());
         dto.setIntroduce(member.getMemberIntroduce());
         return dto;
