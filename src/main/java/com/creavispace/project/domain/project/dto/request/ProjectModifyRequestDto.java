@@ -2,6 +2,8 @@ package com.creavispace.project.domain.project.dto.request;
 
 import java.util.List;
 
+import com.creavispace.project.domain.project.entity.ProjectKind;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProjectModifyRequestDto {
     private Long id;
-    private String kind;
+    private ProjectKind kind;
     private String field;
     private String title;
     private String content;
