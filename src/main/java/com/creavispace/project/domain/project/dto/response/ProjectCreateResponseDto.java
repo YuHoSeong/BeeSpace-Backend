@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.creavispace.project.domain.project.entity.Project;
+import com.creavispace.project.domain.project.entity.ProjectKind;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProjectCreateResponseDto {
     private Long id;
-    private String kind;
+    private ProjectKind kind;
     private String field;
     private String title;
     private String content;

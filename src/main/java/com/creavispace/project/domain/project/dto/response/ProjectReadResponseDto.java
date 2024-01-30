@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.creavispace.project.domain.project.entity.Project;
+import com.creavispace.project.domain.project.entity.ProjectKind;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +25,7 @@ public class ProjectReadResponseDto {
     private String content;
     private Boolean like;
     private Boolean bookmark;
-    private String kind;
+    private ProjectKind kind;
     private List<ProjectMemberResponseDto> memberList;
     private List<ProjectLinkResponseDto> linkList;
     private List<ProjectTechStackResponseDto> techStackList;

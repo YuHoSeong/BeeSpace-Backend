@@ -10,6 +10,8 @@ import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDt
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,8 +36,9 @@ public class Project {
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Column(name = "kind" , nullable = false, columnDefinition = "VARCHAR(20) COMMENT 'PERSONAL OR TEAM'")
-    private String kind;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ProjectKind kind;
 
     private String field;
 
@@ -85,7 +88,7 @@ public class Project {
         this.content = dto.getContent();
         this.thumbnail = dto.getThumbnail();
         this.bannerContent = dto.getBannerContent();
-        this.kind = dto.getKind();
+        this.kind = dto.getKindAsEnum();
         this.status = true;
         this.viewCount = 0;
         this.weekViewCount = 0;

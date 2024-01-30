@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.creavispace.project.domain.project.entity.Project;
+import com.creavispace.project.domain.project.entity.ProjectKind;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,7 @@ public class PopularProjectReadResponseDto {
     private Long id;
     private String title;
     private String thumbnail;
-    private String kind;
+    private ProjectKind kind;
     private String bannerContent;
 
     public PopularProjectReadResponseDto(Project project){
