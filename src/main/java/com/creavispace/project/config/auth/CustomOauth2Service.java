@@ -43,8 +43,18 @@ public class CustomOauth2Service implements OAuth2UserService<OAuth2UserRequest,
     }
 
     private Member findOrSave(OAuthAttributes attributes) {
+        System.out.println("-----------------------findOrSave------------------------");
+        if (memberRepository.existsByMemberEmail(attributes.getEmail())) {
+            System.out.println("-----------------------findOrSaveEnd------------------------");
+            System.out.println("email = " + memberRepository.findByMemberEmail(attributes.getEmail()));
+            return memberRepository.findByMemberEmail(attributes.getEmail()).get();
+        }
+
         Member member = memberRepository.findByMemberEmail(attributes.getEmail())
                 .orElse(memberRepository.save(attributes.toEntity()));
+
+        System.out.println("-----------------------findOrSaveEnd------------------------");
+        System.out.println("email = " + memberRepository.findByMemberEmail(attributes.getEmail()));
         return member;
     }
 }
