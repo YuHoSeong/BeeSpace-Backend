@@ -1,8 +1,5 @@
 package com.creavispace.project.domain.project.dto.response;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.creavispace.project.domain.project.entity.Project;
 import com.creavispace.project.domain.project.entity.ProjectKind;
 
@@ -26,14 +23,5 @@ public class PopularProjectReadResponseDto {
         this.thumbnail = project.getThumbnail();
         this.kind = project.getKind();
         this.bannerContent = project.getBannerContent();
-    }
-
-    public static List<PopularProjectReadResponseDto> copyList(List<Project> projectList){
-        List<PopularProjectReadResponseDto> list = new ArrayList<>();
-        if(projectList == null) return list;
-        for(Project project : projectList){
-            list.add(new PopularProjectReadResponseDto(project));
-        }
-        return list;
     }
 }

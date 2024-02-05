@@ -8,8 +8,8 @@ import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDt
 public interface ProjectService {
     public ResponseEntity<?> createProject(ProjectCreateRequestDto dto);
     public ResponseEntity<?> modifyProject(ProjectModifyRequestDto dto);
-    public ResponseEntity<?> deleteProject(long projectId);
+    public ResponseEntity<?> deleteProject(Long projectId);
     public ResponseEntity<?> readPopularProjectList();
-    public ResponseEntity<?> readProjectList(int size, int page);
-    public ResponseEntity<?> readProject(long projectId);
+    public ResponseEntity<?> readProjectList(Integer size, Integer page);
+    public ResponseEntity<?> readProject(Long projectId);
 }

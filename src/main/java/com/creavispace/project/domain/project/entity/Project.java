@@ -77,10 +77,10 @@ public class Project extends BaseTimeEntity{
     @OneToMany(mappedBy = "projectId")
     private List<ProjectLike> likeList;
 
-    @OneToMany(mappedBy = "projectId")
+    @OneToMany(mappedBy = "project")
     private List<ProjectMember> memberList;
 
-    @OneToMany(mappedBy = "projectId")
+    @OneToMany(mappedBy = "project")
     private List<ProjectTechStack> techStackList;
 
     public void modify(ProjectModifyRequestDto dto){

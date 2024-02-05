@@ -43,7 +43,7 @@ public class ProjectController {
     }
     
     @DeleteMapping(DELETE_PROJECT)
-    public ResponseEntity<?> deleteProject(@PathVariable("projectId") long projectId){
+    public ResponseEntity<?> deleteProject(@PathVariable("projectId") Long projectId){
         return projectService.deleteProject(projectId);
     }
 
@@ -54,19 +54,15 @@ public class ProjectController {
 
     @GetMapping(READ_PROJECT_LIST)
     public ResponseEntity<?> readProjectList(
-        @RequestParam(value = "size", required = false, defaultValue = "6") int size,
-        @RequestParam(value = "page", required = false, defaultValue = "1") int page
+        @RequestParam(value = "size", required = false, defaultValue = "6") Integer size,
+        @RequestParam(value = "page", required = false, defaultValue = "1") Integer page
         ) {
         return projectService.readProjectList(size, page);
     }
 
     @GetMapping(READ_PROJECT)
-    public ResponseEntity<?> readProject(@PathVariable("projectId") long projectId) {
+    public ResponseEntity<?> readProject(@PathVariable("projectId") Long projectId) {
         return projectService.readProject(projectId);
     }
-    
-
-
-    
     
 }
