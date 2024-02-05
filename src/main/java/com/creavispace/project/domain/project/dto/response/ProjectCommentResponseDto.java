@@ -3,6 +3,7 @@ package com.creavispace.project.domain.project.dto.response;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.creavispace.project.domain.comment.entity.ProjectComment;
 
@@ -31,12 +32,9 @@ public class ProjectCommentResponseDto {
         // this.modifiedDate = projectComment.getModifiedDate();
     }
 
-    public static List<ProjectCommentResponseDto> copyList(List<ProjectComment> commentList){
-        List<ProjectCommentResponseDto> list = new ArrayList<>();
-        if(commentList == null) return list;
-        for(ProjectComment projectComment : commentList){
-            list.add(new ProjectCommentResponseDto(projectComment));
-        }
-        return list;
+    public static List<ProjectCommentResponseDto> copyList(List<ProjectComment> comments){
+        return comments.stream()
+            .map(comment -> new ProjectCommentResponseDto(comment))
+            .collect(Collectors.toList());
     }
 }

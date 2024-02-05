@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.creavispace.project.domain.project.dto.request.ProjectMemberDto;
+import com.creavispace.project.domain.project.dto.request.ProjectMemberCreateRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,11 +14,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectMember {
@@ -40,6 +43,12 @@ public class ProjectMember {
     private Long projectId;
 
     private String position;
+
+    public ProjectMember(ProjectMemberCreateRequestDto dto, Long projectId){
+        this.memberId = dto.getMemberId();
+        this.position = dto.getPosition();
+        this.projectId = projectId;
+    }
 
     public ProjectMember(ProjectMemberDto dto, Long projectId){
         this.id = dto.getId();

@@ -4,37 +4,40 @@ import java.util.List;
 
 import com.creavispace.project.domain.bookmark.entity.ProjectBookmark;
 import com.creavispace.project.domain.comment.entity.ProjectComment;
+import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.like.entity.ProjectLike;
-import com.creavispace.project.domain.project.dto.request.ProjectCreateRequestDto;
+import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Project {
+public class Project extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @ManyToOne(targetEntity = Member.class)
-    // @JoinColumn(name = "member_id", nullable = false, insertable = false, updatable = false)
-    // private Member member;
-
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -79,20 +82,6 @@ public class Project {
 
     @OneToMany(mappedBy = "projectId")
     private List<ProjectTechStack> techStackList;
-
-    public Project(ProjectCreateRequestDto dto, long memberId){
-        this.memberId = memberId;
-        this.field = dto.getField();
-        this.title = dto.getTitle();
-        this.content = dto.getContent();
-        this.link = dto.getLink();
-        this.thumbnail = dto.getThumbnail();
-        this.bannerContent = dto.getBannerContent();
-        this.kind = ProjectKind.valueOf(dto.getKind());
-        this.status = true;
-        this.viewCount = 0;
-        this.weekViewCount = 0;
-    }
 
     public void modify(ProjectModifyRequestDto dto){
         this.field = dto.getField();

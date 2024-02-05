@@ -2,6 +2,7 @@ package com.creavispace.project.domain.project.dto.response;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.creavispace.project.domain.project.entity.ProjectTechStack;
 
@@ -27,11 +28,8 @@ public class ProjectTechStackResponseDto {
     }
 
     public static List<ProjectTechStackResponseDto> copyList(List<ProjectTechStack> techStackList){
-        List<ProjectTechStackResponseDto> list = new ArrayList<>();
-        if(techStackList == null) return list;
-        for(ProjectTechStack projectTechStack : techStackList){
-            list.add(new ProjectTechStackResponseDto(projectTechStack));
-        }
-        return list;
+        return techStackList.stream()
+            .map(techStack -> new ProjectTechStackResponseDto(techStack))
+            .collect(Collectors.toList());
     }
 }

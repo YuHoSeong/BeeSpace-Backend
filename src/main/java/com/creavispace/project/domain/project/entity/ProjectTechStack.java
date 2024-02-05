@@ -3,6 +3,7 @@ package com.creavispace.project.domain.project.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.creavispace.project.domain.project.dto.request.ProjectTechStackCreateRequestDto;
 import com.creavispace.project.domain.project.dto.request.ProjectTechStackDto;
 
 import jakarta.persistence.Column;
@@ -38,6 +39,11 @@ public class ProjectTechStack {
 
     @Column(name = "project_id", nullable = false)
     private Long projectId;
+
+    public ProjectTechStack(ProjectTechStackCreateRequestDto dto, Long projectId){
+        this.techStackId = dto.getTechStackId();
+        this.projectId = dto.getProjectId();
+    }
 
     public ProjectTechStack(ProjectTechStackDto dto, Long projectId){
         this.id = dto.getId();

@@ -34,7 +34,7 @@ public class ProjectReadResponseDto {
     public ProjectReadResponseDto(Project project){
         this.id = project.getId();
         this.field = project.getField();
-        this.memberId = project.getMemberId();
+        this.memberId = project.getMember().getId();
         // this.memberName = project.getMember().getMemberName();
         this.likeCount = project.getLikeList().size();
         this.viewCount = project.getViewCount();

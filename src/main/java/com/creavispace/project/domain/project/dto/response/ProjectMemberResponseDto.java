@@ -2,6 +2,7 @@ package com.creavispace.project.domain.project.dto.response;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.creavispace.project.domain.project.entity.ProjectMember;
 
@@ -28,12 +29,9 @@ public class ProjectMemberResponseDto {
         this.position = projectMember.getPosition();
     }
 
-    public static List<ProjectMemberResponseDto> copyList(List<ProjectMember> projectMemberList){
-        List<ProjectMemberResponseDto> list = new ArrayList<>();
-        if(projectMemberList == null) return list;
-        for(ProjectMember projectMember : projectMemberList){
-            list.add(new ProjectMemberResponseDto(projectMember));
-        }
-        return list;
+    public static List<ProjectMemberResponseDto> copyList(List<ProjectMember> projectMembers){
+        return projectMembers.stream()
+            .map(member -> new ProjectMemberResponseDto(member))
+            .collect(Collectors.toList());
     }
 }
