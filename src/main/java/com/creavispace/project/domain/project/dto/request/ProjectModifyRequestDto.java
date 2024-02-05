@@ -20,6 +20,7 @@ public class ProjectModifyRequestDto {
     private String link;
     private String thumbnail;
     private String bannerContent;
-    private List<ProjectMemberDto> memberList;
-    private List<ProjectTechStackDto> techStackList;
+    private List<ProjectMemberModifyRequestDto> memberList;
+    private List<ProjectTechStackModifyRequestDto> techStackList;
+
 }

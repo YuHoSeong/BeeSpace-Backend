@@ -20,5 +20,5 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Lo
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM project_member WHERE id NOT IN :idList",nativeQuery = true)
-    public void deleteByNotModifyLinkIdList(@Param("idList") List<Long> modifyMemberIdList);
+    public void deleteByNotModifyMemberIdList(@Param("idList") List<Long> modifyMemberIdList);
 }

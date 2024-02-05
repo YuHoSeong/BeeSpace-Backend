@@ -20,5 +20,5 @@ public interface ProjectTechStackRepository extends JpaRepository<ProjectTechSta
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM project_tech_stack WHERE id NOT IN :idList",nativeQuery = true)
-    public void deleteByNotModifyLinkIdList(@Param("idList") List<Long> modifyTechStackIdList);
+    public void deleteByNotModifyTechStackIdList(@Param("idList") List<Long> modifyTechStackIdList);
 }

@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectMemberDto {
+public class ProjectTechStackModifyRequestDto {
     private Long id;
-    private Long memberId;
-    private String position;
+    private Long techStackId;
 
 }

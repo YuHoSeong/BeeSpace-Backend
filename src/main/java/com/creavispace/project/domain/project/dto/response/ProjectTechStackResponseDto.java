@@ -1,9 +1,9 @@
 package com.creavispace.project.domain.project.dto.response;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.creavispace.project.domain.common.entity.TechStack;
 import com.creavispace.project.domain.project.entity.ProjectTechStack;
 
 import lombok.AllArgsConstructor;
@@ -17,14 +17,14 @@ public class ProjectTechStackResponseDto {
     private Long id;
     private Long techStackId;
     private String techStackName;
-    private String url;
+    private String iconUrl;
 
     public ProjectTechStackResponseDto(ProjectTechStack projectTechStack){
-        // TechStack techStack = projectTechStack.getTechStack();
+        TechStack techStack = projectTechStack.getTechStack();
         this.id = projectTechStack.getId();
-        // this.techStackId = techStack.getId();
-        // this.techStackName = techStack.getTechStackName();
-        // this.url = techStack.getUrl();
+        this.techStackId = techStack.getId();
+        this.techStackName = techStack.getTechStack();
+        this.iconUrl = techStack.getIconUrl();
     }
 
     public static List<ProjectTechStackResponseDto> copyList(List<ProjectTechStack> techStackList){

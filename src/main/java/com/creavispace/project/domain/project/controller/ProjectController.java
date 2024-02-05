@@ -33,27 +33,27 @@ public class ProjectController {
     private static final String READ_PROJECT = "/{projectId}";
 
     @PostMapping(CREATE_PROJECT)
-    public ResponseEntity createProject(@RequestBody ProjectCreateRequestDto dto) {
+    public ResponseEntity<?> createProject(@RequestBody ProjectCreateRequestDto dto) {
         return projectService.createProject(dto);
     }
 
     @PutMapping(MODIFY_PROJECT)
-    public ResponseEntity modifyProject(@RequestBody ProjectModifyRequestDto dto) {
+    public ResponseEntity<?> modifyProject(@RequestBody ProjectModifyRequestDto dto) {
         return projectService.modifyProject(dto);
     }
     
     @DeleteMapping(DELETE_PROJECT)
-    public ResponseEntity deleteProject(@PathVariable("projectId") long projectId){
+    public ResponseEntity<?> deleteProject(@PathVariable("projectId") long projectId){
         return projectService.deleteProject(projectId);
     }
 
     @GetMapping(READ_POPULAR_PROJECT)
-    public ResponseEntity readPopularProjectList() {
+    public ResponseEntity<?> readPopularProjectList() {
         return projectService.readPopularProjectList();
     }
 
     @GetMapping(READ_PROJECT_LIST)
-    public ResponseEntity readProjectList(
+    public ResponseEntity<?> readProjectList(
         @RequestParam(value = "size", required = false, defaultValue = "6") int size,
         @RequestParam(value = "page", required = false, defaultValue = "1") int page
         ) {
@@ -61,7 +61,7 @@ public class ProjectController {
     }
 
     @GetMapping(READ_PROJECT)
-    public ResponseEntity readProject(@PathVariable("projectId") long projectId) {
+    public ResponseEntity<?> readProject(@PathVariable("projectId") long projectId) {
         return projectService.readProject(projectId);
     }
     
