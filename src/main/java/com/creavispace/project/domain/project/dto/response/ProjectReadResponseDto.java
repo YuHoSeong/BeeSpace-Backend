@@ -23,11 +23,11 @@ public class ProjectReadResponseDto {
     private LocalDateTime createdDate;
     private String title;
     private String content;
+    private String link;
     private Boolean like;
     private Boolean bookmark;
     private ProjectKind kind;
     private List<ProjectMemberResponseDto> memberList;
-    private List<ProjectLinkResponseDto> linkList;
     private List<ProjectTechStackResponseDto> techStackList;
     private List<ProjectCommentResponseDto> commentList;
 
@@ -41,11 +41,11 @@ public class ProjectReadResponseDto {
         // this.createdDate = project.getCreatedDate();
         this.title = project.getTitle();
         this.content = project.getContent();
+        this.link = project.getLink();
         this.like = false;
         this.bookmark = false;
         this.kind = project.getKind();
         this.memberList = ProjectMemberResponseDto.copyList(project.getMemberList());
-        this.linkList = ProjectLinkResponseDto.copyList(project.getLinkList());
         this.techStackList = ProjectTechStackResponseDto.copyList(project.getTechStackList());
         this.commentList = ProjectCommentResponseDto.copyList(project.getCommentList());
     }
