@@ -1,9 +1,9 @@
 package com.creavispace.project.domain.project.dto.response;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.project.entity.ProjectMember;
 
 import lombok.AllArgsConstructor;
@@ -17,16 +17,16 @@ public class ProjectMemberResponseDto {
     private Long id;
     private Long memberId;
     private String memberEmail;
-    private String memberProfile;
-    private String position;
+    private String profileUrl;
+    private String positionName;
 
     public ProjectMemberResponseDto(ProjectMember projectMember){
-        // Member member = projectMember.getMember();
+        Member member = projectMember.getMember();
         this.id = projectMember.getId();
-        // this.memberId = member.getId();
-        // this.memberEmail = member.getMemberEmail();
-        // this.memberProfile = member.getMemberProfile();
-        this.position = projectMember.getPosition();
+        this.memberId = member.getId();
+        this.memberEmail = member.getMemberEmail();
+        this.profileUrl = member.getProfileUrl();
+        // this.positionName = projectMember.getPosition().getName();
     }
 
     public static List<ProjectMemberResponseDto> copyList(List<ProjectMember> projectMembers){

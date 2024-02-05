@@ -26,7 +26,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -84,13 +84,13 @@ public class Project extends BaseTimeEntity{
     private List<ProjectTechStack> techStackList;
 
     public void modify(ProjectModifyRequestDto dto){
+        this.kind = dto.getKind();
         this.field = dto.getField();
         this.title = dto.getTitle();
         this.content = dto.getContent();
         this.link = dto.getLink();
         this.thumbnail = dto.getThumbnail();
         this.bannerContent = dto.getBannerContent();
-        this.kind = dto.getKind();
     }
 
     public void disable(){
