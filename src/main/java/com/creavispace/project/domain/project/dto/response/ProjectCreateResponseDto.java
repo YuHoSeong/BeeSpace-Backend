@@ -7,10 +7,12 @@ import com.creavispace.project.domain.project.entity.Project;
 import com.creavispace.project.domain.project.entity.ProjectKind;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectCreateResponseDto {
@@ -27,20 +29,4 @@ public class ProjectCreateResponseDto {
     private LocalDateTime modifiedDate;
     private List<ProjectMemberResponseDto> memberList;
     private List<ProjectTechStackResponseDto> techStackList;
-
-    public ProjectCreateResponseDto(Project project){
-        this.id = project.getId();
-        this.kind = project.getKind();
-        this.field = project.getField();
-        this.title = project.getTitle();
-        this.link = project.getLink();
-        this.content = project.getContent();
-        this.thumbnail = project.getThumbnail();
-        this.bannerContent = project.getBannerContent();
-        this.viewCount = project.getViewCount();
-        // this.createdDate = project.getCreatedDate();
-        // this.modifiedDate = project.getModifiedDate();
-        this.memberList = ProjectMemberResponseDto.copyList(project.getMemberList());
-        this.techStackList = ProjectTechStackResponseDto.copyList(project.getTechStackList());
-    }
 }
