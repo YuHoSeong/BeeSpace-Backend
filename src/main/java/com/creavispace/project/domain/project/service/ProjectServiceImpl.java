@@ -12,10 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.creavispace.project.domain.bookmark.repository.ProjectBookmarkRepository;
 import com.creavispace.project.domain.common.dto.FailResponseDto;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.common.entity.TechStack;
 import com.creavispace.project.domain.common.repository.TechStackRepository;
+import com.creavispace.project.domain.like.repository.ProjectLikeRepository;
 import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.member.repository.MemberRepository;
 import com.creavispace.project.domain.project.dto.request.ProjectCreateRequestDto;
@@ -51,6 +53,8 @@ public class ProjectServiceImpl implements ProjectService{
     private final TechStackRepository techStackRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final ProjectTechStackRepository projectTechStackRepository;
+    private final ProjectLikeRepository projectLikeRepository;
+    private final ProjectBookmarkRepository projectBookmarkRepository;
 
     @Override
     @Transactional
@@ -327,78 +331,139 @@ public class ProjectServiceImpl implements ProjectService{
             .techStackList(ProjectTechStackDtos)
             .build();
 
+        // 성공적인 응답 반환
         return ResponseEntity.ok().body(new SuccessResponseDto(true, "프로젝트 게시글의 수정이 완료되었습니다.", modify));
     }
 
-    /** 
-     * 프로젝트 게시글을 비활성화 하는 기능
-     */
     @Override
     @Transactional
-    public ResponseEntity<?> deleteProject(long projectId) {
-        // todo : JWT의 정보로 project작성자와 관리자권한에 대한 확인 로직 필요
-        // long memberId = "토큰정보";
+    public ResponseEntity<?> deleteProject(Long projectId) {
+        // todo 현재 토큰 미구현
+        // jwt 토큰
+        long memberId = 1;
 
-        Project project = projectRepository.findById(projectId).orElse(null);
-        if(project == null)
-            return ResponseEntity.status(404).body("게시글이 존재하지 않습니다.");
-            // return ResponseEntity.status(404).body(new FailResponseDto(false,"게시글이 존재하지 않습니다.", 404));
+        // 회원 ID로 회원을 찾음
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+
+        // 해당 ID에 대한 회원이 존재하지 않을 경우 실패 응답 반환
+        if(optionalMember.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "해당 회원이 존재하지 않습니다.", 400));
+
+        // projectId 의 프로젝트 ID로 프로젝트 게시글 찾아옴
+        Optional<Project> optionalProject = projectRepository.findByIdAndStatusTrue(projectId);
+
+        // 해당 ID에 대한 프로젝트 게시글이 존재하지 않을 경우 실패 응답 반환
+        if(optionalProject.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "해당 프로젝트 게시글이 존재하지 않습니다.", 400));
+
+        // Optional에서 프로젝트 게시글 객체 찾아옴
+        Project project = optionalProject.get();
         
-        // if(memberId != project.getMemberId() && !member.getRole().equals("Administrator")){
-        //     return ResponseEntity.status(401).body(new FailResponseDto(false,"프로젝트 게시글을 삭제할 수 있는 권한이 없습니다.", 401));
-        // }
+        // 작성자도 아니고 관리자도 아니면 실패 응답 반환
+        if(project.getMember().getId() != memberId && !optionalMember.get().getRole().equals("Administrator")){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new FailResponseDto(false,"글을 수정할 수 있는 권한이 없습니다.",401));
+        }
 
+        // 프로젝트 비활성화 Status = false
         project.disable();
+
+        // 프로젝트 상태 저장
         projectRepository.save(project);
 
-        return ResponseEntity.ok().body("프로젝트 게시글 삭제가 완료되었습니다.");
+        // 성공적인 응답 반환
+        return ResponseEntity.ok().body(new SuccessResponseDto(true, "프로젝트 게시글 삭제가 완료되었습니다.", projectId));
     }
 
     @Override
     public ResponseEntity<?> readPopularProjectList() {
-
+        // 인기 프로젝트 5개 조회(주간조회수 기준)
         List<Project> projectList = projectRepository.findTop5ByStatusTrueOrderByWeekViewCountDesc();
 
-        List<PopularProjectReadResponseDto> readPopularList = PopularProjectReadResponseDto.copyList(projectList);
+        // 인기 프로젝트 정보를 DTO로 변환
+        List<PopularProjectReadResponseDto> readPopularList = projectList.stream()
+            .map(project -> new PopularProjectReadResponseDto(project))
+            .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(readPopularList);
+        // 성공적인 응답 반환
+        return ResponseEntity.ok().body(new SuccessResponseDto(true, "인기 프로젝트 조회가 완료 되었습니다.", readPopularList));
     }
 
     @Override
-    public ResponseEntity<?> readProjectList(int size, int page) {
+    public ResponseEntity<?> readProjectList(Integer size, Integer page) {
+        // 프로젝트 페이지네이션 조회
         Pageable pageRequest = PageRequest.of(page-1, size);
         Page<Project> pageable = projectRepository.findAllByStatusTrue(pageRequest);
+
+        // 해당 페이지에 게시글이 없을 경우 실패 응답 반환
+        if(!pageable.hasContent()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "해당 페이지에 프로젝트 게시글이 없습니다.", 400));
+        
+        // 해당 페이지의 게시글 찾아옴
         List<Project> projectList = pageable.getContent();
 
-        List<ProjectListReadResponseDto> readList = ProjectListReadResponseDto.copyList(projectList);
+        // 프로젝트 게시글의 정보를 DTO로 변환
+        List<ProjectListReadResponseDto> readList = projectList.stream()
+            .map(project -> new ProjectListReadResponseDto(project))
+            .collect(Collectors.toList());
 
-        // todo : JWT 토큰이 있다면 
-        // if(isJwt){
-        //     for(ProjectListReadResponseDto read : readList){
-        //         Long projectId = read.getId();
-        //         read.setLike(projectLikeRepository.existsByProjectIdAndMemberId(projectId, memberId));
-        //         read.setBookmark(projectBookmarkRepository.existsByProjectIdAndMemberId(projectId, memberId));
-        //     }
-        // }
+        // todo 현재 토큰 미구현
+        // 토큰이 있다면
+        Boolean isJwt = true;
+        if(isJwt){
+            // jwt 토큰
+            long memberId = 1;
+            // 프로젝트 게시글 정보에 좋아요, 북마크 정보 추가
+            readList.stream()
+                .map(project -> project.toBuilder()
+                        .like(projectLikeRepository.existsByProjectIdAndMemberId(project.getId(), memberId))
+                        .bookmark(projectBookmarkRepository.existsByProjectIdAndMemberId(project.getId(), memberId))
+                        .build())
+                .collect(Collectors.toList());
+        }
 
-        return ResponseEntity.ok().body(readList);
+        // 성공적인 응답 반환
+        return ResponseEntity.ok().body(new SuccessResponseDto(true, "프로젝트 게시글 리스트 조회가 완료되었습니다.", readList));
     }
 
     @Override
-    public ResponseEntity readProject(long projectId) {
-        Project project = projectRepository.findByIdAndStatusTrue(projectId);
-        if(project == null)
-            return ResponseEntity.status(404).body("게시글이 존재하지 않습니다.");
-            // return ResponseEntity.status(404).body(new FailResponseDto(false,"게시글이 존재하지 않습니다.", 404));
+    public ResponseEntity<?> readProject(Long projectId) {
+        // 해당 ID로 활성화된 프로젝트 게시글 찾아옴
+        Optional<Project> optionalProject = projectRepository.findByIdAndStatusTrue(projectId);
         
-        ProjectReadResponseDto read = new ProjectReadResponseDto(project);
-        // todo : JWT 토큰이 있다면
-        // if(isJwt){
-        //     read.setLike(projectLikeRepository.existsByProjectIdAndMemberId(projectId, memberId));
-        //     read.setBookmark(projectBookmarkRepository.existsByProjectIdAndMemberId(projectId, memberId));
-        // }
+        // todo 현재 토큰 미구현
+        // 토큰이 있다면
+        Boolean isJwt = true;
+        if(isJwt){
+            // jwt 토큰
+            long memberId = 1;
+            // 해당 프로젝트 ID의 회원정보가 토큰 회원 ID와 일치하면
+            if(projectRepository.existsByIdAndMemberId(projectId,memberId)){
+                // 해당 ID로 프로젝트 게시글 찾아옴
+                optionalProject = projectRepository.findById(projectId);
+            }
+        }
+        
+        // 해당 ID에 대한 프로젝트 게시글이 존재하지 않을 경우 실패 응답 반환
+        if(optionalProject.isEmpty())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "해당 프로젝트 게시글이 존재하지 않습니다.", 400));
 
-        return ResponseEntity.ok().body(read);
+        // Optional에서 프로젝트 게시글 객체 찾아옴
+        Project project = optionalProject.get();
+        
+        // 프로젝트 게시글 정보를 DTO로 변환
+        ProjectReadResponseDto read = new ProjectReadResponseDto(project);
+
+        // todo 현재 토큰 미구현
+        // 토큰이 있다면
+        if(isJwt){
+            // jwt 토큰
+            long memberId = 1;
+            // 프로젝트 게시글 정보에 좋아요, 북마크 정보 추가
+            read.toBuilder()
+                .like(projectLikeRepository.existsByProjectIdAndMemberId(project.getId(), memberId))
+                .bookmark(projectBookmarkRepository.existsByProjectIdAndMemberId(project.getId(), memberId))
+                .build();
+        }
+
+        // 성공적인 응답 반환
+        return ResponseEntity.ok().body(new SuccessResponseDto(true, "프로젝트 게시글 상세조회가 완료되었습니다.", read));
     }
 
 
