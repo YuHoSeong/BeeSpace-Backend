@@ -48,6 +48,8 @@ public class Project {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    private String link;
+
     @Column(name = "thumbnail")
     private String thumbnail;
 
@@ -62,9 +64,6 @@ public class Project {
 
     @OneToMany(mappedBy = "projectId")
     private List<ProjectImage> imageList;
-
-    @OneToMany(mappedBy = "projectId")
-    private List<ProjectLink> linkList;
 
     @OneToMany(mappedBy = "projectId")
     private List<ProjectComment> commentList;
@@ -86,9 +85,10 @@ public class Project {
         this.field = dto.getField();
         this.title = dto.getTitle();
         this.content = dto.getContent();
+        this.link = dto.getLink();
         this.thumbnail = dto.getThumbnail();
         this.bannerContent = dto.getBannerContent();
-        this.kind = dto.getKindAsEnum();
+        this.kind = ProjectKind.valueOf(dto.getKind());
         this.status = true;
         this.viewCount = 0;
         this.weekViewCount = 0;
@@ -98,6 +98,7 @@ public class Project {
         this.field = dto.getField();
         this.title = dto.getTitle();
         this.content = dto.getContent();
+        this.link = dto.getLink();
         this.thumbnail = dto.getThumbnail();
         this.bannerContent = dto.getBannerContent();
         this.kind = dto.getKind();
@@ -105,6 +106,14 @@ public class Project {
 
     public void disable(){
         this.status = false;
+    }
+
+    public void addMemberList(List<ProjectMember> memberList){
+        this.memberList = memberList;
+    }
+
+    public void addTechStackList(List<ProjectTechStack> techStackList){
+        this.techStackList = techStackList;
     }
 
 }

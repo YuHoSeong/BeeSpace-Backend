@@ -17,19 +17,19 @@ public class ProjectListReadResponseDto {
     private Long id;
     private ProjectKind kind;
     private String title;
+    private String link;
     private String thumbnail;
     private String bannerContent;
     private Boolean like;
     private Boolean bookmark;
-    private List<ProjectLinkResponseDto> linkList;
 
     public ProjectListReadResponseDto(Project project){
         this.id = project.getId();
         this.kind = project.getKind();
         this.title = project.getTitle();
+        this.link = project.getLink();
         this.thumbnail = project.getThumbnail();
         this.bannerContent = project.getBannerContent();
-        this.linkList = ProjectLinkResponseDto.copyList(project.getLinkList());
         this.like = false;
         this.bookmark = false;
     }

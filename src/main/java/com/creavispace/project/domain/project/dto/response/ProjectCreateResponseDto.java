@@ -19,6 +19,7 @@ public class ProjectCreateResponseDto {
     private String field;
     private String title;
     private String content;
+    private String link;
     private String thumbnail;
     private String bannerContent;
     private Integer viewCount;
@@ -26,13 +27,13 @@ public class ProjectCreateResponseDto {
     private LocalDateTime modifiedDate;
     private List<ProjectMemberResponseDto> memberList;
     private List<ProjectTechStackResponseDto> techStackList;
-    private List<ProjectLinkResponseDto> linkList;
 
     public ProjectCreateResponseDto(Project project){
         this.id = project.getId();
         this.kind = project.getKind();
         this.field = project.getField();
         this.title = project.getTitle();
+        this.link = project.getLink();
         this.content = project.getContent();
         this.thumbnail = project.getThumbnail();
         this.bannerContent = project.getBannerContent();
@@ -41,6 +42,5 @@ public class ProjectCreateResponseDto {
         // this.modifiedDate = project.getModifiedDate();
         this.memberList = ProjectMemberResponseDto.copyList(project.getMemberList());
         this.techStackList = ProjectTechStackResponseDto.copyList(project.getTechStackList());
-        this.linkList = ProjectLinkResponseDto.copyList(project.getLinkList());
     }
 }

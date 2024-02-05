@@ -17,9 +17,9 @@ public class ProjectModifyRequestDto {
     private String field;
     private String title;
     private String content;
+    private String link;
     private String thumbnail;
     private String bannerContent;
     private List<ProjectMemberDto> memberList;
     private List<ProjectTechStackDto> techStackList;
-    private List<ProjectLinkDto> linkList;
 }
