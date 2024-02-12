@@ -23,11 +23,30 @@ public class OAuthAttributes {
         this.email = email;
     }
 
-    public static OAuthAttributes of (String registrationId, String memberNameAttributeName, Map<String, Object> attributes) {
-        return ofGoogle(memberNameAttributeName, attributes);
+    public static OAuthAttributes of(String registrationId, String memberNameAttributeName,
+                                     Map<String, Object> attributes) {
+        if ("google".equals(registrationId)) {
+
+            return ofGoogle(memberNameAttributeName, attributes);
+        }
+
+        return ofNaver("id", attributes);
+    }
+
+    private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
+        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        System.out.println("------------------------네이버 로그인----------------------------");
+
+        return OAuthAttributes.builder()
+                .name((String) response.get("name"))
+                .email((String) response.get("email"))
+                .attributes(response)
+                .nameAttributeKey(userNameAttributeName)
+                .build();
     }
 
     private static OAuthAttributes ofGoogle(String memberNameAttributeName, Map<String, Object> attributes) {
+        System.out.println("------------------------구글 로그인----------------------------");
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
