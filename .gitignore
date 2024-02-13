@@ -39,3 +39,4 @@ out/
 
 ### oauth propereties ###
 application-oauth.properties
+application-s3.properties
