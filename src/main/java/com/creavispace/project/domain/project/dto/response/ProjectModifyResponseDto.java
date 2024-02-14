@@ -27,8 +27,8 @@ public class ProjectModifyResponseDto {
     private Integer viewCount;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
-    private List<ProjectMemberResponseDto> memberList;
-    private List<ProjectTechStackResponseDto> techStackList;
+    private List<ProjectMemberResponseDto> projectMemberList;
+    private List<ProjectTechStackResponseDto> projectTechStackList;
 
     public ProjectModifyResponseDto(Project project){
         this.id = project.getId();
@@ -40,9 +40,9 @@ public class ProjectModifyResponseDto {
         this.thumbnail = project.getThumbnail();
         this.bannerContent = project.getBannerContent();
         this.viewCount = project.getViewCount();
-        // this.createdDate = project.getCreatedDate();
-        // this.modifiedDate = project.getModifiedDate();
-        this.memberList = ProjectMemberResponseDto.copyList(project.getMemberList());
-        this.techStackList = ProjectTechStackResponseDto.copyList(project.getTechStackList());
+        this.createdDate = project.getCreatedDate();
+        this.modifiedDate = project.getModifiedDate();
+        this.projectMemberList = ProjectMemberResponseDto.copyList(project.getMemberList());
+        this.projectTechStackList = ProjectTechStackResponseDto.copyList(project.getTechStackList());
     }
 }
