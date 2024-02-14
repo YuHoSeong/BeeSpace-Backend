@@ -40,7 +40,7 @@ public class ProjectCommentController {
     }
 
     @DeleteMapping(DELETE_PROJECT_COMMENT)
-    public ResponseEntity<?> deleteProjectComment(@PathVariable("projectCommentId") long projectCommentId){
+    public ResponseEntity<?> deleteProjectComment(@PathVariable("projectCommentId") Long projectCommentId){
         return projectCommentService.deleteProjectComment(projectCommentId);
     }
     

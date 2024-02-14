@@ -29,7 +29,7 @@ public class ProjectBookmarkServiceImpl implements ProjectBookmarkService{
 
     @Override
     @Transactional
-    public ResponseEntity<?> projectBookmark(long projectId) {
+    public ResponseEntity<?> projectBookmark(Long projectId) {
         // todo : JWT 토큰의 member정보 사용 예정
         Long memberId =1L;
 
