@@ -26,6 +26,6 @@ public class ProjectCreateResponseDto {
     private Integer viewCount;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
-    private List<ProjectMemberResponseDto> memberList;
-    private List<ProjectTechStackResponseDto> techStackList;
+    private List<ProjectMemberResponseDto> projectMemberList;
+    private List<ProjectTechStackResponseDto> projectTechStackList;
 }

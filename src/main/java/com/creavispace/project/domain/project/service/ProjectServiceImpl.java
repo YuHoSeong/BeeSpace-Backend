@@ -91,11 +91,11 @@ public class ProjectServiceImpl implements ProjectService{
         projectRepository.save(project);
 
         // 프로젝트 맴버 정보가 있다면
-        if(dto.getMemberList() != null){
+        if(dto.getProjectMemberList() != null){
             // 저장할 맴버리스트 객체 생성
             List<ProjectMember> projectMembers = new ArrayList<>();
 
-            for(ProjectMemberCreateRequestDto projectMemberDto : dto.getMemberList()){
+            for(ProjectMemberCreateRequestDto projectMemberDto : dto.getProjectMemberList()){
                 // 리스트의 맴버 ID로 회원을 찾음
                 Optional<Member> optionalProjectMember = memberRepository.findById(projectMemberDto.getMemberId());
 
@@ -117,11 +117,11 @@ public class ProjectServiceImpl implements ProjectService{
         }
         
         // 프로젝트 기술스택 정보가 있을 경우 저장
-        if(dto.getTechStackList() != null){
+        if(dto.getProjectTechStackList() != null){
             // 저장할 기술스택 리스트 객체 생성
             List<ProjectTechStack> projectTechStacks = new ArrayList<>();
             
-            for(ProjectTechStackCreateRequestDto projectTechStackDto : dto.getTechStackList()){
+            for(ProjectTechStackCreateRequestDto projectTechStackDto : dto.getProjectTechStackList()){
                 // 리스트의 기술스택 ID로 기술스택을 찾음
                 Optional<TechStack> optionalProjectTechStack = techStackRepository.findById(projectTechStackDto.getTechStackId());
 
@@ -172,8 +172,8 @@ public class ProjectServiceImpl implements ProjectService{
             .viewCount(project.getViewCount())
             .createdDate(project.getCreatedDate())
             .modifiedDate(project.getModifiedDate())
-            .memberList(ProjectMemberDtos)
-            .techStackList(ProjectTechStackDtos)
+            .projectMemberList(ProjectMemberDtos)
+            .projectTechStackList(ProjectTechStackDtos)
             .build();
 
         // 성공적인 응답 반환
@@ -222,11 +222,11 @@ public class ProjectServiceImpl implements ProjectService{
         projectRepository.save(project);
 
         // MemberList가 있다면
-        if(dto.getMemberList() !=null){
+        if(dto.getProjectMemberList() !=null){
             // 저장할 맴버리스트 객체 생성
             List<ProjectMember> projectMembers = new ArrayList<>();
 
-            for(ProjectMemberModifyRequestDto projectMemberDto : dto.getMemberList()){
+            for(ProjectMemberModifyRequestDto projectMemberDto : dto.getProjectMemberList()){
                 Optional<Member> optionalProjectMember = memberRepository.findById(projectMemberDto.getMemberId());
 
                 // 해당 ID에 대한 회원이 존재하지 않을 경우 실패 응답 반환
@@ -245,13 +245,13 @@ public class ProjectServiceImpl implements ProjectService{
             }
             
             // 삭제된 맴버를 찾기위한 수정 프로젝트 맴버 ID 리스트 생성
-            List<Long> modifiedMemberIdList = dto.getMemberList().stream()
+            List<Long> modifiedProjectMemberIdList = dto.getProjectMemberList().stream()
                 .map(projectMember -> projectMember.getId())
                 .filter(id -> id != null)
                 .collect(Collectors.toList());
     
             // 기존 프로젝트 맴버에서 삭제된 맴버만 삭제
-            projectMemberRepository.deleteByNotModifyMemberIdList(modifiedMemberIdList);
+            projectMemberRepository.deleteByNotModifyMemberIdList(modifiedProjectMemberIdList);
 
             // 수정 및 추가된 프로젝트 맴버 저장
             projectMemberRepository.saveAll(projectMembers);
@@ -261,11 +261,11 @@ public class ProjectServiceImpl implements ProjectService{
         }
 
         // TechStackList가 있다면
-        if(dto.getTechStackList() != null){
+        if(dto.getProjectTechStackList() != null){
             // 저장할 기술스택 리스트 객체 생성
             List<ProjectTechStack> projectTechStacks = new ArrayList<>();
             
-            for(ProjectTechStackModifyRequestDto projectTechStackDto : dto.getTechStackList()){
+            for(ProjectTechStackModifyRequestDto projectTechStackDto : dto.getProjectTechStackList()){
                 // 리스트의 기술스택 ID로 기술스택을 찾음
                 Optional<TechStack> optionalProjectTechStack = techStackRepository.findById(projectTechStackDto.getTechStackId());
 
@@ -284,13 +284,13 @@ public class ProjectServiceImpl implements ProjectService{
             }
 
             // 삭제된 기술스택을 찾기위한 수정 프로젝트 기술스택 ID 리스트 생성
-            List<Long> modifiedTechStackIdList = dto.getTechStackList().stream()
+            List<Long> modifiedProjectTechStackIdList = dto.getProjectTechStackList().stream()
                 .map(projectTechStack -> projectTechStack.getId())
                 .filter(id -> id != null)
                 .collect(Collectors.toList());
 
             // 기존 프로젝트 기술스택에서 삭제된 기술스택만 삭제
-            projectTechStackRepository.deleteByNotModifyTechStackIdList(modifiedTechStackIdList);
+            projectTechStackRepository.deleteByNotModifyTechStackIdList(modifiedProjectTechStackIdList);
 
             // 수정 및 추가된 프로젝트 기술스택 저장
             projectTechStackRepository.saveAll(projectTechStacks);
@@ -327,8 +327,8 @@ public class ProjectServiceImpl implements ProjectService{
             .viewCount(project.getViewCount())
             .createdDate(project.getCreatedDate())
             .modifiedDate(project.getModifiedDate())
-            .memberList(ProjectMemberDtos)
-            .techStackList(ProjectTechStackDtos)
+            .projectMemberList(ProjectMemberDtos)
+            .projectTechStackList(ProjectTechStackDtos)
             .build();
 
         // 성공적인 응답 반환
