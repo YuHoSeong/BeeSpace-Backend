@@ -22,7 +22,7 @@ public class ProjectBookmarkController {
     private static final String PROJECT_BOOKMARK = "/{projectId}";
 
     @GetMapping(PROJECT_BOOKMARK)
-    public ResponseEntity<?> projectBookmark(@PathVariable("projectId") long projectId) {
+    public ResponseEntity<?> projectBookmark(@PathVariable("projectId") Long projectId) {
         return projectBookmarkService.projectBookmark(projectId);
     }
     

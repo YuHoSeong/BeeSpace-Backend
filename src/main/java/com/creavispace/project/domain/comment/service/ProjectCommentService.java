@@ -8,5 +8,5 @@ import com.creavispace.project.domain.comment.dto.request.ProjectCommentModifyRe
 public interface ProjectCommentService {
     public ResponseEntity<?> createProjectComment(ProjectCommentCreateRequestDto dto);
     public ResponseEntity<?> modifyProjectComment(ProjectCommentModifyRequestDto dto);
-    public ResponseEntity<?> deleteProjectComment(long projectCommentId);
+    public ResponseEntity<?> deleteProjectComment(Long projectCommentId);
 }
