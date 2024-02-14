@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.creavispace.project.domain.comment.entity.ProjectComment;
+import com.creavispace.project.domain.member.entity.Member;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,19 +17,19 @@ import lombok.NoArgsConstructor;
 public class ProjectCommentResponseDto {
     private Long id;
     private Long memberId;
-    private String memberName;
-    private String memberProfile;
+    private String memberNickName;
+    private String memberProfileUrl;
     private String content;
     private LocalDateTime modifiedDate;
 
     public ProjectCommentResponseDto(ProjectComment projectComment){
-        // Member member - projectComment.getMember();
+        Member member = projectComment.getMember();
         this.id = projectComment.getId();
-        this.memberId = projectComment.getMemberId();
-        // this.memberName = member.getMemberName();
-        // this.memberProfile = member.getMemberProfile();
+        this.memberId = member.getId();
+        this.memberNickName = member.getMemberNickname();
+        this.memberProfileUrl = member.getProfileUrl();
         this.content = projectComment.getContent();
-        // this.modifiedDate = projectComment.getModifiedDate();
+        this.modifiedDate = projectComment.getModifiedDate();
     }
 
     public static List<ProjectCommentResponseDto> copyList(List<ProjectComment> comments){
