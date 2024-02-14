@@ -53,7 +53,6 @@ public class Project extends BaseTimeEntity{
 
     private String link;
 
-    @Column(name = "thumbnail")
     private String thumbnail;
 
     @Column(name = "banner_content", nullable = false, columnDefinition = "TEXT")
@@ -65,22 +64,22 @@ public class Project extends BaseTimeEntity{
 
     private Boolean status;
 
-    @OneToMany(mappedBy = "projectId")
+    @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY)
     private List<ProjectImage> imageList;
 
-    @OneToMany(mappedBy = "projectId")
+    @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY)
     private List<ProjectComment> commentList;
 
-    @OneToMany(mappedBy = "projectId")
+    @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY)
     private List<ProjectBookmark> bookmarkList;
 
-    @OneToMany(mappedBy = "projectId")
+    @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY)
     private List<ProjectLike> likeList;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectMember> memberList;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectTechStack> techStackList;
 
     public void modify(ProjectModifyRequestDto dto){

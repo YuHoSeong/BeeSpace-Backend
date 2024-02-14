@@ -21,7 +21,7 @@ public class ProjectLikeController {
     private static final String PROJECT_LIKE = "/{projectId}";
 
     @GetMapping(PROJECT_LIKE)
-    public ResponseEntity projcetLike(@PathVariable("projectId") long projectId) {
+    public ResponseEntity<?> projcetLike(@PathVariable("projectId") long projectId) {
         return projectLikeService.projcetLike(projectId);
     }
     

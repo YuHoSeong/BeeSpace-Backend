@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectBookmarkResponseDto {
-    private boolean status;
+    private boolean bookmarkStatus;
 }

@@ -30,17 +30,17 @@ public class ProjectCommentController {
     private static final String DELETE_PROJECT_COMMENT = "/{projectCommentId}";
 
     @PostMapping(CREATE_PROJECT_COMMENT)
-    public ResponseEntity createProjectComment(@RequestBody ProjectCommentCreateRequestDto requestBody) {
+    public ResponseEntity<?> createProjectComment(@RequestBody ProjectCommentCreateRequestDto requestBody) {
         return projectCommentService.createProjectComment(requestBody);
     }
 
     @PutMapping(MODIFY_PROJECT_COMMENT)
-    public ResponseEntity modifyProjectComment(@RequestBody ProjectCommentModifyRequestDto requestBody) {
+    public ResponseEntity<?> modifyProjectComment(@RequestBody ProjectCommentModifyRequestDto requestBody) {
         return projectCommentService.modifyProjectComment(requestBody);
     }
 
     @DeleteMapping(DELETE_PROJECT_COMMENT)
-    public ResponseEntity deleteProjectComment(@PathVariable("projectCommentId") long projectCommentId){
+    public ResponseEntity<?> deleteProjectComment(@PathVariable("projectCommentId") long projectCommentId){
         return projectCommentService.deleteProjectComment(projectCommentId);
     }
     
