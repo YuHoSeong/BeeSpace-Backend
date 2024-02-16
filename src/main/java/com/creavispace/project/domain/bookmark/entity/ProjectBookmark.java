@@ -31,7 +31,7 @@ public class ProjectBookmark extends BaseTimeEntity{
     private Member member;
 
     @ManyToOne(targetEntity = Project.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "projcet_id", nullable = false)
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
 }
