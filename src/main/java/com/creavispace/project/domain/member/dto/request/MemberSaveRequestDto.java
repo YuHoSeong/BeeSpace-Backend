@@ -16,5 +16,6 @@ public class MemberSaveRequestDto {
     String memberEmail;
     String memberNickname;
     String memberName;
+    String loginType;
     Role role;
 }
