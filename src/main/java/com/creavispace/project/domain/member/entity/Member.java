@@ -35,17 +35,17 @@ public class Member {
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //회원 관련 정보와 로그인 정보는 분리
     private Long id;
     @Column(nullable = false, unique = true)
     private String memberEmail;
-//    @Column(nullable = false)
-//    private String memberPassword;
     @Column(nullable = false)
     private String memberName;
     @Column(nullable = false, unique = true)
     private String memberNickname;
     private String profileUrl;
-
+    @Column(nullable = false)
+    private String loginType;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -59,6 +59,7 @@ public class Member {
     public Member(MemberSaveRequestDto memberSaveRequestDto) {
         this.memberEmail = memberSaveRequestDto.getMemberEmail();
         this.memberName = memberSaveRequestDto.getMemberName();
+        this.loginType = memberSaveRequestDto.getLoginType();
         this.memberNickname = memberSaveRequestDto.getMemberNickname();
         this.role = memberSaveRequestDto.getRole();
         createdDate = LocalDateTime.now();

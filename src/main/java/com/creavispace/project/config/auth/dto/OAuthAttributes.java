@@ -14,42 +14,48 @@ public class OAuthAttributes {
     private String nameAttributeKey;
     private String name;
     private String email;
+    private String loginType;
 
     @Builder
-    public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, String name, String email) {
+    public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, String name, String email,
+                           String loginType) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.name = name;
         this.email = email;
+        this.loginType = loginType;
     }
 
     public static OAuthAttributes of(String registrationId, String memberNameAttributeName,
                                      Map<String, Object> attributes) {
         if ("google".equals(registrationId)) {
-
-            return ofGoogle(memberNameAttributeName, attributes);
+            return ofGoogle(memberNameAttributeName, attributes, registrationId);
         }
-
-        return ofNaver("id", attributes);
+        return ofNaver("id", attributes, registrationId);
     }
 
-    private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
+    private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes,
+                                           String registrationId) {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
         System.out.println("------------------------네이버 로그인----------------------------");
-
+        System.out.println("response = " + response);
         return OAuthAttributes.builder()
                 .name((String) response.get("name"))
                 .email((String) response.get("email"))
+                .loginType(registrationId)
                 .attributes(response)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
     }
 
-    private static OAuthAttributes ofGoogle(String memberNameAttributeName, Map<String, Object> attributes) {
+    private static OAuthAttributes ofGoogle(String memberNameAttributeName, Map<String, Object> attributes,
+                                            String registrationId) {
         System.out.println("------------------------구글 로그인----------------------------");
+        System.out.println("attributes = " + attributes);
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
+                .loginType(registrationId)
                 .attributes(attributes)
                 .nameAttributeKey(memberNameAttributeName)
                 .build();
@@ -60,6 +66,7 @@ public class OAuthAttributes {
         MemberSaveRequestDto dto = MemberSaveRequestDto.builder()
                 .memberEmail(email)
                 .memberName(name)
+                .loginType(loginType)
                 .memberNickname(randomNickName)
                 .role(Role.MEMBER).build();
 

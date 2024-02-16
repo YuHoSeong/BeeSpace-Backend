@@ -8,9 +8,11 @@ import lombok.Getter;
 public class SessionMember implements Serializable {
     private String name;
     private String email;
+    private String loginType;
 
     public SessionMember(Member member) {
         this.name = member.getMemberName();
         this.email = member.getMemberEmail();
+        this.loginType = member.getLoginType();
     }
 }

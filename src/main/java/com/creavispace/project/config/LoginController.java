@@ -1,7 +1,14 @@
 package com.creavispace.project.config;
 
 import com.creavispace.project.config.auth.dto.SessionMember;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     private final HttpSession httpSession;
-    @GetMapping("/google/login")
-    public ResponseEntity<SessionMember> index(Model model) {
+    private Map<String, Object> sessionStore = new ConcurrentHashMap<>();
+
+    @GetMapping("/")
+    public void index(Model model, HttpServletResponse response, HttpServletRequest request) {
         SessionMember member = (SessionMember) httpSession.getAttribute("member");
 
         if (member != null) {
@@ -24,13 +33,16 @@ public class LoginController {
         }
         System.out.println("-----------------------세션----------------------");
         System.out.println(member);
-        return ResponseEntity.status(HttpStatus.OK).body(member);
-    }
 
-    @GetMapping("/")
-    public void index() {
+        String sessionId = UUID.randomUUID().toString();
+        HttpSession session = request.getSession(true);
+        session.setAttribute("memberSessionId", member);
+        SessionMember sessionMember = (SessionMember) httpSession.getAttribute("member");
+        sessionStore.put(sessionId, sessionMember);
+        Cookie cookie = new Cookie("memberSession", sessionId);
+        response.addCookie(cookie);
+        System.out.println("sessionMember = " + sessionMember);
+        httpSession.getAttributeNames().asIterator().forEachRemaining(System.out::println);
         System.out.println("----------------------index------------------");
     }
-
-
 }
