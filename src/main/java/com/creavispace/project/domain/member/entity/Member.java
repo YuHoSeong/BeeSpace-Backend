@@ -53,10 +53,6 @@ public class Member {
     @Column(nullable = false)
     private Role role;
     private String memberPassword;
-    @Column(nullable = false, unique = true)
-    private String memberNickname;
-    private String profileUrl;
-    private String role;
     private String memberIntroduce;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
@@ -68,11 +64,8 @@ public class Member {
         this.memberEmail = memberSaveRequestDto.getMemberEmail();
         this.memberName = memberSaveRequestDto.getMemberName();
         this.loginType = memberSaveRequestDto.getLoginType();
-        this.memberNickname = memberSaveRequestDto.getMemberNickname();
         this.role = memberSaveRequestDto.getRole();
-        this.memberPassword = memberSaveRequestDto.getMemberPassword();
         this.memberNickname = memberSaveRequestDto.getMemberNickname();
-        role = "default";
         createdDate = LocalDateTime.now();
         modifiedDate = LocalDateTime.now();
         expired = false;

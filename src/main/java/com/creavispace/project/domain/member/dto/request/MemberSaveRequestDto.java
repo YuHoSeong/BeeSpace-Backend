@@ -19,6 +19,4 @@ public class MemberSaveRequestDto {
     String memberName;
     String loginType;
     Role role;
-    String memberPassword;
-    String memberNickname;
 }
