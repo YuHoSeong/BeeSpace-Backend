@@ -29,7 +29,7 @@ public class ProjectLikeServiceImpl implements ProjectLikeService{
     
     @Override
     @Transactional
-    public ResponseEntity<?> projcetLike(Long projectId) {
+    public ResponseEntity<?> projectLike(Long projectId) {
         // todo : JWT 토큰의 member정보 사용 예정
         Long memberId =1L;
 

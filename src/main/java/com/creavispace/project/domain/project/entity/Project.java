@@ -64,16 +64,16 @@ public class Project extends BaseTimeEntity{
 
     private Boolean status;
 
-    @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectImage> imageList;
 
-    @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectComment> commentList;
 
-    @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectBookmark> bookmarkList;
 
-    @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectLike> likeList;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
