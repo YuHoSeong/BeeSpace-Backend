@@ -6,6 +6,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,6 +52,11 @@ public class Member {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+    private String memberPassword;
+    @Column(nullable = false, unique = true)
+    private String memberNickname;
+    private String profileUrl;
+    private String role;
     private String memberIntroduce;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
@@ -62,6 +70,9 @@ public class Member {
         this.loginType = memberSaveRequestDto.getLoginType();
         this.memberNickname = memberSaveRequestDto.getMemberNickname();
         this.role = memberSaveRequestDto.getRole();
+        this.memberPassword = memberSaveRequestDto.getMemberPassword();
+        this.memberNickname = memberSaveRequestDto.getMemberNickname();
+        role = "default";
         createdDate = LocalDateTime.now();
         modifiedDate = LocalDateTime.now();
         expired = false;
@@ -71,5 +82,4 @@ public class Member {
     public String getRoleKey() {
         return this.role.getKey();
     }
-
 }

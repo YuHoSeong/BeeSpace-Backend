@@ -1,6 +1,7 @@
 package com.creavispace.project.domain.member.dto.request;
 
 import com.creavispace.project.domain.member.Role;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,4 +19,6 @@ public class MemberSaveRequestDto {
     String memberName;
     String loginType;
     Role role;
+    String memberPassword;
+    String memberNickname;
 }

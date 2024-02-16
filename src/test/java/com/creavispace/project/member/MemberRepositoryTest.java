@@ -28,6 +28,8 @@ class MemberRepositoryTest {
                 .memberName("김규영")
                 .memberNickname("rlardud1")
                 .role(Role.MEMBER)
+                .memberPassword("12455")
+                .memberNickname("rlardud1")
                 .build();
 
         Member member = new Member(dto);
@@ -48,6 +50,7 @@ class MemberRepositoryTest {
         MemberUpdateRequestDto dto = new MemberUpdateRequestDto();
         dto.setMemberPassword("바뀜");
         dto.setMemberNickname("999999999999");
+        beforeEdit.setMemberPassword(dto.getMemberPassword());
         beforeEdit.setMemberNickname(dto.getMemberNickname());
         beforeEdit.setMemberIntroduce(dto.getIntroduce());
         repository.save(beforeEdit);
