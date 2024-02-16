@@ -1,5 +1,8 @@
 package com.creavispace.project.domain.member.controller;
 
+import com.creavispace.project.config.auth.dto.SessionMember;
+import com.creavispace.project.domain.member.dto.request.MemberInfoRequestDto;
+
 import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
 import com.creavispace.project.domain.member.dto.response.MemberResponseDto;
 import com.creavispace.project.domain.member.entity.Member;
@@ -38,5 +41,11 @@ public class MemberController {
     @PostMapping("/read/members")
     public List<Member> findAllMembers() {
         return service.findAllMembers();
+    }
+
+    @PostMapping("/member/login")
+    public ResponseEntity<SessionMember> login(@ModelAttribute MemberInfoRequestDto dto) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(new SessionMember(new Member()));
     }
 }

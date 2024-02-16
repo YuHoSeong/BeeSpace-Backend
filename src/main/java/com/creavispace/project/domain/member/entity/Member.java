@@ -1,5 +1,11 @@
 package com.creavispace.project.domain.member.entity;
 
+import com.creavispace.project.domain.member.Role;
+import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -31,10 +38,20 @@ public class Member {
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //회원 관련 정보와 로그인 정보는 분리
     private Long id;
     @Column(nullable = false, unique = true)
     private String memberEmail;
     @Column(nullable = false)
+    private String memberName;
+    @Column(nullable = false, unique = true)
+    private String memberNickname;
+    private String profileUrl;
+    @Column(nullable = false)
+    private String loginType;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
     private String memberPassword;
     @Column(nullable = false, unique = true)
     private String memberNickname;
@@ -49,6 +66,10 @@ public class Member {
 
     public Member(MemberSaveRequestDto memberSaveRequestDto) {
         this.memberEmail = memberSaveRequestDto.getMemberEmail();
+        this.memberName = memberSaveRequestDto.getMemberName();
+        this.loginType = memberSaveRequestDto.getLoginType();
+        this.memberNickname = memberSaveRequestDto.getMemberNickname();
+        this.role = memberSaveRequestDto.getRole();
         this.memberPassword = memberSaveRequestDto.getMemberPassword();
         this.memberNickname = memberSaveRequestDto.getMemberNickname();
         role = "default";
@@ -58,4 +79,7 @@ public class Member {
         enabled = true;
     }
 
+    public String getRoleKey() {
+        return this.role.getKey();
+    }
 }

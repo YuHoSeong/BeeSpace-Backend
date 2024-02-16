@@ -2,6 +2,7 @@ package com.creavispace.project.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.creavispace.project.domain.member.Role;
 import com.creavispace.project.domain.member.dto.request.MemberUpdateRequestDto;
 import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
 import com.creavispace.project.domain.member.entity.Member;
@@ -24,6 +25,9 @@ class MemberRepositoryTest {
     void testSave() {
         MemberSaveRequestDto dto = MemberSaveRequestDto.builder()
                 .memberEmail("123@naver.com")
+                .memberName("김규영")
+                .memberNickname("rlardud1")
+                .role(Role.MEMBER)
                 .memberPassword("12455")
                 .memberNickname("rlardud1")
                 .build();
