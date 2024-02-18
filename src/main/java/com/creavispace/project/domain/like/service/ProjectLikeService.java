@@ -1,7 +1,8 @@
 package com.creavispace.project.domain.like.service;
 
-import org.springframework.http.ResponseEntity;
+import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.like.dto.response.ProjectLikeResponseDto;
 
 public interface ProjectLikeService {
-    public ResponseEntity<?> projectLike(Long projectId);
+    public SuccessResponseDto<ProjectLikeResponseDto> projectLike(Long projectId);
 }

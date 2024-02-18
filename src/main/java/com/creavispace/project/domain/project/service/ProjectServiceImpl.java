@@ -8,12 +8,9 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.bookmark.repository.ProjectBookmarkRepository;
-import com.creavispace.project.domain.common.dto.FailResponseDto;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.common.entity.TechStack;
 import com.creavispace.project.domain.common.repository.TechStackRepository;
@@ -40,6 +37,8 @@ import com.creavispace.project.domain.project.entity.ProjectTechStack;
 import com.creavispace.project.domain.project.repository.ProjectMemberRepository;
 import com.creavispace.project.domain.project.repository.ProjectRepository;
 import com.creavispace.project.domain.project.repository.ProjectTechStackRepository;
+import com.creavispace.project.global.exception.CreaviCodeException;
+import com.creavispace.project.global.exception.GlobalErrorCode;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +57,7 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     @Transactional
-    public ResponseEntity<?> createProject(ProjectCreateRequestDto dto) {
+    public SuccessResponseDto<ProjectCreateResponseDto> createProject(ProjectCreateRequestDto dto) {
         // todo 현재 토큰 미구현
         // jwt 토큰
         long memberId = 1;
@@ -66,11 +65,7 @@ public class ProjectServiceImpl implements ProjectService{
         // 회원 ID로 회원을 찾음
         Optional<Member> optionalMember = memberRepository.findById(memberId);
 
-        // 해당 ID에 대한 회원이 존재하지 않을 경우 실패 응답 반환
-        if(optionalMember.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "해당 회원이 존재하지 않습니다.", 400));
-
-        // Optional에서 회원 객체를 가져옴
-        Member member = optionalMember.get();
+        Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
         // 새로운 프로젝트 게시글 생성
         Project project = Project.builder()
@@ -99,11 +94,7 @@ public class ProjectServiceImpl implements ProjectService{
                 // 리스트의 맴버 ID로 회원을 찾음
                 Optional<Member> optionalProjectMember = memberRepository.findById(projectMemberDto.getMemberId());
 
-                // 해당 ID에 대한 회원이 존재하지 않을 경우 실패 응답 반환
-                if(optionalProjectMember.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "맴버 회원이 존재하지 않습니다.", 400));
-
-                // 프로젝트 맴버의 맴버 객체 생성
-                Member projectMember = optionalProjectMember.get();
+                Member projectMember = optionalProjectMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
                 
                 // 저장할 맴버를 맴버 리스트 객체에 추가
                 projectMembers.add(ProjectMember.builder()
@@ -125,11 +116,7 @@ public class ProjectServiceImpl implements ProjectService{
                 // 리스트의 기술스택 ID로 기술스택을 찾음
                 Optional<TechStack> optionalProjectTechStack = techStackRepository.findById(projectTechStackDto.getTechStackId());
 
-                // 해당 ID에 대한 기술스택이 존재하지 않을 경우 실패 응답 반환
-                if(optionalProjectTechStack.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "기술스택이 존재하지 않습니다.", 400));
-
-                // 프로젝트 기술스택의 기술스택 객체 생성
-                TechStack projectTechStack = optionalProjectTechStack.get();
+                TechStack projectTechStack = optionalProjectTechStack.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.TECHSTACK_NOT_FOUND));
 
                 // 저장할 기술스택을 기술스택 리스트 객체에 추가
                 projectTechStacks.add(ProjectTechStack.builder()
@@ -177,12 +164,12 @@ public class ProjectServiceImpl implements ProjectService{
             .build();
 
         // 성공적인 응답 반환
-        return ResponseEntity.ok().body(new SuccessResponseDto(true, "프로젝트 게시글 생성이 완료 되었습니다.", create));
+        return new SuccessResponseDto<>(true, "프로젝트 게시글 생성이 완료 되었습니다.", create);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> modifyProject(ProjectModifyRequestDto dto) {
+    public SuccessResponseDto<ProjectModifyResponseDto> modifyProject(ProjectModifyRequestDto dto) {
         // todo 현재 토큰 미구현
         // jwt 토큰
         long memberId = 1;
@@ -190,21 +177,16 @@ public class ProjectServiceImpl implements ProjectService{
         // 회원 ID로 회원을 찾음
         Optional<Member> optionalMember = memberRepository.findById(memberId);
 
-        // 해당 ID에 대한 회원이 존재하지 않을 경우 실패 응답 반환
-        if(optionalMember.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "해당 회원이 존재하지 않습니다.", 400));
+        Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
         // DTO의 프로젝트 ID로 프로젝트 게시글 찾아옴
         Optional<Project> optionalProject = projectRepository.findById(dto.getId());
 
-        // 해당 ID에 대한 프로젝트 게시글이 존재하지 않을 경우 실패 응답 반환
-        if(optionalProject.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "해당 프로젝트 게시글이 존재하지 않습니다.", 400));
-
-        // Optional에서 프로젝트 게시글 객체 찾아옴
-        Project project = optionalProject.get();
+        Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
 
         // 작성자도 아니고 관리자도 아니면 실패 응답 반환
-        if(project.getMember().getId() != memberId && !optionalMember.get().getRole().equals("Administrator")){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new FailResponseDto(false,"글을 수정할 수 있는 권한이 없습니다.",401));
+        if(project.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
+            new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
         }
 
         // 프로젝트 수정
@@ -229,12 +211,8 @@ public class ProjectServiceImpl implements ProjectService{
             for(ProjectMemberModifyRequestDto projectMemberDto : dto.getProjectMemberList()){
                 Optional<Member> optionalProjectMember = memberRepository.findById(projectMemberDto.getMemberId());
 
-                // 해당 ID에 대한 회원이 존재하지 않을 경우 실패 응답 반환
-                if(optionalProjectMember.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "맴버 회원이 존재하지 않습니다.", 400));
+                Member projectMember = optionalProjectMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
-                // 프로젝트 맴버의 맴버 객체 생성
-                Member projectMember = optionalProjectMember.get();
-                
                 // 저장할 맴버리스트 객체에 추가
                 projectMembers.add(ProjectMember.builder()
                     .id(projectMemberDto.getId())
@@ -269,11 +247,7 @@ public class ProjectServiceImpl implements ProjectService{
                 // 리스트의 기술스택 ID로 기술스택을 찾음
                 Optional<TechStack> optionalProjectTechStack = techStackRepository.findById(projectTechStackDto.getTechStackId());
 
-                // 해당 ID에 대한 기술스택이 존재하지 않을 경우 실패 응답 반환
-                if(optionalProjectTechStack.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "기술스택이 존재하지 않습니다.", 400));
-
-                // 프로젝트 기술스택의 기술스택 객체 생성
-                TechStack projectTechStack = optionalProjectTechStack.get();
+                TechStack projectTechStack = optionalProjectTechStack.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.TECHSTACK_NOT_FOUND));
 
                 // 저장할 기술스택을 기술스택 리스트 객체에 추가
                 projectTechStacks.add(ProjectTechStack.builder()
@@ -332,12 +306,12 @@ public class ProjectServiceImpl implements ProjectService{
             .build();
 
         // 성공적인 응답 반환
-        return ResponseEntity.ok().body(new SuccessResponseDto(true, "프로젝트 게시글의 수정이 완료되었습니다.", modify));
+        return new SuccessResponseDto<ProjectModifyResponseDto>(true, "프로젝트 게시글의 수정이 완료되었습니다.", modify);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> deleteProject(Long projectId) {
+    public SuccessResponseDto<Long> deleteProject(Long projectId) {
         // todo 현재 토큰 미구현
         // jwt 토큰
         long memberId = 1;
@@ -345,21 +319,16 @@ public class ProjectServiceImpl implements ProjectService{
         // 회원 ID로 회원을 찾음
         Optional<Member> optionalMember = memberRepository.findById(memberId);
 
-        // 해당 ID에 대한 회원이 존재하지 않을 경우 실패 응답 반환
-        if(optionalMember.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "해당 회원이 존재하지 않습니다.", 400));
-
+        Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+        
         // projectId 의 프로젝트 ID로 프로젝트 게시글 찾아옴
         Optional<Project> optionalProject = projectRepository.findByIdAndStatusTrue(projectId);
 
-        // 해당 ID에 대한 프로젝트 게시글이 존재하지 않을 경우 실패 응답 반환
-        if(optionalProject.isEmpty()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "해당 프로젝트 게시글이 존재하지 않습니다.", 400));
-
-        // Optional에서 프로젝트 게시글 객체 찾아옴
-        Project project = optionalProject.get();
+        Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
         
         // 작성자도 아니고 관리자도 아니면 실패 응답 반환
-        if(project.getMember().getId() != memberId && !optionalMember.get().getRole().equals("Administrator")){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new FailResponseDto(false,"글을 수정할 수 있는 권한이 없습니다.",401));
+        if(project.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
+            new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
         }
 
         // 프로젝트 비활성화 Status = false
@@ -369,11 +338,11 @@ public class ProjectServiceImpl implements ProjectService{
         projectRepository.save(project);
 
         // 성공적인 응답 반환
-        return ResponseEntity.ok().body(new SuccessResponseDto(true, "프로젝트 게시글 삭제가 완료되었습니다.", projectId));
+        return new SuccessResponseDto<Long>(true, "프로젝트 게시글 삭제가 완료되었습니다.", projectId);
     }
 
     @Override
-    public ResponseEntity<?> readPopularProjectList() {
+    public SuccessResponseDto<List<PopularProjectReadResponseDto>> readPopularProjectList() {
         // 인기 프로젝트 5개 조회(주간조회수 기준)
         List<Project> projectList = projectRepository.findTop5ByStatusTrueOrderByWeekViewCountDesc();
 
@@ -383,17 +352,17 @@ public class ProjectServiceImpl implements ProjectService{
             .collect(Collectors.toList());
 
         // 성공적인 응답 반환
-        return ResponseEntity.ok().body(new SuccessResponseDto(true, "인기 프로젝트 조회가 완료 되었습니다.", readPopularList));
+        return new SuccessResponseDto<List<PopularProjectReadResponseDto>>(true, "인기 프로젝트 조회가 완료 되었습니다.", readPopularList);
     }
 
     @Override
-    public ResponseEntity<?> readProjectList(Integer size, Integer page) {
+    public SuccessResponseDto<List<ProjectListReadResponseDto>> readProjectList(Integer size, Integer page) {
         // 프로젝트 페이지네이션 조회
         Pageable pageRequest = PageRequest.of(page-1, size);
         Page<Project> pageable = projectRepository.findAllByStatusTrue(pageRequest);
 
         // 해당 페이지에 게시글이 없을 경우 실패 응답 반환
-        if(!pageable.hasContent()) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "해당 페이지에 프로젝트 게시글이 없습니다.", 400));
+        if(!pageable.hasContent()) new CreaviCodeException(GlobalErrorCode.NOT_PROJECT_CONTENT);
         
         // 해당 페이지의 게시글 찾아옴
         List<Project> projectList = pageable.getContent();
@@ -419,11 +388,11 @@ public class ProjectServiceImpl implements ProjectService{
         }
 
         // 성공적인 응답 반환
-        return ResponseEntity.ok().body(new SuccessResponseDto(true, "프로젝트 게시글 리스트 조회가 완료되었습니다.", readList));
+        return new SuccessResponseDto<List<ProjectListReadResponseDto>>(true, "프로젝트 게시글 리스트 조회가 완료되었습니다.", readList);
     }
 
     @Override
-    public ResponseEntity<?> readProject(Long projectId) {
+    public SuccessResponseDto<ProjectReadResponseDto> readProject(Long projectId) {
         // 해당 ID로 활성화된 프로젝트 게시글 찾아옴
         Optional<Project> optionalProject = projectRepository.findByIdAndStatusTrue(projectId);
         
@@ -439,13 +408,8 @@ public class ProjectServiceImpl implements ProjectService{
                 optionalProject = projectRepository.findById(projectId);
             }
         }
-        
-        // 해당 ID에 대한 프로젝트 게시글이 존재하지 않을 경우 실패 응답 반환
-        if(optionalProject.isEmpty())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FailResponseDto(false, "해당 프로젝트 게시글이 존재하지 않습니다.", 400));
 
-        // Optional에서 프로젝트 게시글 객체 찾아옴
-        Project project = optionalProject.get();
+        Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
         
         // 프로젝트 게시글 정보를 DTO로 변환
         ProjectReadResponseDto read = new ProjectReadResponseDto(project);
@@ -463,7 +427,7 @@ public class ProjectServiceImpl implements ProjectService{
         }
 
         // 성공적인 응답 반환
-        return ResponseEntity.ok().body(new SuccessResponseDto(true, "프로젝트 게시글 상세조회가 완료되었습니다.", read));
+        return new SuccessResponseDto<ProjectReadResponseDto>(true, "프로젝트 게시글 상세조회가 완료되었습니다.", read);
     }
 
 
