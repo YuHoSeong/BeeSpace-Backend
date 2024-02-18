@@ -1,15 +1,21 @@
 package com.creavispace.project.domain.project.service;
 
-import org.springframework.http.ResponseEntity;
+import java.util.List;
 
+import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.project.dto.request.ProjectCreateRequestDto;
 import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDto;
+import com.creavispace.project.domain.project.dto.response.PopularProjectReadResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectCreateResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectModifyResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectReadResponseDto;
 
 public interface ProjectService {
-    public ResponseEntity<?> createProject(ProjectCreateRequestDto dto);
-    public ResponseEntity<?> modifyProject(ProjectModifyRequestDto dto);
-    public ResponseEntity<?> deleteProject(Long projectId);
-    public ResponseEntity<?> readPopularProjectList();
-    public ResponseEntity<?> readProjectList(Integer size, Integer page);
-    public ResponseEntity<?> readProject(Long projectId);
+    public SuccessResponseDto<ProjectCreateResponseDto> createProject(ProjectCreateRequestDto dto);
+    public SuccessResponseDto<ProjectModifyResponseDto> modifyProject(ProjectModifyRequestDto dto);
+    public SuccessResponseDto<Long> deleteProject(Long projectId);
+    public SuccessResponseDto<List<PopularProjectReadResponseDto>> readPopularProjectList();
+    public SuccessResponseDto<List<ProjectListReadResponseDto>> readProjectList(Integer size, Integer page);
+    public SuccessResponseDto<ProjectReadResponseDto> readProject(Long projectId);
 }

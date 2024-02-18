@@ -20,9 +20,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.creavispace.project.domain.common.dto.FailResponseDto;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.common.entity.CustomMultipartFile;
+import com.creavispace.project.global.exception.CreaviCodeException;
+import com.creavispace.project.global.exception.GlobalErrorCode;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class S3UploadService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public ResponseEntity<?> saveFile(MultipartFile multipartFile) throws Exception {
+    public SuccessResponseDto<String> saveFile(MultipartFile multipartFile) throws Exception {
         String fileName = createFileName(multipartFile.getOriginalFilename()); //종복되지 않게 이름을 randomUUID()를 사용해서 생성함
         String fileFormat = multipartFile.getContentType().substring(multipartFile.getContentType().lastIndexOf("/") + 1); //파일 확장자명 추출
         
@@ -50,11 +51,11 @@ public class S3UploadService {
         try(InputStream inputStream = resizeImage.getInputStream()) {
             amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, metadata));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new FailResponseDto(false,"이미지 저장에 실패했습니다.",500));
+            new CreaviCodeException(GlobalErrorCode.S3_SERVER_NOT_FOUND);
         }
 
         String url = amazonS3.getUrl(bucket, fileName).toString();
-        return ResponseEntity.ok().body(new SuccessResponseDto(true, "이미지가 저장되었습니다.", url));
+        return new SuccessResponseDto<String>(true, "이미지가 저장되었습니다.", url);
     }
 
     public ResponseEntity<?> deleteImage(String fileUrl) {

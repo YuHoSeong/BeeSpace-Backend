@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SuccessResponseDto {
+public class SuccessResponseDto<D> {
 
     private boolean success;
     private String message;
-    private Object data;
+    private D data;
 
 }
