@@ -28,7 +28,6 @@ class MemberRepositoryTest {
                 .memberName("김규영")
                 .memberNickname("rlardud1")
                 .role(Role.MEMBER)
-                .memberPassword("12455")
                 .memberNickname("rlardud1")
                 .build();
 
