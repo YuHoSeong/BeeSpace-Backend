@@ -56,7 +56,7 @@ public class SecurityConfig {
                     .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                                 .requestMatchers("/", "/login", "/join", "/swagger-ui/**", "/v3/api-docs/**")
-                                .permitAll().requestMatchers(HttpMethod.POST, "/member/**", "/review")
+                                .permitAll().requestMatchers(HttpMethod.POST, "/member/**", "/review", "/upload")
                                 .hasRole(Role.MEMBER.name()).anyRequest()
                                 .authenticated())
                 .logout(logout -> logout.logoutSuccessHandler(new LogoutHandler()).logoutUrl("/logout"))

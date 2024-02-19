@@ -1,4 +1,4 @@
-package com.creavispace.project.domain.common.entity;
+package com.creavispace.project.domain.file.entity;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

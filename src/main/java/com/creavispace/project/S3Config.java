@@ -1,4 +1,4 @@
-package com.creavispace.project.domain.common.config;
+package com.creavispace.project;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
