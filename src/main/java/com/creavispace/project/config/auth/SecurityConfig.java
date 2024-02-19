@@ -52,9 +52,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(
+        httpSecurity.csrf(AbstractHttpConfigurer::disable)
+                    .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
-                                .requestMatchers("/", "/login", "/join")
+                                .requestMatchers("/", "/login", "/join", "/swagger-ui/**", "/v3/api-docs/**")
                                 .permitAll().requestMatchers(HttpMethod.POST, "/member/**", "/review")
                                 .hasRole(Role.MEMBER.name()).anyRequest()
                                 .authenticated())
