@@ -36,7 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-
-### oauth propereties ###
-application-oauth.properties
-application-s3.properties
+### .env ###
+.env
