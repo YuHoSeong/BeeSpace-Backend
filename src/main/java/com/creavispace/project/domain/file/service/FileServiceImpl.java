@@ -1,4 +1,4 @@
-package com.creavispace.project.domain.common.service;
+package com.creavispace.project.domain.file.service;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -21,7 +21,8 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
-import com.creavispace.project.domain.common.entity.CustomMultipartFile;
+import com.creavispace.project.domain.file.dto.response.UploadFileResponseDto;
+import com.creavispace.project.domain.file.entity.CustomMultipartFile;
 import com.creavispace.project.global.exception.CreaviCodeException;
 import com.creavispace.project.global.exception.GlobalErrorCode;
 
@@ -31,14 +32,14 @@ import marvin.image.MarvinImage;
 
 @Service
 @RequiredArgsConstructor
-public class S3UploadService {
+public class FileServiceImpl implements FileService {
     
     private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public SuccessResponseDto<String> saveFile(MultipartFile multipartFile) throws Exception {
+    public SuccessResponseDto<UploadFileResponseDto> saveFile(MultipartFile multipartFile) {
         String fileName = createFileName(multipartFile.getOriginalFilename()); //종복되지 않게 이름을 randomUUID()를 사용해서 생성함
         String fileFormat = multipartFile.getContentType().substring(multipartFile.getContentType().lastIndexOf("/") + 1); //파일 확장자명 추출
         
@@ -55,7 +56,7 @@ public class S3UploadService {
         }
 
         String url = amazonS3.getUrl(bucket, fileName).toString();
-        return new SuccessResponseDto<String>(true, "이미지가 저장되었습니다.", url);
+        return new SuccessResponseDto<UploadFileResponseDto>(true, "이미지가 저장되었습니다.", new UploadFileResponseDto(url));
     }
 
     public ResponseEntity<?> deleteImage(String fileUrl) {
