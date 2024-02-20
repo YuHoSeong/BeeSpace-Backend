@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/hashTag")
+@RequestMapping("/hashtag")
 public class HashTagController {
     
     private final HashTagService hashTagService;

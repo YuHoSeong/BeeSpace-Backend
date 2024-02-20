@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/projectComment")
+@RequestMapping("/project-comment")
 public class ProjectCommentController {
     
     private final ProjectCommentService projectCommentService;
@@ -40,7 +40,7 @@ public class ProjectCommentController {
     private static final String DELETE_PROJECT_COMMENT = "/{projectCommentId}";
 
     @GetMapping(READ_PROJECT_COMMENT)
-    @Operation(summary = "프로젝트 댓글 조회")
+    @Operation(summary = "프로젝트 댓글 리스트 조회")
     public ResponseEntity<SuccessResponseDto<List<ProjectCommentReadResponseDto>>> readProjectComment(@RequestParam("projectId") Long projectId){
         return ResponseEntity.ok().body(projectCommentService.readProjectComment(projectId));
     }
