@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
@@ -63,9 +64,12 @@ public class CommunityController {
     }
     
     @GetMapping(READ_COMMUNITY_LIST)
-    @Operation(summary = "커뮤니티 게시글 리스트")
-    public ResponseEntity<SuccessResponseDto<List<CommunityReadListResponseDto>>> readCommunity(){
-        return ResponseEntity.ok().body(communityService.readCommunity());
+    @Operation(summary = "커뮤니티 게시글 리스트 조회 / 인기 태그 게시글 조회")
+    public ResponseEntity<SuccessResponseDto<List<CommunityReadListResponseDto>>> readCommunityList(
+        @RequestParam(value = "hashTag", required = false) String hashTag,
+        @RequestParam(value = "type", required = false) String type
+    ){
+        return ResponseEntity.ok().body(communityService.readCommunityList(hashTag, type));
     }
 
 
