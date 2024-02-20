@@ -40,6 +40,8 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //회원 관련 정보와 로그인 정보는 분리
     private Long id;
+    @Column
+    private String loginId;
     @Column(nullable = false, unique = true)
     private String memberEmail;
     @Column(nullable = false)
