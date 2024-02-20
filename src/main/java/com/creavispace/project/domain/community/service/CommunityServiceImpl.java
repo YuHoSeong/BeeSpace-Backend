@@ -42,9 +42,9 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
-    public SuccessResponseDto<List<CommunityReadListResponseDto>> readCommunity() {
+    public SuccessResponseDto<List<CommunityReadListResponseDto>> readCommunityList(String hashTag, String type) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readCommunity'");
+        throw new UnsupportedOperationException("Unimplemented method 'readCommunityList'");
     }
     
 }
