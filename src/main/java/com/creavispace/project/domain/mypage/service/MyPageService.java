@@ -55,4 +55,6 @@ public class MyPageService {
     public Map<String, List<Object>> readMyContent() {
         return new HashMap<>();
     }
+
+    //프로필, 관심스택 수정
 }
