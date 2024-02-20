@@ -1,5 +1,7 @@
 package com.creavispace.project.domain.recruit.service;
 
+import java.util.List;
+
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.recruit.dto.request.RecruitCreateRequestDto;
 import com.creavispace.project.domain.recruit.dto.request.RecruitModifyRequestDto;
@@ -13,6 +15,6 @@ public interface RecruitService {
     public SuccessResponseDto<RecruitCreateResponseDto> createRecruit(RecruitCreateRequestDto dto);
     public SuccessResponseDto<RecruitModifyResponseDto> modifyRecruit(Long recruitId, RecruitModifyRequestDto dto);
     public SuccessResponseDto<RecruitDeleteResponseDto> deleteRecruit(Long recruitId);
-    public SuccessResponseDto<RecruitListReadResponseDto> readRecruitList(Integer size, Integer page);
+    public SuccessResponseDto<List<RecruitListReadResponseDto>> readRecruitList(Integer size, Integer page);
     public SuccessResponseDto<RecruitReadResponseDto> readRecruit(Long recruitId);
 }

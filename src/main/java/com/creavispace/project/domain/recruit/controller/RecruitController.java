@@ -1,5 +1,7 @@
 package com.creavispace.project.domain.recruit.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,7 +59,7 @@ public class RecruitController {
 
     @GetMapping(READ_RECRUIT_LIST)
     @Operation(summary = "모집 게시글 리스트")
-    public ResponseEntity<SuccessResponseDto<RecruitListReadResponseDto>> readRecruitList(
+    public ResponseEntity<SuccessResponseDto<List<RecruitListReadResponseDto>>> readRecruitList(
         @RequestParam(value = "size", required = false, defaultValue = "6") Integer size,
         @RequestParam(value = "page", required = false, defaultValue = "1") Integer page
     ){
@@ -68,6 +70,12 @@ public class RecruitController {
     @Operation(summary = "모집 게시글 디테일")
     public ResponseEntity<SuccessResponseDto<RecruitReadResponseDto>> readRecruit(@PathVariable("recruitId") Long recruitId){
         return ResponseEntity.ok().body(recruitService.readRecruit(recruitId));
+    }
+
+    @GetMapping(READ_DEADLINE_RECRUIT_LIST)
+    @Operation(summary = "모집 마감 리스트")
+    public ResponseEntity<SuccessResponseDto<List<DeadLineRecruitListReadResponseDto>>> readDeadlineRecruitList(){
+        return ResponseEntity.ok().body(recruitService.readDeadlineRecruitList());
     }
     
 }

@@ -1,5 +1,7 @@
 package com.creavispace.project.domain.recruit.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
@@ -33,7 +35,7 @@ public class RecruitServiceImpl implements RecruitService {
     }
 
     @Override
-    public SuccessResponseDto<RecruitListReadResponseDto> readRecruitList(Integer size, Integer page) {
+    public SuccessResponseDto<List<RecruitListReadResponseDto>> readRecruitList(Integer size, Integer page) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'readRecruitList'");
     }
