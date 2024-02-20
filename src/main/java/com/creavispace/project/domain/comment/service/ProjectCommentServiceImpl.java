@@ -1,6 +1,7 @@
 package com.creavispace.project.domain.comment.service;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,7 @@ import com.creavispace.project.domain.comment.dto.request.ProjectCommentCreateRe
 import com.creavispace.project.domain.comment.dto.request.ProjectCommentModifyRequestDto;
 import com.creavispace.project.domain.comment.dto.response.ProjectCommentCreateResponseDto;
 import com.creavispace.project.domain.comment.dto.response.ProjectCommentModifyResponseDto;
+import com.creavispace.project.domain.comment.dto.response.ProjectCommentReadResponseDto;
 import com.creavispace.project.domain.comment.entity.ProjectComment;
 import com.creavispace.project.domain.comment.repository.ProjectCommentRepository;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
@@ -24,10 +26,16 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ProjectCommentServiceImpl implements ProjectCommentService{
-
+    
     private final ProjectCommentRepository projectCommentRepository;
     private final MemberRepository memberRepository;
     private final ProjectRepository projectRepository;
+
+    @Override
+    public SuccessResponseDto<List<ProjectCommentReadResponseDto>> readProjectComment(Long projectId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'readProjectComment'");
+    }
 
     @Override
     @Transactional
@@ -56,10 +64,9 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
 
     @Override
     @Transactional
-    public SuccessResponseDto<ProjectCommentModifyResponseDto> modifyProjectComment(ProjectCommentModifyRequestDto dto) {
+    public SuccessResponseDto<ProjectCommentModifyResponseDto> modifyProjectComment(Long projectCommentId, ProjectCommentModifyRequestDto dto) {
         // todo : JWT
         Long memberId = 1L;
-        Long projectCommentId = dto.getId();
         
         Optional<ProjectComment> optionalProjectComment = projectCommentRepository.findById(projectCommentId);
         ProjectComment projectComment = optionalProjectComment.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_COMMENT_NOT_FOUND));

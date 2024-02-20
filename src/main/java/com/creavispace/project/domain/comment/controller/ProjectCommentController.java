@@ -1,19 +1,25 @@
 package com.creavispace.project.domain.comment.controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creavispace.project.domain.comment.dto.request.ProjectCommentCreateRequestDto;
 import com.creavispace.project.domain.comment.dto.request.ProjectCommentModifyRequestDto;
 import com.creavispace.project.domain.comment.dto.response.ProjectCommentCreateResponseDto;
 import com.creavispace.project.domain.comment.dto.response.ProjectCommentModifyResponseDto;
+import com.creavispace.project.domain.comment.dto.response.ProjectCommentReadResponseDto;
 import com.creavispace.project.domain.comment.service.ProjectCommentService;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,26 +29,36 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/project/comment")
+@RequestMapping("/projectComment")
 public class ProjectCommentController {
     
     private final ProjectCommentService projectCommentService;
 
+    private static final String READ_PROJECT_COMMENT = "";
     private static final String CREATE_PROJECT_COMMENT = "";
-    private static final String MODIFY_PROJECT_COMMENT = "";
+    private static final String MODIFY_PROJECT_COMMENT = "/{projectCommentId}";
     private static final String DELETE_PROJECT_COMMENT = "/{projectCommentId}";
 
+    @GetMapping(READ_PROJECT_COMMENT)
+    @Operation(summary = "프로젝트 댓글 조회")
+    public ResponseEntity<SuccessResponseDto<List<ProjectCommentReadResponseDto>>> readProjectComment(@RequestParam("projectId") Long projectId){
+        return ResponseEntity.ok().body(projectCommentService.readProjectComment(projectId));
+    }
+
     @PostMapping(CREATE_PROJECT_COMMENT)
+    @Operation(summary = "프로젝트 댓글 등록")
     public ResponseEntity<SuccessResponseDto<ProjectCommentCreateResponseDto>> createProjectComment(@RequestBody ProjectCommentCreateRequestDto requestBody) {
         return ResponseEntity.ok().body(projectCommentService.createProjectComment(requestBody));
     }
 
     @PutMapping(MODIFY_PROJECT_COMMENT)
-    public ResponseEntity<SuccessResponseDto<ProjectCommentModifyResponseDto>> modifyProjectComment(@RequestBody ProjectCommentModifyRequestDto requestBody) {
-        return ResponseEntity.ok().body(projectCommentService.modifyProjectComment(requestBody));
+    @Operation(summary = "프로젝트 댓글 수정")
+    public ResponseEntity<SuccessResponseDto<ProjectCommentModifyResponseDto>> modifyProjectComment(@PathVariable("projectCommentId") Long projectCommentId, @RequestBody ProjectCommentModifyRequestDto requestBody) {
+        return ResponseEntity.ok().body(projectCommentService.modifyProjectComment(projectCommentId, requestBody));
     }
 
     @DeleteMapping(DELETE_PROJECT_COMMENT)
+    @Operation(summary = "프로젝트 댓글 삭제")
     public ResponseEntity<SuccessResponseDto<Long>> deleteProjectComment(@PathVariable("projectCommentId") Long projectCommentId){
         return ResponseEntity.ok().body(projectCommentService.deleteProjectComment(projectCommentId));
     }

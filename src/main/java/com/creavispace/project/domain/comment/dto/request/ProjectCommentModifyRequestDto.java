@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectCommentModifyRequestDto {
-    private Long id;
     private String content;
 }
