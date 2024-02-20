@@ -70,9 +70,10 @@ public class ProjectController {
     @Operation(summary = "프로젝트 게시글 리스트 조회")
     public ResponseEntity<SuccessResponseDto<List<ProjectListReadResponseDto>>> readProjectList(
         @RequestParam(value = "size", required = false, defaultValue = "6") Integer size,
-        @RequestParam(value = "page", required = false, defaultValue = "1") Integer page
+        @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+        @RequestParam(value = "kind", required = false) String kind
         ) {
-        return ResponseEntity.ok().body(projectService.readProjectList(size, page));
+        return ResponseEntity.ok().body(projectService.readProjectList(size, page, kind));
     }
 
     @GetMapping(READ_PROJECT)

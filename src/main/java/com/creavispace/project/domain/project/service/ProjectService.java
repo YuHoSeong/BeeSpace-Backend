@@ -17,6 +17,6 @@ public interface ProjectService {
     public SuccessResponseDto<ProjectModifyResponseDto> modifyProject(Long projectId, ProjectModifyRequestDto dto);
     public SuccessResponseDto<ProjectDeleteResponseDto> deleteProject(Long projectId);
     public SuccessResponseDto<List<PopularProjectReadResponseDto>> readPopularProjectList();
-    public SuccessResponseDto<List<ProjectListReadResponseDto>> readProjectList(Integer size, Integer page);
+    public SuccessResponseDto<List<ProjectListReadResponseDto>> readProjectList(Integer size, Integer page, String kind);
     public SuccessResponseDto<ProjectReadResponseDto> readProject(Long projectId);
 }
