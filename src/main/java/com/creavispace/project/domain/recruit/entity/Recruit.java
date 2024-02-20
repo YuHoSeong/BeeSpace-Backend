@@ -52,18 +52,18 @@ public class Recruit extends BaseTimeEntity {
 
     private int viewCount;
 
-    @OneToMany(mappedBy = "recruit")
-    private List<RecruitImage> imageList;
+    // @OneToMany(mappedBy = "recruit")
+    // private List<RecruitImage> imageList;
 
-    @OneToMany(mappedBy = "recruit")
-    private List<RecruitPosition> positionList;
+    // @OneToMany(mappedBy = "recruit")
+    // private List<RecruitPosition> positionList;
 
-    @OneToMany(mappedBy = "recruit")
-    private List<RecruitTechStack> techStackList;
+    // @OneToMany(mappedBy = "recruit")
+    // private List<RecruitTechStack> techStackList;
 
-    @OneToMany(mappedBy = "recruit")
-    private List<RecruitComment> commentList;
+    // @OneToMany(mappedBy = "recruit")
+    // private List<RecruitComment> commentList;
 
-    @OneToMany(mappedBy = "recruit")
-    private List<RecruitBookmark> bookmarkList;
+    // @OneToMany(mappedBy = "recruit")
+    // private List<RecruitBookmark> bookmarkList;
 }

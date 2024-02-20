@@ -11,15 +11,6 @@ java {
 	sourceCompatibility = '17'
 }
 
-sourceSets {
-	main {
-		java {
-			exclude 'com/creavispace/project/domain/recruit/**'
-		}
-	}
-}
-
-
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
