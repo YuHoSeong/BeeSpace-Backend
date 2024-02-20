@@ -75,7 +75,7 @@ public class RecruitController {
     }
 
     @GetMapping(READ_DEADLINE_RECRUIT_LIST)
-    @Operation(summary = "모집 마감 리스트")
+    @Operation(summary = "모집 마감 리스트 / 모집 베너 조회")
     public ResponseEntity<SuccessResponseDto<List<DeadLineRecruitListReadResponseDto>>> readDeadlineRecruitList(){
         return ResponseEntity.ok().body(recruitService.readDeadlineRecruitList());
     }

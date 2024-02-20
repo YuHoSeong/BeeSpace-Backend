@@ -1,5 +1,7 @@
 package com.creavispace.project.domain.recruit.dto.response;
 
+import java.util.List;
+
 import org.joda.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -18,5 +20,6 @@ public class DeadLineRecruitListReadResponseDto {
     private LocalDateTime end;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+    private List<RecruitTechStackResponseDto> recruitTechStackList;
 
 }
