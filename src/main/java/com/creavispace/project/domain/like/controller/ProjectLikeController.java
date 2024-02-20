@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +23,7 @@ public class ProjectLikeController {
 
     private static final String PROJECT_LIKE = "";
 
-    @GetMapping(PROJECT_LIKE)
+    @PostMapping(PROJECT_LIKE)
     @Operation(summary = "프로젝트 좋아요 토글 기능")
     public ResponseEntity<SuccessResponseDto<ProjectLikeResponseDto>> projectLike(@RequestParam("projectId") Long projectId) {
         return ResponseEntity.ok().body(projectLikeService.projectLike(projectId));
