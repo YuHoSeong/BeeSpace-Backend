@@ -7,14 +7,15 @@ import com.creavispace.project.domain.project.dto.request.ProjectCreateRequestDt
 import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDto;
 import com.creavispace.project.domain.project.dto.response.PopularProjectReadResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectCreateResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectDeleteResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectModifyResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectReadResponseDto;
 
 public interface ProjectService {
     public SuccessResponseDto<ProjectCreateResponseDto> createProject(ProjectCreateRequestDto dto);
-    public SuccessResponseDto<ProjectModifyResponseDto> modifyProject(ProjectModifyRequestDto dto);
-    public SuccessResponseDto<Long> deleteProject(Long projectId);
+    public SuccessResponseDto<ProjectModifyResponseDto> modifyProject(Long projectId, ProjectModifyRequestDto dto);
+    public SuccessResponseDto<ProjectDeleteResponseDto> deleteProject(Long projectId);
     public SuccessResponseDto<List<PopularProjectReadResponseDto>> readPopularProjectList();
     public SuccessResponseDto<List<ProjectListReadResponseDto>> readProjectList(Integer size, Integer page);
     public SuccessResponseDto<ProjectReadResponseDto> readProject(Long projectId);

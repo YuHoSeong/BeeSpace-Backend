@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectMemberResponseDto {
-    private Long memberId;
-    private String memberProfile;
-    private String memberNickname;
+public class ProjectLinkResponseDto {
+    // enum 변경
+    private String type;
+    private String url;
 }

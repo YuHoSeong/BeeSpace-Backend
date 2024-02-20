@@ -10,11 +10,13 @@ import com.creavispace.project.domain.project.dto.request.ProjectCreateRequestDt
 import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDto;
 import com.creavispace.project.domain.project.dto.response.PopularProjectReadResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectCreateResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectDeleteResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectModifyResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectReadResponseDto;
 import com.creavispace.project.domain.project.service.ProjectService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -34,33 +36,38 @@ public class ProjectController {
     private final ProjectService projectService;
     
     private static final String CREATE_PROJECT = "";
-    private static final String MODIFY_PROJECT = "";
+    private static final String MODIFY_PROJECT = "/{projectId}";
     private static final String DELETE_PROJECT = "/{projectId}";
     private static final String READ_POPULAR_PROJECT = "/popular";
     private static final String READ_PROJECT_LIST = "";
     private static final String READ_PROJECT = "/{projectId}";
 
     @PostMapping(CREATE_PROJECT)
+    @Operation(summary = "프로젝트 게시글 생성")
     public ResponseEntity<SuccessResponseDto<ProjectCreateResponseDto>> createProject(@RequestBody ProjectCreateRequestDto dto) {
         return ResponseEntity.ok().body(projectService.createProject(dto));
     }
 
     @PutMapping(MODIFY_PROJECT)
-    public ResponseEntity<SuccessResponseDto<ProjectModifyResponseDto>> modifyProject(@RequestBody ProjectModifyRequestDto dto) {
-        return ResponseEntity.ok().body(projectService.modifyProject(dto));
+    @Operation(summary = "프로젝트 게시글 수정")
+    public ResponseEntity<SuccessResponseDto<ProjectModifyResponseDto>> modifyProject(@PathVariable("projectId") Long projectId, @RequestBody ProjectModifyRequestDto dto) {
+        return ResponseEntity.ok().body(projectService.modifyProject(projectId, dto));
     }
     
     @DeleteMapping(DELETE_PROJECT)
-    public ResponseEntity<SuccessResponseDto<Long>> deleteProject(@PathVariable("projectId") Long projectId){
+    @Operation(summary = "프로젝트 게시글 삭제")
+    public ResponseEntity<SuccessResponseDto<ProjectDeleteResponseDto>> deleteProject(@PathVariable("projectId") Long projectId){
         return ResponseEntity.ok().body(projectService.deleteProject(projectId));
     }
 
     @GetMapping(READ_POPULAR_PROJECT)
+    @Operation(summary = "프로젝트 인기 게시글 5개 조회")
     public ResponseEntity<SuccessResponseDto<List<PopularProjectReadResponseDto>>> readPopularProjectList() {
         return ResponseEntity.ok().body(projectService.readPopularProjectList());
     }
 
     @GetMapping(READ_PROJECT_LIST)
+    @Operation(summary = "프로젝트 게시글 리스트 조회")
     public ResponseEntity<SuccessResponseDto<List<ProjectListReadResponseDto>>> readProjectList(
         @RequestParam(value = "size", required = false, defaultValue = "6") Integer size,
         @RequestParam(value = "page", required = false, defaultValue = "1") Integer page
@@ -69,6 +76,7 @@ public class ProjectController {
     }
 
     @GetMapping(READ_PROJECT)
+    @Operation(summary = "프로젝트 게시글 디테일")
     public ResponseEntity<SuccessResponseDto<ProjectReadResponseDto>> readProject(@PathVariable("projectId") Long projectId) {
         return ResponseEntity.ok().body(projectService.readProject(projectId));
     }

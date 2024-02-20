@@ -16,16 +16,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProjectCreateResponseDto {
     private Long id;
+    private Long memberId;
     private ProjectKind kind;
     private String field;
     private String title;
     private String content;
-    private String link;
     private String thumbnail;
     private String bannerContent;
     private Integer viewCount;
+    private Integer likeCount;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
-    private List<ProjectMemberResponseDto> projectMemberList;
+    private List<ProjectPositionResponseDto> projectPositionList;
+    private List<ProjectLinkResponseDto> projectLinkList;
     private List<ProjectTechStackResponseDto> projectTechStackList;
 }

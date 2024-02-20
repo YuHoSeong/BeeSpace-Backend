@@ -14,16 +14,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectTechStackResponseDto {
-    private Long id;
     private Long techStackId;
-    private String techStackName;
+    private String techStack;
     private String iconUrl;
 
     public ProjectTechStackResponseDto(ProjectTechStack projectTechStack){
         TechStack techStack = projectTechStack.getTechStack();
-        this.id = projectTechStack.getId();
+        // this.id = projectTechStack.getId();
         this.techStackId = techStack.getId();
-        this.techStackName = techStack.getTechStack();
+        this.techStack = techStack.getTechStack();
         this.iconUrl = techStack.getIconUrl();
     }
 

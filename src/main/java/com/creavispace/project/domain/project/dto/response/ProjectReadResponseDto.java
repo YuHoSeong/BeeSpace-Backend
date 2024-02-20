@@ -17,21 +17,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProjectReadResponseDto {
     private Long id;
-    private String field;
     private Long memberId;
-    private String memberName;
-    private Integer likeCount;
-    private Integer viewCount;
-    private LocalDateTime createdDate;
+    private ProjectKind kind;
+    private String field;
     private String title;
     private String content;
-    private String link;
-    private Boolean like;
-    private Boolean bookmark;
-    private ProjectKind kind;
-    private List<ProjectMemberResponseDto> projectMemberList;
+    private String thumbnail;
+    private String bannerContent;
+    private Integer viewCount;
+    private Integer likeCount;
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
+    private List<ProjectPositionResponseDto> projectPositionList;
+    private List<ProjectLinkResponseDto> projectLinkList;
     private List<ProjectTechStackResponseDto> projectTechStackList;
-    private List<ProjectCommentResponseDto> projectCommentList;
 
     public ProjectReadResponseDto(Project project){
         this.id = project.getId();
@@ -43,13 +42,10 @@ public class ProjectReadResponseDto {
         this.createdDate = project.getCreatedDate();
         this.title = project.getTitle();
         this.content = project.getContent();
-        this.link = project.getLink();
-        this.like = false;
-        this.bookmark = false;
+        // this.link = project.getLink();
         this.kind = project.getKind();
-        this.projectMemberList = ProjectMemberResponseDto.copyList(project.getMemberList());
+        this.projectPositionList = ProjectPositionResponseDto.copyList(project.getMemberList());
         this.projectTechStackList = ProjectTechStackResponseDto.copyList(project.getTechStackList());
-        this.projectCommentList = ProjectCommentResponseDto.copyList(project.getCommentList());
     }
 
 }

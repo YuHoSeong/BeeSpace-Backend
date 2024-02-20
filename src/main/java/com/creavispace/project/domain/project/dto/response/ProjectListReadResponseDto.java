@@ -19,7 +19,7 @@ public class ProjectListReadResponseDto {
     private Long id;
     private ProjectKind kind;
     private String title;
-    private String link;
+    private List<ProjectLinkResponseDto> linkList;
     private String thumbnail;
     private String bannerContent;
     private Boolean like;
@@ -29,7 +29,7 @@ public class ProjectListReadResponseDto {
         this.id = project.getId();
         this.kind = project.getKind();
         this.title = project.getTitle();
-        this.link = project.getLink();
+        // this.link = project.getLink();
         this.thumbnail = project.getThumbnail();
         this.bannerContent = project.getBannerContent();
         this.like = false;
