@@ -61,7 +61,7 @@ public class ProjectController {
     }
 
     @GetMapping(READ_POPULAR_PROJECT)
-    @Operation(summary = "프로젝트 인기 게시글 5개 조회")
+    @Operation(summary = "프로젝트 인기 게시글 6개 조회 / 프로젝트 베너 조회")
     public ResponseEntity<SuccessResponseDto<List<PopularProjectReadResponseDto>>> readPopularProjectList() {
         return ResponseEntity.ok().body(projectService.readPopularProjectList());
     }
