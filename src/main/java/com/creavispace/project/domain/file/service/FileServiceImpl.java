@@ -39,7 +39,7 @@ public class FileServiceImpl implements FileService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public SuccessResponseDto<UploadFileResponseDto> saveFile(MultipartFile multipartFile) {
+    public SuccessResponseDto<UploadFileResponseDto> fileUpload(MultipartFile multipartFile) {
         String fileName = createFileName(multipartFile.getOriginalFilename()); //종복되지 않게 이름을 randomUUID()를 사용해서 생성함
         String fileFormat = multipartFile.getContentType().substring(multipartFile.getContentType().lastIndexOf("/") + 1); //파일 확장자명 추출
         
