@@ -14,6 +14,7 @@ import lombok.Data;
 @Data
 @Builder
 public class MemberSaveRequestDto {
+    String loginId;
     String memberEmail;
     String memberNickname;
     String memberName;
