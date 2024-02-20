@@ -10,7 +10,7 @@ import com.creavispace.project.domain.community.dto.request.CommunityModifyReque
 import com.creavispace.project.domain.community.dto.response.CommunityCreateResponseDto;
 import com.creavispace.project.domain.community.dto.response.CommunityDeleteResponseDto;
 import com.creavispace.project.domain.community.dto.response.CommunityModifyResponseDto;
-import com.creavispace.project.domain.community.dto.response.CommunityReadListResponseDto;
+import com.creavispace.project.domain.community.dto.response.CommunityListReadResponseDto;
 import com.creavispace.project.domain.community.dto.response.CommunityReadResponseDto;
 
 @Service
@@ -42,7 +42,7 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
-    public SuccessResponseDto<List<CommunityReadListResponseDto>> readCommunityList(String hashTag, String type) {
+    public SuccessResponseDto<List<CommunityListReadResponseDto>> readCommunityList(String hashTag, String type) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'readCommunityList'");
     }

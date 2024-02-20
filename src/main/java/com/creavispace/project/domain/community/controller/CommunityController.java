@@ -19,7 +19,7 @@ import com.creavispace.project.domain.community.dto.request.CommunityModifyReque
 import com.creavispace.project.domain.community.dto.response.CommunityCreateResponseDto;
 import com.creavispace.project.domain.community.dto.response.CommunityDeleteResponseDto;
 import com.creavispace.project.domain.community.dto.response.CommunityModifyResponseDto;
-import com.creavispace.project.domain.community.dto.response.CommunityReadListResponseDto;
+import com.creavispace.project.domain.community.dto.response.CommunityListReadResponseDto;
 import com.creavispace.project.domain.community.dto.response.CommunityReadResponseDto;
 import com.creavispace.project.domain.community.service.CommunityService;
 
@@ -65,7 +65,7 @@ public class CommunityController {
     
     @GetMapping(READ_COMMUNITY_LIST)
     @Operation(summary = "커뮤니티 게시글 리스트 조회 / 인기 태그 게시글 조회")
-    public ResponseEntity<SuccessResponseDto<List<CommunityReadListResponseDto>>> readCommunityList(
+    public ResponseEntity<SuccessResponseDto<List<CommunityListReadResponseDto>>> readCommunityList(
         @RequestParam(value = "hashTag", required = false) String hashTag,
         @RequestParam(value = "type", required = false) String type
     ){
