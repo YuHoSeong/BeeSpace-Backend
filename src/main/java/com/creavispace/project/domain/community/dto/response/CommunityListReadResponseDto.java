@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommunityReadListResponseDto {
+public class CommunityListReadResponseDto {
     private Long id;
     // enum으로 교체
     private Long memberId;
