@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.recruit.dto.request.RecruitCreateRequestDto;
 import com.creavispace.project.domain.recruit.dto.request.RecruitModifyRequestDto;
+import com.creavispace.project.domain.recruit.dto.response.DeadLineRecruitListReadResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitCreateResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitDeleteResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitListReadResponseDto;
@@ -44,6 +45,12 @@ public class RecruitServiceImpl implements RecruitService {
     public SuccessResponseDto<RecruitReadResponseDto> readRecruit(Long recruitId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'readRecruit'");
+    }
+
+    @Override
+    public SuccessResponseDto<List<DeadLineRecruitListReadResponseDto>> readDeadlineRecruitList() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'readDeadlineRecruitList'");
     }
     
 }

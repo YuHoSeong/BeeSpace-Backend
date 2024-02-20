@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.recruit.dto.request.RecruitCreateRequestDto;
 import com.creavispace.project.domain.recruit.dto.request.RecruitModifyRequestDto;
+import com.creavispace.project.domain.recruit.dto.response.DeadLineRecruitListReadResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitCreateResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitDeleteResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitListReadResponseDto;
@@ -38,6 +39,7 @@ public class RecruitController {
     private static final String DELETE_RECRUIT = "/{recruitId}";
     private static final String READ_RECRUIT_LIST = "";
     private static final String READ_RECRUIT = "/{recruitId}";
+    private static final String READ_DEADLINE_RECRUIT_LIST = "/deadline";
 
     @PostMapping(CREATE_RECRUIT)
     @Operation(summary = "모집 게시글 생성")
