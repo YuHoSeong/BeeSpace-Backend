@@ -6,6 +6,9 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class RecruitDeleteRequestDto {
-    private Long id;
+public class RecruitPositionRequestDto {
+    // enum 관리로 변경
+    private String position;
+    private int amount;
+    
 }

@@ -1,17 +1,18 @@
 package com.creavispace.project.domain.recruit.dto.response;
 
-import com.creavispace.project.domain.recruit.dto.request.RecruitImageDto;
-import com.creavispace.project.domain.recruit.dto.request.RecruitPositionRequestDto;
-import lombok.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
-public class RecruitModifyResponseDto {
+public class RecruitReadResponseDto {
     private Long id;
     private Long memberId;
     private Integer viewCount;
@@ -29,4 +30,3 @@ public class RecruitModifyResponseDto {
     private String content;
     private List<RecruitPositionResponseDto> positionList;
 }
-

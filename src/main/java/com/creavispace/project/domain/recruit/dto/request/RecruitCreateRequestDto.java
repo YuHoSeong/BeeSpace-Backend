@@ -11,31 +11,18 @@ import java.util.List;
 @AllArgsConstructor
 public class RecruitCreateRequestDto {
 
+    // enum 관리로 변경
     private String kind;
-
     private int amount;
-
-    private String proceedWay;
-
-    private LocalDateTime startDay;
-
-    private LocalDateTime endDay;
-
     private int workDay;
-
+    private String contact;
+    // enum 관리로 변경
+    private String contactWay;
+    // enum 관리로 변경
+    private String proceedWay;
     private LocalDateTime end;
-
-    private String contect;
-
     private String title;
-
     private String content;
-
-    private String thumbnail;
-
-    private long memberId;
-
-    private List<RecruitPositionDto> positionList;
-
-    private List<RecruitImageDto> imageList;
+    private List<RecruitPositionRequestDto> recruitPositionList;
+    private List<RecruitTechStackRequestDto> recruitTechStackList;
 }

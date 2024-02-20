@@ -22,7 +22,7 @@ public class RecruitPosition extends BaseTimeEntity {
 
     private boolean status;
 
-    @ManyToOne
-    @JoinColumn(name = "recruit_id")
-    private Recruit recruit;
+    // @ManyToOne
+    // @JoinColumn(name = "recruit_id")
+    // private Recruit recruit;
 }
