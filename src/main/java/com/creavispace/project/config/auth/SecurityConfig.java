@@ -60,7 +60,7 @@ public class SecurityConfig {
                                 .hasRole(Role.MEMBER.name()).anyRequest()
                                 .authenticated())
                 .logout(logout -> logout.logoutSuccessHandler(new LogoutHandler()).logoutUrl("/logout"))
-                .oauth2Login(login -> login.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service)))
+                .oauth2Login(login -> login.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service)).successHandler(new LoginSuccessHandler()))
                 /*.exceptionHandling(exception -> exception
                                 .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))
                         // 시작 페이지로 리디렉션
