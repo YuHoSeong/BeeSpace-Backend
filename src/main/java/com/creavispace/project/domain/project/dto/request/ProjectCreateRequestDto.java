@@ -14,9 +14,9 @@ public class ProjectCreateRequestDto {
     private String field;
     private String title;
     private String content;
-    private String link;
+    private List<ProjectLinkRequestDto> linkList;
     private String thumbnail;
     private String bannerContent;
-    private List<ProjectMemberCreateRequestDto> projectMemberList;
-    private List<ProjectTechStackCreateRequestDto> projectTechStackList;
+    private List<ProjectMemberRequestDto> projectMemberList;
+    private List<ProjectTechStackRequestDto> projectTechStackList;
 }
