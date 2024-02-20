@@ -356,7 +356,7 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    public SuccessResponseDto<List<ProjectListReadResponseDto>> readProjectList(Integer size, Integer page) {
+    public SuccessResponseDto<List<ProjectListReadResponseDto>> readProjectList(Integer size, Integer page, String kind) {
         // 프로젝트 페이지네이션 조회
         Pageable pageRequest = PageRequest.of(page-1, size);
         Page<Project> pageable = projectRepository.findAllByStatusTrue(pageRequest);
