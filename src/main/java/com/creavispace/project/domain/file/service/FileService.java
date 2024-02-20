@@ -6,5 +6,5 @@ import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.file.dto.response.UploadFileResponseDto;
 
 public interface FileService {
-    public SuccessResponseDto<UploadFileResponseDto> saveFile(MultipartFile multipartFile);
+    public SuccessResponseDto<UploadFileResponseDto> fileUpload(MultipartFile multipartFile);
 }
