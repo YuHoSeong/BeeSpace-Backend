@@ -58,7 +58,7 @@ public class BookmarkController {
     @GetMapping(READ_RECRUIT_BOOKMARK)
     @Operation(summary = "모집 게시글 북마크 조회 기능")
     public ResponseEntity<SuccessResponseDto<RecruitBookmarkReadResponseDto>> readRecruitBookmark(@PathVariable("recruitId") Long recruitId){
-        return ResponseEntity.ok().body(recruitBookmarkService.readRcruitBookmark(recruitId));
+        return ResponseEntity.ok().body(recruitBookmarkService.readRecruitBookmark(recruitId));
     }
 
     @PostMapping(TOGGLE_COMMUNITY_BOOKMARK)

@@ -6,5 +6,5 @@ import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 
 public interface RecruitBookmarkService {
     public SuccessResponseDto<RecruitBookmarkResponseDto> recruitBookmark(Long recruitId);
-    public SuccessResponseDto<RecruitBookmarkReadResponseDto> readRcruitBookmark(Long recruitId);
+    public SuccessResponseDto<RecruitBookmarkReadResponseDto> readRecruitBookmark(Long recruitId);
 }
