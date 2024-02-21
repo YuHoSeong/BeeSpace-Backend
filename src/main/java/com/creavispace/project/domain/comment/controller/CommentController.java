@@ -11,6 +11,7 @@ import com.creavispace.project.domain.comment.dto.request.ProjectCommentModifyRe
 import com.creavispace.project.domain.comment.dto.response.CommentResponseDto;
 import com.creavispace.project.domain.comment.dto.response.CommentDeleteResponseDto;
 import com.creavispace.project.domain.comment.service.ProjectCommentService;
+import com.creavispace.project.domain.comment.service.RecruitCommentService;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,11 +31,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class CommentController {
     
     private final ProjectCommentService projectCommentService;
+    private final RecruitCommentService recruitCommentService;
 
     private static final String READ_PROJECT_COMMENT_LIST = "/project";
     private static final String CREATE_PROJECT_COMMENT = "/project";
     private static final String MODIFY_PROJECT_COMMENT = "/project/{projectCommentId}";
     private static final String DELETE_PROJECT_COMMENT = "/project/{projectCommentId}";
+    private static final String READ_RECRUIT_COMMENT_LIST = "/recruit";
 
     @GetMapping(READ_PROJECT_COMMENT_LIST)
     @Operation(summary = "프로젝트 댓글 리스트 조회")
@@ -58,6 +61,12 @@ public class CommentController {
     @Operation(summary = "프로젝트 댓글 삭제")
     public ResponseEntity<SuccessResponseDto<CommentDeleteResponseDto>> deleteProjectComment(@PathVariable("projectCommentId") Long projectCommentId){
         return ResponseEntity.ok().body(projectCommentService.deleteProjectComment(projectCommentId));
+    }
+
+    @GetMapping(READ_RECRUIT_COMMENT_LIST)
+    @Operation(summary = "모집 댓글 리스트 조회")
+    public ResponseEntity<SuccessResponseDto<List<CommentResponseDto>>> readRecruitCommentList(@RequestParam("recruitId") Long recruitId){
+        return ResponseEntity.ok().body(recruitCommentService.readRecruitCommentList(recruitId));
     }
     
 }
