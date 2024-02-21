@@ -32,7 +32,7 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
     private final ProjectRepository projectRepository;
 
     @Override
-    public SuccessResponseDto<List<ProjectCommentReadResponseDto>> readProjectComment(Long projectId) {
+    public SuccessResponseDto<List<ProjectCommentReadResponseDto>> readProjectCommentList(Long projectId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'readProjectComment'");
     }

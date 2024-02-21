@@ -25,24 +25,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/project-comment")
-public class ProjectCommentController {
+@RequestMapping("/comment")
+public class CommentController {
     
     private final ProjectCommentService projectCommentService;
 
-    private static final String READ_PROJECT_COMMENT = "";
-    private static final String CREATE_PROJECT_COMMENT = "";
-    private static final String MODIFY_PROJECT_COMMENT = "/{projectCommentId}";
-    private static final String DELETE_PROJECT_COMMENT = "/{projectCommentId}";
+    private static final String READ_PROJECT_COMMENT_LIST = "/project";
+    private static final String CREATE_PROJECT_COMMENT = "/project";
+    private static final String MODIFY_PROJECT_COMMENT = "/project/{projectCommentId}";
+    private static final String DELETE_PROJECT_COMMENT = "/project/{projectCommentId}";
 
-    @GetMapping(READ_PROJECT_COMMENT)
+    @GetMapping(READ_PROJECT_COMMENT_LIST)
     @Operation(summary = "프로젝트 댓글 리스트 조회")
-    public ResponseEntity<SuccessResponseDto<List<ProjectCommentReadResponseDto>>> readProjectComment(@RequestParam("projectId") Long projectId){
-        return ResponseEntity.ok().body(projectCommentService.readProjectComment(projectId));
+    public ResponseEntity<SuccessResponseDto<List<ProjectCommentReadResponseDto>>> readProjectCommentList(@RequestParam("projectId") Long projectId){
+        return ResponseEntity.ok().body(projectCommentService.readProjectCommentList(projectId));
     }
 
     @PostMapping(CREATE_PROJECT_COMMENT)
