@@ -1,11 +1,11 @@
 package com.creavispace.project.domain.bookmark.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creavispace.project.domain.bookmark.dto.response.ProjectBookmarkReadResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.ProjectBookmarkResponseDto;
+import com.creavispace.project.domain.bookmark.dto.response.RecruitBookmarkReadResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.RecruitBookmarkResponseDto;
 import com.creavispace.project.domain.bookmark.service.ProjectBookmarkService;
 import com.creavispace.project.domain.bookmark.service.RecruitBookmarkService;
@@ -31,6 +31,7 @@ public class BookmarkController {
     private static final String TOGGLE_PROJECT_BOOKMARK = "/project/{projectId}";
     private static final String READ_PROJECT_BOOKMARK = "/project/{projectId}";
     private static final String TOGGLE_RECRUIT_BOOKMARK = "/recruit/{recruitId}";
+    private static final String READ_RECRUIT_BOOKMARK = "/recruit/{recruitId}";
 
     @PostMapping(TOGGLE_PROJECT_BOOKMARK)
     @Operation(summary = "프로젝트 북마크 토글 기능")
@@ -48,6 +49,12 @@ public class BookmarkController {
     @Operation(summary = "모집 게시글 북마크 토글 기능")
     public ResponseEntity<SuccessResponseDto<RecruitBookmarkResponseDto>> recruitBookmark(@PathVariable("recruitId") Long recruitId) {
         return ResponseEntity.ok().body(recruitBookmarkService.recruitBookmark(recruitId));
+    }
+
+    @GetMapping(READ_RECRUIT_BOOKMARK)
+    @Operation(summary = "모집 게시글 북마크 조회 기능")
+    public ResponseEntity<SuccessResponseDto<RecruitBookmarkReadResponseDto>> readRecruitBookmark(@PathVariable("recruitId") Long recruitId){
+        return ResponseEntity.ok().body(recruitBookmarkService.readRcruitBookmark(recruitId));
     }
     
 }
