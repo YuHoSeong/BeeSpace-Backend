@@ -10,7 +10,7 @@ import com.creavispace.project.domain.comment.dto.response.ProjectCommentReadRes
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 
 public interface ProjectCommentService {
-    public SuccessResponseDto<List<ProjectCommentReadResponseDto>> readProjectComment(Long projectId);
+    public SuccessResponseDto<List<ProjectCommentReadResponseDto>> readProjectCommentList(Long projectId);
     public SuccessResponseDto<ProjectCommentCreateResponseDto> createProjectComment(ProjectCommentCreateRequestDto dto);
     public SuccessResponseDto<ProjectCommentModifyResponseDto> modifyProjectComment(Long projectCommentId, ProjectCommentModifyRequestDto dto);
     public SuccessResponseDto<Long> deleteProjectComment(Long projectCommentId);
