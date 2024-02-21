@@ -28,6 +28,7 @@ public class LikeController {
     private static final String PROJECT_LIKE = "/project/{projectId}";
     private static final String READ_PROJECT_LIKE = "/project/{projectId}";
     private static final String COMMUNITY_LIKE = "/community/{communityId}";
+    private static final String READ_COMMUNITY_LIKE = "/community/{communityId}";
 
     @PostMapping(PROJECT_LIKE)
     @Operation(summary = "프로젝트 좋아요 토글 기능")
@@ -45,6 +46,12 @@ public class LikeController {
     @Operation(summary = "커뮤니티 좋아요 토글 기능")
     public ResponseEntity<SuccessResponseDto<LikeResponseDto>> communityLike(@PathVariable("communityId") Long communityId){
         return ResponseEntity.ok().body(communityLikeService.communityLike(communityId));
+    }
+
+    @GetMapping(READ_COMMUNITY_LIKE)
+    @Operation(summary = "커뮤니티 좋아요 조회 기능")
+    public ResponseEntity<SuccessResponseDto<LikeResponseDto>> readCommunityLike(@PathVariable("communityId") Long communityId){
+        return ResponseEntity.ok().body(communityLikeService.readCommunityLike(communityId));
     }
     
 }

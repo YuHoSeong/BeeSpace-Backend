@@ -13,5 +13,11 @@ public class CommunityLikeServiceImpl implements CommunityLikeService {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'communityLike'");
     }
+
+    @Override
+    public SuccessResponseDto<LikeResponseDto> readCommunityLike(Long communityId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'readCommunityLike'");
+    }
     
 }
