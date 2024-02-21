@@ -8,6 +8,7 @@ import com.creavispace.project.domain.project.service.ProjectService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Service;
  *
  * */
 @Service
+@RequiredArgsConstructor
 public class MyPageService {
 
     //이름, 자기소개, 관심 스택, 사용자 직무
