@@ -3,6 +3,7 @@ package com.creavispace.project.domain.bookmark.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.creavispace.project.domain.bookmark.dto.response.CommunityBookmarkReadResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.CommunityBookmarkResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.ProjectBookmarkReadResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.ProjectBookmarkResponseDto;
@@ -36,6 +37,7 @@ public class BookmarkController {
     private static final String TOGGLE_RECRUIT_BOOKMARK = "/recruit/{recruitId}";
     private static final String READ_RECRUIT_BOOKMARK = "/recruit/{recruitId}";
     private static final String TOGGLE_COMMUNITY_BOOKMARK = "/community/{communityId}";
+    private static final String READ_COMMUNITY_BOOKMARK = "/community/{communityId}";
 
     @PostMapping(TOGGLE_PROJECT_BOOKMARK)
     @Operation(summary = "프로젝트 북마크 토글 기능")
@@ -65,6 +67,12 @@ public class BookmarkController {
     @Operation(summary = "커뮤니티 게시글 북마크 토글 기능")
     public ResponseEntity<SuccessResponseDto<CommunityBookmarkResponseDto>> communityBookmark(@PathVariable("communityId") Long communityId) {
         return ResponseEntity.ok().body(communityBookmarkService.communityBookmark(communityId));
+    }
+
+    @GetMapping(READ_COMMUNITY_BOOKMARK)
+    @Operation(summary = "커뮤니티 게시글 북마크 조회 기능")
+    public ResponseEntity<SuccessResponseDto<CommunityBookmarkReadResponseDto>> readCommunityBookmark(@PathVariable("communityId") Long communityId){
+        return ResponseEntity.ok().body(communityBookmarkService.readCommunityBookmark(communityId));
     }
     
 }
