@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.comment.dto.request.CommentRequestDto;
+import com.creavispace.project.domain.comment.dto.response.CommentDeleteResponseDto;
 import com.creavispace.project.domain.comment.dto.response.CommentResponseDto;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 
@@ -27,6 +28,12 @@ public class RecruitCommentServiceImpl implements RecruitCommentService {
     public SuccessResponseDto<CommentResponseDto> modifyRecruitComment(Long recruitCommentId, CommentRequestDto dto) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'modifyRecruitComment'");
+    }
+
+    @Override
+    public SuccessResponseDto<CommentDeleteResponseDto> deleteRecruitComment(Long recruitCommentId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteRecruitComment'");
     }
     
 }
