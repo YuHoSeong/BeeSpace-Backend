@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
 import com.creavispace.project.domain.search.dto.response.SearchListReadResponseDto;
 
 @Service
@@ -15,6 +16,12 @@ public class SearchServiceImpl implements SearchService{
             String type) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'readSearchList'");
+    }
+
+    @Override
+    public SuccessResponseDto<ProjectListReadResponseDto> readSearchProject(Long projectId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'readSearchProject'");
     }
     
 }
