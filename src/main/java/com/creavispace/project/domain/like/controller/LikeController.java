@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/like")
-public class ProjectLikeController {
+public class LikeController {
     
     private final ProjectLikeService projectLikeService;
 
