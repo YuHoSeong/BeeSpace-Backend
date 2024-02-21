@@ -34,18 +34,18 @@ public class ProjectReadResponseDto {
 
     public ProjectReadResponseDto(Project project){
         this.id = project.getId();
-        this.field = project.getField();
+        // this.field = project.getField();
         this.memberId = project.getMember().getId();
         // this.memberName = project.getMember().getMemberName();
-        this.likeCount = project.getLikeList().size();
+        // this.likeCount = project.getLikeList().size();
         this.viewCount = project.getViewCount();
         this.createdDate = project.getCreatedDate();
         this.title = project.getTitle();
         this.content = project.getContent();
         // this.link = project.getLink();
-        this.kind = project.getKind();
-        this.projectPositionList = ProjectPositionResponseDto.copyList(project.getMemberList());
-        this.projectTechStackList = ProjectTechStackResponseDto.copyList(project.getTechStackList());
+        // this.kind = project.getKind();
+        // this.projectPositionList = ProjectPositionResponseDto.copyList(project.getMemberList());
+        // this.projectTechStackList = ProjectTechStackResponseDto.copyList(project.getTechStackList());
     }
 
 }

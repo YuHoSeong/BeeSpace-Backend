@@ -11,8 +11,6 @@ import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDt
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,52 +37,54 @@ public class Project extends BaseTimeEntity{
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ProjectKind kind;
-
     private String field;
 
-    @Column(name = "title", length = 200, nullable = false)
+    // enum으로 관리 변경
+    @Column(nullable = false)
+    private String category;
+
+    @Column(length = 200, nullable = false)
     private String title;
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    private String link;
-
+    @Column(nullable = false)
     private String thumbnail;
 
-    @Column(name = "banner_content", nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String bannerContent;
 
-    private Integer viewCount;
+    private int viewCount;
 
-    private Integer weekViewCount;
+    private int weekViewCount;
 
-    private Boolean status;
-
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<ProjectImage> imageList;
+    private boolean status;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<ProjectComment> commentList;
+    private List<ProjectLink> links;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<ProjectBookmark> bookmarkList;
+    private List<ProjectImage> images;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<ProjectLike> likeList;
+    private List<ProjectComment> comments;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<ProjectMember> memberList;
+    private List<ProjectBookmark> bookmarks;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<ProjectTechStack> techStackList;
+    private List<ProjectLike> likes;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<ProjectMember> members;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<ProjectTechStack> techStacks;
 
     public void modify(ProjectModifyRequestDto dto){
         // this.kind = dto.getKind();
-        this.field = dto.getField();
+        // this.field = dto.getField();
         this.title = dto.getTitle();
         this.content = dto.getContent();
         // this.link = dto.getLink();
@@ -96,12 +96,12 @@ public class Project extends BaseTimeEntity{
         this.status = false;
     }
 
-    public void addMemberList(List<ProjectMember> memberList){
-        this.memberList = memberList;
+    public void addMemberList(List<ProjectMember> members){
+        this.members = members;
     }
 
-    public void addTechStackList(List<ProjectTechStack> techStackList){
-        this.techStackList = techStackList;
+    public void addTechStackList(List<ProjectTechStack> techStacks){
+        this.techStacks = techStacks;
     }
 
 }

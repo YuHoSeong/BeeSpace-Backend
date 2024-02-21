@@ -34,8 +34,8 @@ public class ProjectModifyResponseDto {
 
     public ProjectModifyResponseDto(Project project){
         this.id = project.getId();
-        this.kind = project.getKind();
-        this.field = project.getField();
+        // this.kind = project.getKind();
+        // this.field = project.getField();
         this.title = project.getTitle();
         this.content = project.getContent();
         // this.link = project.getLink();
@@ -44,7 +44,7 @@ public class ProjectModifyResponseDto {
         this.viewCount = project.getViewCount();
         this.createdDate = project.getCreatedDate();
         this.modifiedDate = project.getModifiedDate();
-        this.projectPositionList = ProjectPositionResponseDto.copyList(project.getMemberList());
-        this.projectTechStackList = ProjectTechStackResponseDto.copyList(project.getTechStackList());
+        // this.projectPositionList = ProjectPositionResponseDto.copyList(project.getMemberList());
+        // this.projectTechStackList = ProjectTechStackResponseDto.copyList(project.getTechStackList());
     }
 }

@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
-import com.creavispace.project.domain.project.dto.request.ProjectCreateRequestDto;
+import com.creavispace.project.domain.project.dto.request.ProjectRequestDto;
 import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDto;
 import com.creavispace.project.domain.project.dto.response.PopularProjectReadResponseDto;
-import com.creavispace.project.domain.project.dto.response.ProjectCreateResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectDeleteResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectModifyResponseDto;
@@ -44,7 +44,7 @@ public class ProjectController {
 
     @PostMapping(CREATE_PROJECT)
     @Operation(summary = "프로젝트 게시글 생성")
-    public ResponseEntity<SuccessResponseDto<ProjectCreateResponseDto>> createProject(@RequestBody ProjectCreateRequestDto dto) {
+    public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> createProject(@RequestBody ProjectRequestDto dto) {
         return ResponseEntity.ok().body(projectService.createProject(dto));
     }
 

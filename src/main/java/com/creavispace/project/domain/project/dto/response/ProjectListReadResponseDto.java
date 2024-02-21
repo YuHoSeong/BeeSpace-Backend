@@ -27,7 +27,7 @@ public class ProjectListReadResponseDto {
 
     public ProjectListReadResponseDto(Project project){
         this.id = project.getId();
-        this.kind = project.getKind();
+        // this.kind = project.getKind();
         this.title = project.getTitle();
         // this.link = project.getLink();
         this.thumbnail = project.getThumbnail();

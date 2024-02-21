@@ -3,21 +3,20 @@ package com.creavispace.project.domain.project.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.creavispace.project.domain.project.entity.ProjectKind;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectCreateResponseDto {
+public class ProjectResponseDto {
     private Long id;
     private Long memberId;
-    private ProjectKind kind;
+    // enum 관리로 변경
+    private String category;
     private String field;
     private String title;
     private String content;
@@ -27,7 +26,7 @@ public class ProjectCreateResponseDto {
     private Integer likeCount;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
-    private List<ProjectPositionResponseDto> projectPositionList;
-    private List<ProjectLinkResponseDto> projectLinkList;
-    private List<ProjectTechStackResponseDto> projectTechStackList;
+    private List<ProjectPositionResponseDto> positions;
+    private List<ProjectLinkResponseDto> links;
+    private List<ProjectTechStackResponseDto> techStacks;
 }

@@ -21,7 +21,7 @@ public class PopularProjectReadResponseDto {
         this.id = project.getId();
         this.title = project.getTitle();
         this.thumbnail = project.getThumbnail();
-        this.kind = project.getKind();
+        // this.kind = project.getKind();
         this.bannerContent = project.getBannerContent();
     }
 }
