@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.creavispace.project.domain.comment.dto.request.CommentRequestDto;
 import com.creavispace.project.domain.comment.dto.request.ProjectCommentCreateRequestDto;
 import com.creavispace.project.domain.comment.dto.request.ProjectCommentModifyRequestDto;
 import com.creavispace.project.domain.comment.dto.response.CommentResponseDto;
@@ -38,6 +39,7 @@ public class CommentController {
     private static final String MODIFY_PROJECT_COMMENT = "/project/{projectCommentId}";
     private static final String DELETE_PROJECT_COMMENT = "/project/{projectCommentId}";
     private static final String READ_RECRUIT_COMMENT_LIST = "/recruit";
+    private static final String CREATE_RECRUIT_COMMENT = "/recruit";
 
     @GetMapping(READ_PROJECT_COMMENT_LIST)
     @Operation(summary = "프로젝트 댓글 리스트 조회")
@@ -69,4 +71,11 @@ public class CommentController {
         return ResponseEntity.ok().body(recruitCommentService.readRecruitCommentList(recruitId));
     }
     
+    @PostMapping(CREATE_RECRUIT_COMMENT)
+    @Operation(summary = "모집 댓글 등록")
+    public ResponseEntity<SuccessResponseDto<CommentResponseDto>> createRecruitComment(
+        @RequestParam("recruitId") Long recruitId,
+        @RequestBody CommentRequestDto requestBody) {
+        return ResponseEntity.ok().body(recruitCommentService.createRecruitComment(recruitId, requestBody));
+    }
 }
