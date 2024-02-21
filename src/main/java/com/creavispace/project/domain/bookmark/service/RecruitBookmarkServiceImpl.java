@@ -16,7 +16,7 @@ public class RecruitBookmarkServiceImpl implements RecruitBookmarkService{
     }
 
     @Override
-    public SuccessResponseDto<RecruitBookmarkReadResponseDto> readRcruitBookmark(Long recruitId) {
+    public SuccessResponseDto<RecruitBookmarkReadResponseDto> readRecruitBookmark(Long recruitId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'readRcruitBookmark'");
     }
