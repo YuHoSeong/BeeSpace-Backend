@@ -3,10 +3,12 @@ package com.creavispace.project.domain.bookmark.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.creavispace.project.domain.bookmark.dto.response.CommunityBookmarkResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.ProjectBookmarkReadResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.ProjectBookmarkResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.RecruitBookmarkReadResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.RecruitBookmarkResponseDto;
+import com.creavispace.project.domain.bookmark.service.CommunityBookmarkService;
 import com.creavispace.project.domain.bookmark.service.ProjectBookmarkService;
 import com.creavispace.project.domain.bookmark.service.RecruitBookmarkService;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
@@ -27,11 +29,13 @@ public class BookmarkController {
     
     private final ProjectBookmarkService projectBookmarkService;
     private final RecruitBookmarkService recruitBookmarkService;
+    private final CommunityBookmarkService communityBookmarkService;
 
     private static final String TOGGLE_PROJECT_BOOKMARK = "/project/{projectId}";
     private static final String READ_PROJECT_BOOKMARK = "/project/{projectId}";
     private static final String TOGGLE_RECRUIT_BOOKMARK = "/recruit/{recruitId}";
     private static final String READ_RECRUIT_BOOKMARK = "/recruit/{recruitId}";
+    private static final String TOGGLE_COMMUNITY_BOOKMARK = "/community/{communityId}";
 
     @PostMapping(TOGGLE_PROJECT_BOOKMARK)
     @Operation(summary = "프로젝트 북마크 토글 기능")
@@ -55,6 +59,12 @@ public class BookmarkController {
     @Operation(summary = "모집 게시글 북마크 조회 기능")
     public ResponseEntity<SuccessResponseDto<RecruitBookmarkReadResponseDto>> readRecruitBookmark(@PathVariable("recruitId") Long recruitId){
         return ResponseEntity.ok().body(recruitBookmarkService.readRcruitBookmark(recruitId));
+    }
+
+    @PostMapping(TOGGLE_COMMUNITY_BOOKMARK)
+    @Operation(summary = "커뮤니티 게시글 북마크 토글 기능")
+    public ResponseEntity<SuccessResponseDto<CommunityBookmarkResponseDto>> communityBookmark(@PathVariable("communityId") Long communityId) {
+        return ResponseEntity.ok().body(communityBookmarkService.communityBookmark(communityId));
     }
     
 }
