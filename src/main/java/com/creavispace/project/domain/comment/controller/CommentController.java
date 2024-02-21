@@ -47,6 +47,7 @@ public class CommentController {
     private static final String READ_COMMUNITY_COMMENT_LIST = "/community";
     private static final String CREATE_COMMUNITY_COMMENT = "/community";
     private static final String MODIFY_COMMUNITY_COMMENT = "/community/{communityCommentId}";
+    private static final String DELETE_COMMUNITY_COMMENT = "/community/{communityCommentId}";
 
     @GetMapping(READ_PROJECT_COMMENT_LIST)
     @Operation(summary = "프로젝트 댓글 리스트 조회")
@@ -116,6 +117,12 @@ public class CommentController {
     @Operation(summary = "커뮤니티 댓글 수정")
     public ResponseEntity<SuccessResponseDto<CommentResponseDto>> modifyCommunityComment(@PathVariable("communityCommentId") Long communityCommentId, @RequestBody CommentRequestDto requestBody) {
         return ResponseEntity.ok().body(communityCommentService.modifyCommunityComment(communityCommentId, requestBody));
+    }
+
+    @DeleteMapping(DELETE_COMMUNITY_COMMENT)
+    @Operation(summary = "커뮤니티 댓글 삭제")
+    public ResponseEntity<SuccessResponseDto<CommentDeleteResponseDto>> deleteCommunityComment(@PathVariable("communityCommentId") Long communityCommentId){
+        return ResponseEntity.ok().body(communityCommentService.deleteCommunityComment(communityCommentId));
     }
 
 }
