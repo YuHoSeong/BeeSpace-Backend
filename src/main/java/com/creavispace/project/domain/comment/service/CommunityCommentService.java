@@ -9,4 +9,5 @@ import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 public interface CommunityCommentService {
     public SuccessResponseDto<List<CommentResponseDto>> readCommunityCommentList(Long communityId);
     public SuccessResponseDto<CommentResponseDto> createCommunityComment(Long communityId, CommentRequestDto dto);
+    public SuccessResponseDto<CommentResponseDto> modifyCommunityComment(Long communityCommentId, CommentRequestDto dto);
 }
