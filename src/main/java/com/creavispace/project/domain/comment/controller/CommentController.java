@@ -40,6 +40,7 @@ public class CommentController {
     private static final String DELETE_PROJECT_COMMENT = "/project/{projectCommentId}";
     private static final String READ_RECRUIT_COMMENT_LIST = "/recruit";
     private static final String CREATE_RECRUIT_COMMENT = "/recruit";
+    private static final String MODIFY_RECRUIT_COMMENT = "/recruit/{recruitCommentId}";
 
     @GetMapping(READ_PROJECT_COMMENT_LIST)
     @Operation(summary = "프로젝트 댓글 리스트 조회")
@@ -77,5 +78,11 @@ public class CommentController {
         @RequestParam("recruitId") Long recruitId,
         @RequestBody CommentRequestDto requestBody) {
         return ResponseEntity.ok().body(recruitCommentService.createRecruitComment(recruitId, requestBody));
+    }
+
+    @PutMapping(MODIFY_RECRUIT_COMMENT)
+    @Operation(summary = "모집 댓글 수정")
+    public ResponseEntity<SuccessResponseDto<CommentResponseDto>> modifyRecruitComment(@PathVariable("recruitCommentId") Long recruitCommentId, @RequestBody CommentRequestDto requestBody) {
+        return ResponseEntity.ok().body(recruitCommentService.modifyRecruitComment(recruitCommentId, requestBody));
     }
 }

@@ -9,4 +9,5 @@ import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 public interface RecruitCommentService {
     public SuccessResponseDto<List<CommentResponseDto>> readRecruitCommentList(Long recruitId);
     public SuccessResponseDto<CommentResponseDto> createRecruitComment(Long recruitId, CommentRequestDto dto);
+    public SuccessResponseDto<CommentResponseDto> modifyRecruitComment(Long recruitCommentId, CommentRequestDto dto);
 }

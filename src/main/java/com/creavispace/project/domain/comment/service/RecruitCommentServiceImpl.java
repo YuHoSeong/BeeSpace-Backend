@@ -22,5 +22,11 @@ public class RecruitCommentServiceImpl implements RecruitCommentService {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'createRecruitComment'");
     }
+
+    @Override
+    public SuccessResponseDto<CommentResponseDto> modifyRecruitComment(Long recruitCommentId, CommentRequestDto dto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'modifyRecruitComment'");
+    }
     
 }
