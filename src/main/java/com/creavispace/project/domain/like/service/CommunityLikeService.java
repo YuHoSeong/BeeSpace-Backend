@@ -5,4 +5,5 @@ import com.creavispace.project.domain.like.dto.response.LikeResponseDto;
 
 public interface CommunityLikeService {
     public SuccessResponseDto<LikeResponseDto> communityLike(Long communityId);
+    public SuccessResponseDto<LikeResponseDto> readCommunityLike(Long communityId);
 }
