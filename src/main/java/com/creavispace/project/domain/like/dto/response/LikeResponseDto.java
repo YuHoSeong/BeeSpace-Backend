@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectLikeResponseDto {
+public class LikeResponseDto {
     private boolean likeStatus;
 }
