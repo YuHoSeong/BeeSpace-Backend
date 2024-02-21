@@ -7,9 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.comment.dto.request.ProjectCommentCreateRequestDto;
 import com.creavispace.project.domain.comment.dto.request.ProjectCommentModifyRequestDto;
-import com.creavispace.project.domain.comment.dto.response.ProjectCommentCreateResponseDto;
-import com.creavispace.project.domain.comment.dto.response.ProjectCommentModifyResponseDto;
-import com.creavispace.project.domain.comment.dto.response.ProjectCommentReadResponseDto;
+import com.creavispace.project.domain.comment.dto.response.CommentResponseDto;
+import com.creavispace.project.domain.comment.dto.response.CommentDeleteResponseDto;
 import com.creavispace.project.domain.comment.entity.ProjectComment;
 import com.creavispace.project.domain.comment.repository.ProjectCommentRepository;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
@@ -32,14 +31,14 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
     private final ProjectRepository projectRepository;
 
     @Override
-    public SuccessResponseDto<List<ProjectCommentReadResponseDto>> readProjectCommentList(Long projectId) {
+    public SuccessResponseDto<List<CommentResponseDto>> readProjectCommentList(Long projectId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'readProjectComment'");
     }
 
     @Override
     @Transactional
-    public SuccessResponseDto<ProjectCommentCreateResponseDto> createProjectComment(ProjectCommentCreateRequestDto dto) {
+    public SuccessResponseDto<CommentResponseDto> createProjectComment(ProjectCommentCreateRequestDto dto) {
         // todo : JWT
         Long memberId = 1L;
 
@@ -57,14 +56,21 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
 
         projectCommentRepository.save(projectComment);
 
-        ProjectCommentCreateResponseDto create = new ProjectCommentCreateResponseDto(projectComment);
+        CommentResponseDto create = CommentResponseDto.builder()
+            .id(projectComment.getId())
+            .memberId(projectComment.getMember().getId())
+            .memberNickName(projectComment.getMember().getMemberNickname())
+            .memberProfileUrl(projectComment.getMember().getProfileUrl())
+            // .modifiedDate(projectComment.getModifiedDate())
+            .content(projectComment.getContent())
+            .build();
 
-        return new SuccessResponseDto<ProjectCommentCreateResponseDto>(true, "댓글 작성이 완료되었습니다.", create);
+        return new SuccessResponseDto<>(true, "댓글 작성이 완료되었습니다.", create);
     }
 
     @Override
     @Transactional
-    public SuccessResponseDto<ProjectCommentModifyResponseDto> modifyProjectComment(Long projectCommentId, ProjectCommentModifyRequestDto dto) {
+    public SuccessResponseDto<CommentResponseDto> modifyProjectComment(Long projectCommentId, ProjectCommentModifyRequestDto dto) {
         // todo : JWT
         Long memberId = 1L;
         
@@ -81,14 +87,21 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
         projectComment.modify(dto);
         projectCommentRepository.save(projectComment);
 
-        ProjectCommentModifyResponseDto modify = new ProjectCommentModifyResponseDto(projectComment);
+        CommentResponseDto modify = CommentResponseDto.builder()
+            .id(projectComment.getId())
+            .memberId(projectComment.getMember().getId())
+            .memberNickName(projectComment.getMember().getMemberNickname())
+            .memberProfileUrl(projectComment.getMember().getProfileUrl())
+            // .modifiedDate(projectComment.getModifiedDate())
+            .content(projectComment.getContent())
+            .build();
 
-        return new SuccessResponseDto<ProjectCommentModifyResponseDto>(true, "댓글 수정이 완료되었습니다.", modify);
+        return new SuccessResponseDto<>(true, "댓글 수정이 완료되었습니다.", modify);
     }
 
     @Override
     @Transactional
-    public SuccessResponseDto<Long> deleteProjectComment(Long projectCommentId) {
+    public SuccessResponseDto<CommentDeleteResponseDto> deleteProjectComment(Long projectCommentId) {
         // todo : JWT
         Long memberId = 1L;
 
@@ -104,7 +117,7 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
 
         projectCommentRepository.deleteById(projectCommentId);
 
-        return new SuccessResponseDto<Long>(true, "댓글을 삭제하였습니다.", projectCommentId);
+        return new SuccessResponseDto<>(true, "댓글을 삭제하였습니다.", new CommentDeleteResponseDto(projectCommentId));
     }
     
 }
