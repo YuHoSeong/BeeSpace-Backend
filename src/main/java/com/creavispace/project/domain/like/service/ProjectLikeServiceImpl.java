@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
-import com.creavispace.project.domain.like.dto.response.ProjectLikeResponseDto;
+import com.creavispace.project.domain.like.dto.response.LikeResponseDto;
 import com.creavispace.project.domain.like.entity.ProjectLike;
 import com.creavispace.project.domain.like.repository.ProjectLikeRepository;
 import com.creavispace.project.domain.member.entity.Member;
@@ -28,7 +28,7 @@ public class ProjectLikeServiceImpl implements ProjectLikeService{
     
     @Override
     @Transactional
-    public SuccessResponseDto<ProjectLikeResponseDto> projectLike(Long projectId) {
+    public SuccessResponseDto<LikeResponseDto> projectLike(Long projectId) {
         // todo : JWT 토큰의 member정보 사용 예정
         Long memberId =1L;
 
@@ -49,12 +49,18 @@ public class ProjectLikeServiceImpl implements ProjectLikeService{
                 .project(project)
                 .build();
             projectLikeRepository.save(saveLike);
-            return new SuccessResponseDto<ProjectLikeResponseDto>(true, "좋아요 등록이 완료되었습니다.",new ProjectLikeResponseDto(true));
+            return new SuccessResponseDto<LikeResponseDto>(true, "좋아요 등록이 완료되었습니다.",new LikeResponseDto(true));
         }else{
             Long projectLikeId = projectLike.getId();
             projectLikeRepository.deleteById(projectLikeId);
-            return new SuccessResponseDto<ProjectLikeResponseDto>(true, "좋아요 취소가 완료되었습니다.",new ProjectLikeResponseDto(false));
+            return new SuccessResponseDto<LikeResponseDto>(true, "좋아요 취소가 완료되었습니다.",new LikeResponseDto(false));
         }
+    }
+
+    @Override
+    public SuccessResponseDto<LikeResponseDto> readProjectLike(Long projectId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'readProjectLike'");
     }
     
 }
