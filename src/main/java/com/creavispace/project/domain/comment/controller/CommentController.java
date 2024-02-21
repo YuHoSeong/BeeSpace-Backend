@@ -11,6 +11,7 @@ import com.creavispace.project.domain.comment.dto.request.ProjectCommentCreateRe
 import com.creavispace.project.domain.comment.dto.request.ProjectCommentModifyRequestDto;
 import com.creavispace.project.domain.comment.dto.response.CommentResponseDto;
 import com.creavispace.project.domain.comment.dto.response.CommentDeleteResponseDto;
+import com.creavispace.project.domain.comment.service.CommunityCommentService;
 import com.creavispace.project.domain.comment.service.ProjectCommentService;
 import com.creavispace.project.domain.comment.service.RecruitCommentService;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
@@ -33,6 +34,7 @@ public class CommentController {
     
     private final ProjectCommentService projectCommentService;
     private final RecruitCommentService recruitCommentService;
+    private final CommunityCommentService communityCommentService;
 
     private static final String READ_PROJECT_COMMENT_LIST = "/project";
     private static final String CREATE_PROJECT_COMMENT = "/project";
@@ -42,6 +44,7 @@ public class CommentController {
     private static final String CREATE_RECRUIT_COMMENT = "/recruit";
     private static final String MODIFY_RECRUIT_COMMENT = "/recruit/{recruitCommentId}";
     private static final String DELETE_RECRUIT_COMMENT = "/recruit/{recruitCommentId}";
+    private static final String READ_COMMUNITY_COMMENT_LIST = "/community";
 
     @GetMapping(READ_PROJECT_COMMENT_LIST)
     @Operation(summary = "프로젝트 댓글 리스트 조회")
@@ -93,5 +96,10 @@ public class CommentController {
         return ResponseEntity.ok().body(recruitCommentService.deleteRecruitComment(recruitCommentId));
     }
 
+    @GetMapping(READ_COMMUNITY_COMMENT_LIST)
+    @Operation(summary = "커뮤니티 댓글 리스트 조회")
+    public ResponseEntity<SuccessResponseDto<List<CommentResponseDto>>> readCommunityCommentList(@RequestParam("communityId") Long communityId){
+        return ResponseEntity.ok().body(communityCommentService.readCommunityCommentList(communityId));
+    }
 
 }
