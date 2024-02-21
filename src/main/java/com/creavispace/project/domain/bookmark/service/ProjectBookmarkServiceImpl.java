@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.creavispace.project.domain.bookmark.dto.response.ProjectBookmarkReadResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.ProjectBookmarkResponseDto;
 import com.creavispace.project.domain.bookmark.entity.ProjectBookmark;
 import com.creavispace.project.domain.bookmark.repository.ProjectBookmarkRepository;
@@ -52,6 +53,12 @@ public class ProjectBookmarkServiceImpl implements ProjectBookmarkService{
             projectBookmarkRepository.deleteById(projectBookmarkId);
             return new SuccessResponseDto<ProjectBookmarkResponseDto>(true, "북마크 취소가 완료되었습니다.", new ProjectBookmarkResponseDto(false));
         }
+    }
+
+    @Override
+    public SuccessResponseDto<ProjectBookmarkReadResponseDto> readProjectBookmark(Long projectId) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'readProjectBookmark'");
     }
     
 }
