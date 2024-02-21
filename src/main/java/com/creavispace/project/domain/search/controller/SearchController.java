@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
+import com.creavispace.project.domain.recruit.dto.response.RecruitListReadResponseDto;
 import com.creavispace.project.domain.search.dto.response.SearchListReadResponseDto;
 import com.creavispace.project.domain.search.service.SearchService;
 
@@ -26,6 +27,7 @@ public class SearchController {
 
     private final static String READ_SEARCH_LIST = "";
     private final static String READ_SEARCH_PROJECT = "/project/{projectId}";
+    private final static String READ_SEARCH_RECRUIT = "/recruit/{recruitId}";
 
     @GetMapping(READ_SEARCH_LIST)
     @Operation(summary = "통합 검색 리스트 조회")
@@ -44,5 +46,13 @@ public class SearchController {
         @PathVariable("projectId") Long projectId
     ){
         return ResponseEntity.ok().body(searchService.readSearchProject(projectId));
+    }
+
+    @GetMapping(READ_SEARCH_RECRUIT)
+    @Operation(summary = "통합 검색 모집 게시글 카드 정보 조회")
+    public ResponseEntity<SuccessResponseDto<RecruitListReadResponseDto>> readSearchRecruit(
+        @PathVariable("recruitId") Long recruitId
+    ){
+        return ResponseEntity.ok().body(searchService.readSearchRecruit(recruitId));
     }
 }
