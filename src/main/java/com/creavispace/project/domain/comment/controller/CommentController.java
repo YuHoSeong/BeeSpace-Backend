@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creavispace.project.domain.comment.dto.request.CommentRequestDto;
-import com.creavispace.project.domain.comment.dto.request.ProjectCommentCreateRequestDto;
-import com.creavispace.project.domain.comment.dto.request.ProjectCommentModifyRequestDto;
 import com.creavispace.project.domain.comment.dto.response.CommentResponseDto;
 import com.creavispace.project.domain.comment.dto.response.CommentDeleteResponseDto;
 import com.creavispace.project.domain.comment.service.CommunityCommentService;
@@ -57,13 +55,15 @@ public class CommentController {
 
     @PostMapping(CREATE_PROJECT_COMMENT)
     @Operation(summary = "프로젝트 댓글 등록")
-    public ResponseEntity<SuccessResponseDto<CommentResponseDto>> createProjectComment(@RequestBody ProjectCommentCreateRequestDto requestBody) {
-        return ResponseEntity.ok().body(projectCommentService.createProjectComment(requestBody));
+    public ResponseEntity<SuccessResponseDto<CommentResponseDto>> createProjectComment(
+        @RequestParam("projectId") Long projectId,
+        @RequestBody CommentRequestDto requestBody) {
+        return ResponseEntity.ok().body(projectCommentService.createProjectComment(projectId, requestBody));
     }
 
     @PutMapping(MODIFY_PROJECT_COMMENT)
     @Operation(summary = "프로젝트 댓글 수정")
-    public ResponseEntity<SuccessResponseDto<CommentResponseDto>> modifyProjectComment(@PathVariable("projectCommentId") Long projectCommentId, @RequestBody ProjectCommentModifyRequestDto requestBody) {
+    public ResponseEntity<SuccessResponseDto<CommentResponseDto>> modifyProjectComment(@PathVariable("projectCommentId") Long projectCommentId, @RequestBody CommentRequestDto requestBody) {
         return ResponseEntity.ok().body(projectCommentService.modifyProjectComment(projectCommentId, requestBody));
     }
 
