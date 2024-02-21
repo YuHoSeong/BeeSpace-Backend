@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.creavispace.project.domain.comment.dto.request.ProjectCommentCreateRequestDto;
 import com.creavispace.project.domain.comment.dto.request.ProjectCommentModifyRequestDto;
-import com.creavispace.project.domain.comment.dto.response.ProjectCommentCreateResponseDto;
-import com.creavispace.project.domain.comment.dto.response.ProjectCommentModifyResponseDto;
-import com.creavispace.project.domain.comment.dto.response.ProjectCommentReadResponseDto;
+import com.creavispace.project.domain.comment.dto.response.CommentResponseDto;
+import com.creavispace.project.domain.comment.dto.response.CommentDeleteResponseDto;
 import com.creavispace.project.domain.comment.service.ProjectCommentService;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 
@@ -39,25 +38,25 @@ public class CommentController {
 
     @GetMapping(READ_PROJECT_COMMENT_LIST)
     @Operation(summary = "프로젝트 댓글 리스트 조회")
-    public ResponseEntity<SuccessResponseDto<List<ProjectCommentReadResponseDto>>> readProjectCommentList(@RequestParam("projectId") Long projectId){
+    public ResponseEntity<SuccessResponseDto<List<CommentResponseDto>>> readProjectCommentList(@RequestParam("projectId") Long projectId){
         return ResponseEntity.ok().body(projectCommentService.readProjectCommentList(projectId));
     }
 
     @PostMapping(CREATE_PROJECT_COMMENT)
     @Operation(summary = "프로젝트 댓글 등록")
-    public ResponseEntity<SuccessResponseDto<ProjectCommentCreateResponseDto>> createProjectComment(@RequestBody ProjectCommentCreateRequestDto requestBody) {
+    public ResponseEntity<SuccessResponseDto<CommentResponseDto>> createProjectComment(@RequestBody ProjectCommentCreateRequestDto requestBody) {
         return ResponseEntity.ok().body(projectCommentService.createProjectComment(requestBody));
     }
 
     @PutMapping(MODIFY_PROJECT_COMMENT)
     @Operation(summary = "프로젝트 댓글 수정")
-    public ResponseEntity<SuccessResponseDto<ProjectCommentModifyResponseDto>> modifyProjectComment(@PathVariable("projectCommentId") Long projectCommentId, @RequestBody ProjectCommentModifyRequestDto requestBody) {
+    public ResponseEntity<SuccessResponseDto<CommentResponseDto>> modifyProjectComment(@PathVariable("projectCommentId") Long projectCommentId, @RequestBody ProjectCommentModifyRequestDto requestBody) {
         return ResponseEntity.ok().body(projectCommentService.modifyProjectComment(projectCommentId, requestBody));
     }
 
     @DeleteMapping(DELETE_PROJECT_COMMENT)
     @Operation(summary = "프로젝트 댓글 삭제")
-    public ResponseEntity<SuccessResponseDto<Long>> deleteProjectComment(@PathVariable("projectCommentId") Long projectCommentId){
+    public ResponseEntity<SuccessResponseDto<CommentDeleteResponseDto>> deleteProjectComment(@PathVariable("projectCommentId") Long projectCommentId){
         return ResponseEntity.ok().body(projectCommentService.deleteProjectComment(projectCommentId));
     }
     

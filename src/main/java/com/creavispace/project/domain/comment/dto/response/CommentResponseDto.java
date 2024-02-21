@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectCommentReadResponseDto {
+public class CommentResponseDto {
     private Long id;
     private Long memberId;
     private String memberNickName;
