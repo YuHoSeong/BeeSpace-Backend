@@ -22,5 +22,12 @@ public class CommunityCommentServiceImpl implements CommunityCommentService {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'createCommunityComment'");
     }
+
+    @Override
+    public SuccessResponseDto<CommentResponseDto> modifyCommunityComment(Long communityCommentId,
+            CommentRequestDto dto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'modifyCommunityComment'");
+    }
     
 }
