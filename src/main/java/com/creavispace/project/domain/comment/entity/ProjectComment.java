@@ -1,6 +1,6 @@
 package com.creavispace.project.domain.comment.entity;
 
-import com.creavispace.project.domain.comment.dto.request.ProjectCommentModifyRequestDto;
+import com.creavispace.project.domain.comment.dto.request.CommentRequestDto;
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.project.entity.Project;
@@ -39,7 +39,7 @@ public class ProjectComment extends BaseTimeEntity {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    public void modify(ProjectCommentModifyRequestDto dto){
+    public void modify(CommentRequestDto dto){
         this.content = dto.getContent();
     }
 

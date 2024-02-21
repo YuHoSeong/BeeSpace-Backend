@@ -5,8 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.creavispace.project.domain.comment.dto.request.ProjectCommentCreateRequestDto;
-import com.creavispace.project.domain.comment.dto.request.ProjectCommentModifyRequestDto;
+import com.creavispace.project.domain.comment.dto.request.CommentRequestDto;
 import com.creavispace.project.domain.comment.dto.response.CommentResponseDto;
 import com.creavispace.project.domain.comment.dto.response.CommentDeleteResponseDto;
 import com.creavispace.project.domain.comment.entity.ProjectComment;
@@ -38,14 +37,14 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
 
     @Override
     @Transactional
-    public SuccessResponseDto<CommentResponseDto> createProjectComment(ProjectCommentCreateRequestDto dto) {
+    public SuccessResponseDto<CommentResponseDto> createProjectComment(Long projectId, CommentRequestDto dto) {
         // todo : JWT
         Long memberId = 1L;
 
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
-        Optional<Project> optionalProject = projectRepository.findById(dto.getProjectId());
+        Optional<Project> optionalProject = projectRepository.findById(projectId);
         Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
 
         ProjectComment projectComment = ProjectComment.builder()
@@ -70,7 +69,7 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
 
     @Override
     @Transactional
-    public SuccessResponseDto<CommentResponseDto> modifyProjectComment(Long projectCommentId, ProjectCommentModifyRequestDto dto) {
+    public SuccessResponseDto<CommentResponseDto> modifyProjectComment(Long projectCommentId, CommentRequestDto dto) {
         // todo : JWT
         Long memberId = 1L;
         
