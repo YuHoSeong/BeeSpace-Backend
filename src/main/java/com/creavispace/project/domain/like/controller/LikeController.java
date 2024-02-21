@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
@@ -21,11 +22,11 @@ public class LikeController {
     
     private final ProjectLikeService projectLikeService;
 
-    private static final String PROJECT_LIKE = "";
+    private static final String PROJECT_LIKE = "/project/{projectId}";
 
     @PostMapping(PROJECT_LIKE)
     @Operation(summary = "프로젝트 좋아요 토글 기능")
-    public ResponseEntity<SuccessResponseDto<ProjectLikeResponseDto>> projectLike(@RequestParam("projectId") Long projectId) {
+    public ResponseEntity<SuccessResponseDto<ProjectLikeResponseDto>> projectLike(@PathVariable("projectId") Long projectId) {
         return ResponseEntity.ok().body(projectLikeService.projectLike(projectId));
     }
     
