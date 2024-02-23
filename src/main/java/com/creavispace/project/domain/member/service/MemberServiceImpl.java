@@ -31,12 +31,16 @@ public class MemberServiceImpl implements MemberService {
         return memberSaveRequestDto;
     }
 
+    @Override
+    public Member save(Member member) {
+        return memberRepository.save(member);
+    }
+
     @Transactional
     @Override
     public void update(Long memberId, MemberUpdateRequestDto updateParam) {
         Member member = memberRepository.findById(memberId).orElseThrow();
         member.setMemberNickname(updateParam.getMemberNickname());
-        member.setMemberPassword(updateParam.getMemberPassword());
         memberRepository.save(member);
     }
 
@@ -49,10 +53,14 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponseDto findById(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow();
         MemberResponseDto dto = new MemberResponseDto();
-        dto.setMemberPassword(member.getMemberPassword());
         dto.setMemberNickname(member.getMemberNickname());
         dto.setIntroduce(member.getMemberIntroduce());
         return dto;
+    }
+
+    @Override
+    public Optional<Member> findByEmailAndNameAndLoginId(String email, String name, String loginId) {
+        return memberRepository.findByMemberEmailAndMemberNameAndLoginId(email, name, loginId);
     }
 
     @Override

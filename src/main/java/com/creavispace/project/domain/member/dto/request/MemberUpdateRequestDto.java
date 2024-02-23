@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class MemberUpdateRequestDto {
-    private String memberPassword;
     private String memberNickname;
     private String introduce;
     private String profile;

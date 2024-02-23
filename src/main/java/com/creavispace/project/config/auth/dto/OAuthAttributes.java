@@ -14,16 +14,18 @@ public class OAuthAttributes {
     private String nameAttributeKey;
     private String name;
     private String email;
+    private String loginId;
     private String loginType;
 
     @Builder
     public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, String name, String email,
-                           String loginType) {
+                           String loginType, String loginId) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.name = name;
         this.email = email;
         this.loginType = loginType;
+        this.loginId = loginId;
     }
 
     public static OAuthAttributes of(String registrationId, String memberNameAttributeName,
@@ -42,6 +44,7 @@ public class OAuthAttributes {
         return OAuthAttributes.builder()
                 .name((String) response.get("name"))
                 .email((String) response.get("email"))
+                .loginId((String) response.get("id"))
                 .loginType(registrationId)
                 .attributes(response)
                 .nameAttributeKey(userNameAttributeName)
@@ -55,6 +58,7 @@ public class OAuthAttributes {
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
+                .loginId((String) attributes.get("sub"))
                 .loginType(registrationId)
                 .attributes(attributes)
                 .nameAttributeKey(memberNameAttributeName)
@@ -66,6 +70,7 @@ public class OAuthAttributes {
         MemberSaveRequestDto dto = MemberSaveRequestDto.builder()
                 .memberEmail(email)
                 .memberName(name)
+                .loginId(loginId)
                 .loginType(loginType)
                 .memberNickname(randomNickName)
                 .role(Role.MEMBER).build();
