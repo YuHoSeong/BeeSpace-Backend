@@ -1,6 +1,7 @@
 package com.creavispace.project.config.auth;
 
 import com.creavispace.project.domain.member.Role;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -51,7 +52,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, HttpSession session) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
@@ -60,11 +61,12 @@ public class SecurityConfig {
                                 .hasRole(Role.MEMBER.name()).anyRequest()
                                 .authenticated())
                 .logout(logout -> logout.logoutSuccessHandler(new LogoutHandler()).logoutUrl("/logout"))
-                .oauth2Login(login -> login.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service)).successHandler(new LoginSuccessHandler()))
+                .oauth2Login(login -> login.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service)).successHandler(new LoginSuccessHandler(session)))
                 /*.exceptionHandling(exception -> exception
                                 .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))
                         // 시작 페이지로 리디렉션
                 )*/;
+        System.out.println("SecurityConfig.filterChain");
 
         return httpSecurity.build();
     }

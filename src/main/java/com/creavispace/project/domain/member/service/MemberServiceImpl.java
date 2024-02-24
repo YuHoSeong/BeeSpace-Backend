@@ -1,5 +1,6 @@
 package com.creavispace.project.domain.member.service;
 
+import com.creavispace.project.config.auth.utils.JwtUtil;
 import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
 import com.creavispace.project.domain.member.dto.response.MemberResponseDto;
 import com.creavispace.project.domain.member.entity.Member;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
     @Transactional
     @Override
@@ -71,5 +76,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<Member> findAllMembers() {
         return memberRepository.findAll();
+    }
+
+    @Override
+    public String login(String memberEmail, String loginType) {
+
+        return JwtUtil.createJwt(memberEmail, loginType, jwtSecret, 1000 * 60l);
     }
 }

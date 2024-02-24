@@ -23,4 +23,7 @@ public interface MemberService {
     boolean emailExsists(String memberEmail);
 
     List<Member> findAllMembers();
+
+    String login(String memberEmail, String loginType);
+
 }
