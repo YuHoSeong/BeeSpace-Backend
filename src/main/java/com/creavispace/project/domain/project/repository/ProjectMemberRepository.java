@@ -16,7 +16,7 @@ import jakarta.transaction.Transactional;
 public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Long>{
     public void deleteByProjectId(Long projectId);
     public List<ProjectMember> findByProjectId(Long projectId);
-    public List<String> findByProjectIdOrderByPosition(Long projectId);
+    public List<ProjectMember> findByProjectIdOrderByPosition(Long projectId);
     public List<ProjectMember> findByProjectIdAndPosition(Long projectId, String position);
     @Transactional
     @Modifying

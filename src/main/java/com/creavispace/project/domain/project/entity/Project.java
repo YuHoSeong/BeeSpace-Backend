@@ -7,7 +7,6 @@ import com.creavispace.project.domain.comment.entity.ProjectComment;
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.like.entity.ProjectLike;
 import com.creavispace.project.domain.member.entity.Member;
-import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,9 +64,6 @@ public class Project extends BaseTimeEntity{
     private List<ProjectLink> links;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<ProjectImage> images;
-
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectComment> comments;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
@@ -81,27 +77,5 @@ public class Project extends BaseTimeEntity{
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectTechStack> techStacks;
-
-    public void modify(ProjectModifyRequestDto dto){
-        // this.kind = dto.getKind();
-        // this.field = dto.getField();
-        this.title = dto.getTitle();
-        this.content = dto.getContent();
-        // this.link = dto.getLink();
-        this.thumbnail = dto.getThumbnail();
-        this.bannerContent = dto.getBannerContent();
-    }
-
-    public void disable(){
-        this.status = false;
-    }
-
-    public void addMemberList(List<ProjectMember> members){
-        this.members = members;
-    }
-
-    public void addTechStackList(List<ProjectTechStack> techStacks){
-        this.techStacks = techStacks;
-    }
 
 }

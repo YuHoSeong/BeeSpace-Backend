@@ -8,4 +8,5 @@ import com.creavispace.project.domain.project.entity.ProjectLink;
 
 public interface ProjectLinkRepository extends JpaRepository<ProjectLink, Long>{
     public List<ProjectLink> findByProjectId(Long projectId);
+    public void deleteByProjectId(Long projectId);
 }

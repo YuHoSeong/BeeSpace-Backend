@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProjectResponseDto {
     private Long id;
+    private String postType;
     private Long memberId;
     // enum 관리로 변경
     private String category;
@@ -23,7 +24,6 @@ public class ProjectResponseDto {
     private String thumbnail;
     private String bannerContent;
     private Integer viewCount;
-    private Integer likeCount;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private List<ProjectPositionResponseDto> positions;
