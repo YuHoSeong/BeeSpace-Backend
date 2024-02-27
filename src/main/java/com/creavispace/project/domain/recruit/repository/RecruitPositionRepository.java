@@ -10,4 +10,5 @@ import com.creavispace.project.domain.recruit.entity.RecruitPosition;
 @Repository
 public interface RecruitPositionRepository extends JpaRepository<RecruitPosition, Long> {
     public List<RecruitPosition> findByRecruitId(Long recruitId);
+    public void deleteByRecruitId(Long recruitId);
 }

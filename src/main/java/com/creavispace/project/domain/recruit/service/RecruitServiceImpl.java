@@ -1,6 +1,7 @@
 package com.creavispace.project.domain.recruit.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -72,7 +73,7 @@ public class RecruitServiceImpl implements RecruitService {
                 .map(positionDto -> RecruitPosition.builder()
                     .position(positionDto.getPosition())
                     .amount(positionDto.getAmount())
-                    .now(0)
+                    .now(positionDto.getNow())
                     .status(Boolean.TRUE)
                     .recruit(recruit)
                     .build())
@@ -133,6 +134,8 @@ public class RecruitServiceImpl implements RecruitService {
             .end(recruit.getEnd())
             .title(recruit.getTitle())
             .content(recruit.getContent())
+            .createdDate(recruit.getCreatedDate())
+            .modifiedDate(recruit.getModifiedDate())
             .positions(positions)
             .techStacks(techStacks)
             .build();
@@ -142,8 +145,106 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public SuccessResponseDto<RecruitResponseDto> modifyRecruit(Long recruitId, RecruitRequestDto dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'modifyRecruit'");
+        // JWT 토큰 활용
+        Long memberId = 1L;
+        List<RecruitPositionRequestDto> positionDtos = dto.getPositions();
+        List<RecruitTechStackRequestDto> techStackDtos = dto.getTechStacks();
+
+        Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+        Recruit recruit = recruitRepository.findById(recruitId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
+
+        if(recruit.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
+            new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+        }
+
+        Recruit modifyRecruit = recruit.toBuilder()
+            .category(dto.getCategory())
+            .amount(dto.getAmount())
+            .workDay(dto.getWorkDay())
+            .contact(dto.getContact())
+            .contactWay(dto.getContactWay())
+            .proceedWay(dto.getProceedWay())
+            .end(dto.getEnd())
+            .title(dto.getTitle())
+            .content(dto.getContent())
+            .build();
+
+        recruitRepository.save(modifyRecruit);
+
+        recruitPositionRepository.deleteByRecruitId(recruitId);
+
+        if(positionDtos != null && !positionDtos.isEmpty()){
+            List<RecruitPosition> recruitPositions = positionDtos.stream()
+                .map(positionDto -> RecruitPosition.builder()
+                    .position(positionDto.getPosition())
+                    .amount(positionDto.getAmount())
+                    .now(positionDto.getNow())
+                    .build())
+                .collect(Collectors.toList());
+
+            recruitPositionRepository.saveAll(recruitPositions);
+        }
+
+        recruitTechStackRepository.deleteByRecruitId(recruitId);
+
+        if(techStackDtos != null && !techStackDtos.isEmpty()){
+            List<RecruitTechStack> recruitTechStacks = techStackDtos.stream()
+                .map(techStackDto -> {
+                    TechStack recruitTechStack = techStackRepository.findById(techStackDto.getTackStackId()).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
+
+                    return RecruitTechStack.builder()
+                        .techStack(recruitTechStack)
+                        .recruit(modifyRecruit)
+                        .build();
+                })
+                .collect(Collectors.toList());
+
+            recruitTechStackRepository.saveAll(recruitTechStacks);
+        }
+
+        List<RecruitPosition> recruitPositions = recruitPositionRepository.findByRecruitId(recruitId);
+        List<RecruitTechStack> recruitTechStacks = recruitTechStackRepository.findByRecruitId(recruitId);
+
+        List<RecruitPositionResponseDto> positions = recruitPositions.stream()
+            .map(recruitPosition -> RecruitPositionResponseDto.builder()
+                .id(recruitPosition.getId())
+                .position(recruitPosition.getPosition())
+                .amount(recruitPosition.getAmount())
+                .now(recruitPosition.getNow())
+                .build())
+            .collect(Collectors.toList());
+        
+        List<RecruitTechStackResponseDto> techStacks = recruitTechStacks.stream()
+            .map(recruitTechStack -> RecruitTechStackResponseDto.builder()
+                .techStackId(recruitTechStack.getTechStack().getId())
+                .techStack(recruitTechStack.getTechStack().getTechStack())
+                .iconUrl(recruitTechStack.getTechStack().getIconUrl())
+                .build())
+            .collect(Collectors.toList());
+
+        RecruitResponseDto modify = RecruitResponseDto.builder()
+            .id(modifyRecruit.getId())
+            .postType(PostType.RECRUIT.getName())
+            .memberId(modifyRecruit.getMember().getId())
+            .viewCount(modifyRecruit.getViewCount())
+            .category(modifyRecruit.getCategory())
+            .contactWay(modifyRecruit.getContactWay())
+            .contact(modifyRecruit.getContact())
+            .amount(modifyRecruit.getAmount())
+            .proceedWay(modifyRecruit.getProceedWay())
+            .workDay(modifyRecruit.getWorkDay())
+            .end(modifyRecruit.getEnd())
+            .title(modifyRecruit.getTitle())
+            .content(modifyRecruit.getContent())
+            .createdDate(modifyRecruit.getCreatedDate())
+            .modifiedDate(modifyRecruit.getModifiedDate())
+            .positions(positions)
+            .techStacks(techStacks)
+            .build();
+
+        return new SuccessResponseDto<>(true, "모집 게시글의 수정이 완료되었습니다.", modify);
+            
     }
 
     @Override

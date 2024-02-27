@@ -26,6 +26,8 @@ public class RecruitResponseDto {
     private LocalDateTime end;
     private String title;
     private String content;
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
     private List<RecruitPositionResponseDto> positions;
     private List<RecruitTechStackResponseDto> techStacks;
 }
