@@ -12,7 +12,7 @@ import com.creavispace.project.domain.project.entity.Project;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long>{
-    public List<Project> findTop5ByStatusTrueOrderByWeekViewCountDesc();
+    public List<Project> findTop6ByStatusTrueOrderByWeekViewCountDesc();
     public Page<Project> findAllByStatusTrue(Pageable pageable);
     public Optional<Project> findByIdAndStatusTrue(Long projectId);
     public Boolean existsByIdAndMemberId(Long projectId, Long memberId);

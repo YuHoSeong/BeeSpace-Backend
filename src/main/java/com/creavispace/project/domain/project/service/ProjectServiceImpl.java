@@ -350,17 +350,19 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public SuccessResponseDto<List<PopularProjectReadResponseDto>> readPopularProjectList() {
-        // 인기 프로젝트 5개 조회(주간조회수 기준)
-        List<Project> projectList = projectRepository.findTop5ByStatusTrueOrderByWeekViewCountDesc();
+        List<Project> projects = projectRepository.findTop6ByStatusTrueOrderByWeekViewCountDesc();
 
-        // 인기 프로젝트 정보를 DTO로 변환
-        // List<PopularProjectReadResponseDto> readPopularList = projectList.stream()
-        //     .map(project -> new PopularProjectReadResponseDto(project))
-        //     .collect(Collectors.toList());
+        List<PopularProjectReadResponseDto> readPopularList = projects.stream()
+            .map(project -> PopularProjectReadResponseDto.builder()
+                .id(project.getId())
+                .postType(PostType.PROJECT.getName())
+                .title(project.getTitle())
+                .thumbnail(project.getThumbnail())
+                .category(project.getCategory())
+                .bannerContent(project.getBannerContent())
+                .build())
+            .collect(Collectors.toList());
 
-        List<PopularProjectReadResponseDto> readPopularList = new ArrayList<>();
-
-        // 성공적인 응답 반환
         return new SuccessResponseDto<>(true, "인기 프로젝트 조회가 완료 되었습니다.", readPopularList);
     }
 
