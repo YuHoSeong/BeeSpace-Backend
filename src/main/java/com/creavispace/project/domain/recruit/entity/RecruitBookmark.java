@@ -6,8 +6,6 @@ import com.creavispace.project.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Builder(toBuilder = true)
@@ -18,12 +16,12 @@ public class RecruitBookmark extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @ManyToOne
-    // @JoinColumn(name = "recruit_id")
-    // private List<Recruit> recruitList;
+    @ManyToOne(targetEntity = Recruit.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "recruit_id", nullable = false)
+    private Recruit recruit;
 
-    // @ManyToOne
-    // @JoinColumn(name = "member_id")
-    // private List<Member> memberList;
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
 }

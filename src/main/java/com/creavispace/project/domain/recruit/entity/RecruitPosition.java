@@ -20,9 +20,9 @@ public class RecruitPosition extends BaseTimeEntity {
 
     private int now;
 
-    private boolean status;
+    private Boolean status;
 
-    // @ManyToOne
-    // @JoinColumn(name = "recruit_id")
-    // private Recruit recruit;
+    @ManyToOne(targetEntity = Recruit.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "recruit_id", nullable = false)
+    private Recruit recruit;
 }

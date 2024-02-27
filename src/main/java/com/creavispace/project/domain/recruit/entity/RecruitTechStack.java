@@ -15,11 +15,11 @@ public class RecruitTechStack extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @ManyToOne
-    // @JoinColumn(name = "tech_stack_id")
-    // private TechStack techStack;
+    @ManyToOne(targetEntity = TechStack.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "tech_stack_id", nullable = false)
+    private TechStack techStack;
 
-    // @ManyToOne
-    // @JoinColumn(name = "recruit_id")
-    // private Recruit recruit;
+    @ManyToOne(targetEntity = Recruit.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "recruit_id", nullable = false)
+    private Recruit recruit;
 }

@@ -1,11 +1,14 @@
 package com.creavispace.project.domain.recruit.entity;
 
+import java.util.List;
+
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
+import com.creavispace.project.domain.member.entity.Member;
+
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -18,26 +21,26 @@ public class Recruit extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long memberId;
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(nullable = false)
-    private String kind;
+    private String category;
 
     private int amount;
 
     private String proceedWay;
-
-    private LocalDateTime startDay;
-
-    private LocalDateTime endDay;
 
     private int workDay;
 
     private LocalDateTime end;
 
     @Column(nullable = false)
-    private String contect;
+    private String contactWay;
+
+    @Column(nullable = false)
+    private String contact;
 
     @Column(nullable = false)
     private String title;
@@ -45,25 +48,20 @@ public class Recruit extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-    private String thumbnail;
-
     @Column(nullable = false)
-    private boolean status;
+    private Boolean status;
 
     private int viewCount;
 
-    // @OneToMany(mappedBy = "recruit")
-    // private List<RecruitImage> imageList;
+    @OneToMany(mappedBy = "recruit")
+    private List<RecruitPosition> positions;
 
-    // @OneToMany(mappedBy = "recruit")
-    // private List<RecruitPosition> positionList;
+    @OneToMany(mappedBy = "recruit")
+    private List<RecruitTechStack> techStacks;
 
-    // @OneToMany(mappedBy = "recruit")
-    // private List<RecruitTechStack> techStackList;
+    @OneToMany(mappedBy = "recruit")
+    private List<RecruitComment> comments;
 
-    // @OneToMany(mappedBy = "recruit")
-    // private List<RecruitComment> commentList;
-
-    // @OneToMany(mappedBy = "recruit")
-    // private List<RecruitBookmark> bookmarkList;
+    @OneToMany(mappedBy = "recruit")
+    private List<RecruitBookmark> bookmarks;
 }
