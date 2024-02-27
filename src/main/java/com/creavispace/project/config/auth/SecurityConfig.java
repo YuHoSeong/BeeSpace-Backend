@@ -65,7 +65,7 @@ public class SecurityConfig {
                         auth -> auth.requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                                 .requestMatchers("/", "/login", "/join", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/project/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/member/**", "/review", "/upload").hasRole(Role.MEMBER.name())
+                                .requestMatchers(HttpMethod.POST, "/member/**", "/review", "/upload", "/project/**").hasRole(Role.MEMBER.name())
                                 .anyRequest().authenticated())
                 .logout(logout -> logout.logoutSuccessHandler(new LogoutHandler()).logoutUrl("/logout"))
                 .oauth2Login(login -> login.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service)).successHandler(new LoginSuccessHandler(session)))
