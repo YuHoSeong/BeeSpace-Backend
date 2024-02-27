@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommunityModifyResponseDto {
     private Long id;
+    private String postType;
     // enum으로 교체
     private String kind;
     private Long memberId;

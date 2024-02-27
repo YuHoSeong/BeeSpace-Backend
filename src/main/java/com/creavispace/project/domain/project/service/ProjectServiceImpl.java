@@ -1,5 +1,6 @@
 package com.creavispace.project.domain.project.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.creavispace.project.domain.common.dto.PostType;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.common.entity.TechStack;
 import com.creavispace.project.domain.common.repository.TechStackRepository;
@@ -160,6 +162,7 @@ public class ProjectServiceImpl implements ProjectService{
             
         ProjectResponseDto create = ProjectResponseDto.builder()
             .id(project.getId())
+            .postType(PostType.PROJECT.getName())
             .memberId(memberId)
             .category(project.getCategory())
             .field(project.getField())
@@ -295,6 +298,7 @@ public class ProjectServiceImpl implements ProjectService{
             
         ProjectResponseDto modify = ProjectResponseDto.builder()
             .id(modifyProject.getId())
+            .postType(PostType.PROJECT.getName())
             .memberId(memberId)
             .category(modifyProject.getCategory())
             .field(modifyProject.getField())
@@ -320,29 +324,28 @@ public class ProjectServiceImpl implements ProjectService{
         // jwt 토큰
         long memberId = 1;
 
-        // 회원 ID로 회원을 찾음
         Optional<Member> optionalMember = memberRepository.findById(memberId);
-
         Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
         
-        // projectId 의 프로젝트 ID로 프로젝트 게시글 찾아옴
         Optional<Project> optionalProject = projectRepository.findByIdAndStatusTrue(projectId);
-
         Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
         
-        // 작성자도 아니고 관리자도 아니면 실패 응답 반환
         if(project.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
             new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
         }
 
-        // 프로젝트 비활성화 Status = false
-        project.disable();
+        Project disableProject = project.toBuilder()
+            .status(false)
+            .build();
 
-        // 프로젝트 상태 저장
-        projectRepository.save(project);
+        projectRepository.save(disableProject);
 
-        // 성공적인 응답 반환
-        return new SuccessResponseDto<>(true, "프로젝트 게시글 삭제가 완료되었습니다.", new ProjectDeleteResponseDto(projectId));
+        ProjectDeleteResponseDto delete = ProjectDeleteResponseDto.builder()
+            .projectId(disableProject.getId())
+            .postType(PostType.PROJECT.getName())
+            .build();
+
+        return new SuccessResponseDto<>(true, "프로젝트 게시글 삭제가 완료되었습니다.", delete);
     }
 
     @Override
@@ -351,9 +354,11 @@ public class ProjectServiceImpl implements ProjectService{
         List<Project> projectList = projectRepository.findTop5ByStatusTrueOrderByWeekViewCountDesc();
 
         // 인기 프로젝트 정보를 DTO로 변환
-        List<PopularProjectReadResponseDto> readPopularList = projectList.stream()
-            .map(project -> new PopularProjectReadResponseDto(project))
-            .collect(Collectors.toList());
+        // List<PopularProjectReadResponseDto> readPopularList = projectList.stream()
+        //     .map(project -> new PopularProjectReadResponseDto(project))
+        //     .collect(Collectors.toList());
+
+        List<PopularProjectReadResponseDto> readPopularList = new ArrayList<>();
 
         // 성공적인 응답 반환
         return new SuccessResponseDto<>(true, "인기 프로젝트 조회가 완료 되었습니다.", readPopularList);
@@ -372,9 +377,9 @@ public class ProjectServiceImpl implements ProjectService{
         List<Project> projectList = pageable.getContent();
 
         // 프로젝트 게시글의 정보를 DTO로 변환
-        List<ProjectListReadResponseDto> readList = projectList.stream()
-            .map(project -> new ProjectListReadResponseDto(project))
-            .collect(Collectors.toList());
+        // List<ProjectListReadResponseDto> readList = projectList.stream()
+        //     .map(project -> new ProjectListReadResponseDto(project))
+        //     .collect(Collectors.toList());
 
         // // todo 현재 토큰 미구현
         // // 토큰이 있다면
@@ -390,6 +395,8 @@ public class ProjectServiceImpl implements ProjectService{
         //                 .build())
         //         .collect(Collectors.toList());
         // }
+
+        List<ProjectListReadResponseDto> readList = new ArrayList<>();
 
         // 성공적인 응답 반환
         return new SuccessResponseDto<>(true, "프로젝트 게시글 리스트 조회가 완료되었습니다.", readList);
@@ -416,7 +423,7 @@ public class ProjectServiceImpl implements ProjectService{
         Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
         
         // 프로젝트 게시글 정보를 DTO로 변환
-        ProjectReadResponseDto read = new ProjectReadResponseDto(project);
+        // ProjectReadResponseDto read = new ProjectReadResponseDto(project);
 
         // // todo 현재 토큰 미구현
         // // 토큰이 있다면
@@ -429,6 +436,8 @@ public class ProjectServiceImpl implements ProjectService{
         //         .bookmark(projectBookmarkRepository.existsByProjectIdAndMemberId(project.getId(), memberId))
         //         .build();
         // }
+
+        ProjectReadResponseDto read = new ProjectReadResponseDto();
 
         // 성공적인 응답 반환
         return new SuccessResponseDto<>(true, "프로젝트 게시글 상세조회가 완료되었습니다.", read);
