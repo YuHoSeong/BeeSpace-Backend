@@ -368,40 +368,34 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     public SuccessResponseDto<List<ProjectListReadResponseDto>> readProjectList(Integer size, Integer page, String kind) {
-        // 프로젝트 페이지네이션 조회
         Pageable pageRequest = PageRequest.of(page-1, size);
         Page<Project> pageable = projectRepository.findAllByStatusTrue(pageRequest);
 
-        // 해당 페이지에 게시글이 없을 경우 실패 응답 반환
         if(!pageable.hasContent()) new CreaviCodeException(GlobalErrorCode.NOT_PROJECT_CONTENT);
-        
-        // 해당 페이지의 게시글 찾아옴
-        List<Project> projectList = pageable.getContent();
+        List<Project> projects = pageable.getContent();
 
-        // 프로젝트 게시글의 정보를 DTO로 변환
-        // List<ProjectListReadResponseDto> readList = projectList.stream()
-        //     .map(project -> new ProjectListReadResponseDto(project))
-        //     .collect(Collectors.toList());
+        List<ProjectListReadResponseDto> reads = projects.stream()
+            .map(project -> {
+                List<ProjectLinkResponseDto> links = project.getLinks().stream()
+                    .map(link -> ProjectLinkResponseDto.builder()
+                        .type(link.getType())
+                        .url(link.getUrl())
+                        .build())
+                    .collect(Collectors.toList());
 
-        // // todo 현재 토큰 미구현
-        // // 토큰이 있다면
-        // Boolean isJwt = true;
-        // if(isJwt){
-        //     // jwt 토큰
-        //     long memberId = 1;
-        //     // 프로젝트 게시글 정보에 좋아요, 북마크 정보 추가
-        //     readList.stream()
-        //         .map(project -> project.toBuilder()
-        //                 .like(projectLikeRepository.existsByProjectIdAndMemberId(project.getId(), memberId))
-        //                 .bookmark(projectBookmarkRepository.existsByProjectIdAndMemberId(project.getId(), memberId))
-        //                 .build())
-        //         .collect(Collectors.toList());
-        // }
+                return ProjectListReadResponseDto.builder()
+                .id(project.getId())
+                .postType(PostType.PROJECT.getName())
+                .category(project.getCategory())
+                .title(project.getTitle())
+                .thumbnail(project.getThumbnail())
+                .bannerContent(project.getBannerContent())
+                .links(links)
+                .build();
+                })
+            .collect(Collectors.toList());
 
-        List<ProjectListReadResponseDto> readList = new ArrayList<>();
-
-        // 성공적인 응답 반환
-        return new SuccessResponseDto<>(true, "프로젝트 게시글 리스트 조회가 완료되었습니다.", readList);
+        return new SuccessResponseDto<>(true, "프로젝트 게시글 리스트 조회가 완료되었습니다.", reads);
     }
 
     @Override
