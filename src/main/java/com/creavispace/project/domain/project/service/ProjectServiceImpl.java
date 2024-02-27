@@ -1,6 +1,5 @@
 package com.creavispace.project.domain.project.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,7 +26,6 @@ import com.creavispace.project.domain.project.dto.response.ProjectLinkResponseDt
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectMemberResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectPositionResponseDto;
-import com.creavispace.project.domain.project.dto.response.ProjectReadResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectTechStackResponseDto;
 import com.creavispace.project.domain.project.entity.Project;
 import com.creavispace.project.domain.project.entity.ProjectLink;
@@ -367,9 +365,15 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    public SuccessResponseDto<List<ProjectListReadResponseDto>> readProjectList(Integer size, Integer page, String kind) {
+    public SuccessResponseDto<List<ProjectListReadResponseDto>> readProjectList(Integer size, Integer page, String category) {
         Pageable pageRequest = PageRequest.of(page-1, size);
-        Page<Project> pageable = projectRepository.findAllByStatusTrue(pageRequest);
+        Page<Project> pageable;
+
+        if(category != null && !category.isEmpty()){
+            pageable = projectRepository.findAllByStatusTrueAndCategory(category, pageRequest);
+        }else{
+            pageable = projectRepository.findAllByStatusTrue(pageRequest);
+        }
 
         if(!pageable.hasContent()) new CreaviCodeException(GlobalErrorCode.NOT_PROJECT_CONTENT);
         List<Project> projects = pageable.getContent();
@@ -399,43 +403,76 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    public SuccessResponseDto<ProjectReadResponseDto> readProject(Long projectId) {
-        // 해당 ID로 활성화된 프로젝트 게시글 찾아옴
+    public SuccessResponseDto<ProjectResponseDto> readProject(Long projectId) {
         Optional<Project> optionalProject = projectRepository.findByIdAndStatusTrue(projectId);
         
-        // todo 현재 토큰 미구현
-        // 토큰이 있다면
-        Boolean isJwt = true;
-        if(isJwt){
-            // jwt 토큰
-            long memberId = 1;
-            // 해당 프로젝트 ID의 회원정보가 토큰 회원 ID와 일치하면
-            if(projectRepository.existsByIdAndMemberId(projectId,memberId)){
-                // 해당 ID로 프로젝트 게시글 찾아옴
-                optionalProject = projectRepository.findById(projectId);
-            }
-        }
-
-        Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
-        
-        // 프로젝트 게시글 정보를 DTO로 변환
-        // ProjectReadResponseDto read = new ProjectReadResponseDto(project);
-
         // // todo 현재 토큰 미구현
         // // 토큰이 있다면
+        // Boolean isJwt = true;
         // if(isJwt){
         //     // jwt 토큰
         //     long memberId = 1;
-        //     // 프로젝트 게시글 정보에 좋아요, 북마크 정보 추가
-        //     read.toBuilder()
-        //         .like(projectLikeRepository.existsByProjectIdAndMemberId(project.getId(), memberId))
-        //         .bookmark(projectBookmarkRepository.existsByProjectIdAndMemberId(project.getId(), memberId))
-        //         .build();
+        //     // 해당 프로젝트 ID의 회원정보가 토큰 회원 ID와 일치하면
+        //     if(projectRepository.existsByIdAndMemberId(projectId,memberId)){
+        //         // 해당 ID로 프로젝트 게시글 찾아옴
+        //         optionalProject = projectRepository.findById(projectId);
+        //     }
         // }
 
-        ProjectReadResponseDto read = new ProjectReadResponseDto();
+        Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
 
-        // 성공적인 응답 반환
+        List<String> uniquePositions = project.getMembers().stream()
+            .map(member -> member.getPosition())
+            .distinct()
+            .collect(Collectors.toList());
+
+        List<ProjectPositionResponseDto> positions = uniquePositions.stream()
+            .map(position -> ProjectPositionResponseDto.builder()
+                .position(position)
+                .members(project.getMembers().stream()
+                    .filter(member -> member.getPosition().equals(position))
+                    .map(member -> ProjectMemberResponseDto.builder()
+                        .memberId(member.getMember().getId())
+                        .memberProfile(member.getMember().getProfileUrl())
+                        .memberNickname(member.getMember().getMemberNickname())
+                        .build())
+                    .collect(Collectors.toList()))
+                .build())
+            .collect(Collectors.toList());
+
+        List<ProjectLinkResponseDto> links = project.getLinks().stream()
+        .map(projectLink -> ProjectLinkResponseDto.builder()
+            .type(projectLink.getType())
+            .url(projectLink.getUrl())
+            .build())
+        .collect(Collectors.toList());
+
+        List<ProjectTechStackResponseDto> techStacks = project.getTechStacks().stream()
+            .map(projectTechStack -> ProjectTechStackResponseDto.builder()
+                .techStackId(projectTechStack.getTechStack().getId())
+                .techStack(projectTechStack.getTechStack().getTechStack())
+                .iconUrl(projectTechStack.getTechStack().getIconUrl())
+                .build())
+            .collect(Collectors.toList());
+        
+        ProjectResponseDto read = ProjectResponseDto.builder()
+            .id(project.getId())
+            .postType(PostType.PROJECT.getName())
+            .memberId(project.getMember().getId())
+            .category(project.getCategory())
+            .field(project.getField())
+            .title(project.getTitle())
+            .content(project.getContent())
+            .thumbnail(project.getThumbnail())
+            .bannerContent(project.getBannerContent())
+            .viewCount(project.getViewCount())
+            .createdDate(project.getCreatedDate())
+            .modifiedDate(project.getModifiedDate())
+            .positions(positions)
+            .links(links)
+            .techStacks(techStacks)
+            .build();
+
         return new SuccessResponseDto<>(true, "프로젝트 게시글 상세조회가 완료되었습니다.", read);
     }
 
