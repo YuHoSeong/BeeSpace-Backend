@@ -5,26 +5,23 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
-import com.creavispace.project.domain.recruit.dto.request.RecruitCreateRequestDto;
-import com.creavispace.project.domain.recruit.dto.request.RecruitModifyRequestDto;
+import com.creavispace.project.domain.recruit.dto.request.RecruitRequestDto;
 import com.creavispace.project.domain.recruit.dto.response.DeadLineRecruitListReadResponseDto;
-import com.creavispace.project.domain.recruit.dto.response.RecruitCreateResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitDeleteResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitListReadResponseDto;
-import com.creavispace.project.domain.recruit.dto.response.RecruitModifyResponseDto;
-import com.creavispace.project.domain.recruit.dto.response.RecruitReadResponseDto;
+import com.creavispace.project.domain.recruit.dto.response.RecruitResponseDto;
 
 @Service
 public class RecruitServiceImpl implements RecruitService {
 
     @Override
-    public SuccessResponseDto<RecruitCreateResponseDto> createRecruit(RecruitCreateRequestDto requestBody) {
+    public SuccessResponseDto<RecruitResponseDto> createRecruit(RecruitRequestDto requestBody) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'createRecruit'");
     }
 
     @Override
-    public SuccessResponseDto<RecruitModifyResponseDto> modifyRecruit(Long recruitId, RecruitModifyRequestDto dto) {
+    public SuccessResponseDto<RecruitResponseDto> modifyRecruit(Long recruitId, RecruitRequestDto dto) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'modifyRecruit'");
     }
@@ -42,7 +39,7 @@ public class RecruitServiceImpl implements RecruitService {
     }
 
     @Override
-    public SuccessResponseDto<RecruitReadResponseDto> readRecruit(Long recruitId) {
+    public SuccessResponseDto<RecruitResponseDto> readRecruit(Long recruitId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'readRecruit'");
     }

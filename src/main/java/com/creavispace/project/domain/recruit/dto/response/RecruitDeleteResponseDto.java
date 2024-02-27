@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RecruitDeleteResponseDto {
     private Long recruitId;
+    private String postType;
 }
