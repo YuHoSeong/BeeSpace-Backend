@@ -1,7 +1,6 @@
 package com.creavispace.project.config.auth;
 
 import com.creavispace.project.config.auth.dto.OAuthAttributes;
-import com.creavispace.project.config.auth.dto.SessionMember;
 import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
@@ -39,8 +38,9 @@ public class CustomOauth2Service implements OAuth2UserService<OAuth2UserRequest,
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         Member member = findOrSave(attributes);
-        httpSession.setAttribute("member", memberService.login(member.getMemberEmail(), member.getLoginType()));
+        httpSession.setAttribute("jwt", memberService.login(member.getMemberEmail(), member.getLoginType()));
         httpSession.setMaxInactiveInterval(30);
+
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey())),

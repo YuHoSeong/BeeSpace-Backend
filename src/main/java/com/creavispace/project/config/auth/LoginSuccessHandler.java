@@ -19,8 +19,9 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
         log.info("LoginSuccessHandler.onAuthenticationSuccess");
-        String jsonToken = httpSession.getAttribute("member").toString();
+        String jsonToken = httpSession.getAttribute("jwt").toString();
+        System.out.println("jsonToken = " + jsonToken);
         response.addCookie(new Cookie("jwt", jsonToken));
-        getRedirectStrategy().sendRedirect(request, response, "https://creavispace.vercel.app");
+        getRedirectStrategy().sendRedirect(request, response, "https://creavispace.vercel.app/");
     }
 }

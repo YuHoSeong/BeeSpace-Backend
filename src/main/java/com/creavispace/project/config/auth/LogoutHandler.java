@@ -17,6 +17,5 @@ public class LogoutHandler implements LogoutSuccessHandler {
         System.out.println("request.getHeader(\"user-agent\") = " + request.getHeader("user-agent"));;
         System.out.println(request.getSession());
         System.out.println(request.getRemoteAddr());
-        response.sendRedirect("/");
     }
 }
