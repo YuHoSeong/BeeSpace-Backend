@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommunityModifyRequestDto {
+public class CommunityRequestDto {
     // enum으로 교체
-    private String kind;
+    private String category;
     private String title;
     private String content;
-    private List<String> hashTagList;
+    private List<String> hashTags;
 }
