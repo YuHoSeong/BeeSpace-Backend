@@ -290,16 +290,7 @@ public class RecruitServiceImpl implements RecruitService {
         List<Recruit> recruits = pageable.getContent();
 
         List<RecruitListReadResponseDto> reads = recruits.stream()
-            .map(recruit -> {
-                List<RecruitTechStackResponseDto> techStacks = recruit.getTechStacks().stream()
-                    .map(techStack -> RecruitTechStackResponseDto.builder()
-                        .techStackId(techStack.getTechStack().getId())
-                        .techStack(techStack.getTechStack().getTechStack())
-                        .iconUrl(techStack.getTechStack().getIconUrl())
-                        .build())
-                    .collect(Collectors.toList());
-                
-                return RecruitListReadResponseDto.builder()
+            .map(recruit -> RecruitListReadResponseDto.builder()
                     .id(recruit.getId())
                     .postType(PostType.RECRUIT.getName())
                     .category(recruit.getCategory())
@@ -307,9 +298,14 @@ public class RecruitServiceImpl implements RecruitService {
                     .content(recruit.getContent())
                     .amount(recruit.getAmount())
                     // .now()
-                    .techStacks(techStacks)
-                    .build();
-                })
+                    .techStacks(recruit.getTechStacks().stream()
+                    .map(techStack -> RecruitTechStackResponseDto.builder()
+                        .techStackId(techStack.getTechStack().getId())
+                        .techStack(techStack.getTechStack().getTechStack())
+                        .iconUrl(techStack.getTechStack().getIconUrl())
+                        .build())
+                    .collect(Collectors.toList()))
+                    .build())
             .collect(Collectors.toList());
 
         return new SuccessResponseDto<>(true,"모집 게시글 리스트 조회가 완료되었습니다.", reads);
@@ -317,8 +313,46 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public SuccessResponseDto<RecruitResponseDto> readRecruit(Long recruitId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readRecruit'");
+        Recruit recruit = recruitRepository.findByIdAndStatusTrue(recruitId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
+
+        // if(isJwt){
+        //     recruit = recruitRepository.findById(recruitId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
+        // }
+
+        RecruitResponseDto read = RecruitResponseDto.builder()
+            .id(recruit.getId())
+            .postType(PostType.RECRUIT.getName())
+            .memberId(recruit.getMember().getId())
+            .viewCount(recruit.getViewCount())
+            .category(recruit.getCategory())
+            .contactWay(recruit.getContactWay())
+            .contact(recruit.getContact())
+            .amount(recruit.getAmount())
+            .proceedWay(recruit.getProceedWay())
+            .workDay(recruit.getWorkDay())
+            .end(recruit.getEnd())
+            .title(recruit.getTitle())
+            .content(recruit.getContent())
+            .createdDate(recruit.getCreatedDate())
+            .modifiedDate(recruit.getModifiedDate())
+            .positions(recruit.getPositions().stream()
+                .map(position -> RecruitPositionResponseDto.builder()
+                    .id(position.getId())
+                    .position(position.getPosition())
+                    .amount(position.getAmount())
+                    .now(position.getNow())
+                    .build())
+                .collect(Collectors.toList()))
+            .techStacks(recruit.getTechStacks().stream()
+                .map(techStack -> RecruitTechStackResponseDto.builder()
+                    .techStackId(techStack.getTechStack().getId())
+                    .techStack(techStack.getTechStack().getTechStack())
+                    .iconUrl(techStack.getTechStack().getIconUrl())
+                    .build())
+                .collect(Collectors.toList()))
+            .build();
+
+        return new SuccessResponseDto<>(true, "모집 게시글 디테일 조회가 완료되었습니다.", read);
     }
 
     @Override
