@@ -1,9 +1,8 @@
 package com.creavispace.project.config.auth;
 
 import com.creavispace.project.config.auth.dto.OAuthAttributes;
-import com.creavispace.project.config.auth.dto.SessionMember;
 import com.creavispace.project.domain.member.entity.Member;
-import com.creavispace.project.domain.member.repository.MemberRepository;
+import com.creavispace.project.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.Optional;
@@ -20,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class CustomOauth2Service implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final HttpSession httpSession;
 
     @Override
@@ -29,7 +28,7 @@ public class CustomOauth2Service implements OAuth2UserService<OAuth2UserRequest,
 
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
-
+        System.out.println(oAuth2User.getAttributes());
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         System.out.println("-------------------로그인 유형 = " + registrationId + " ---------------------------");
 
@@ -39,8 +38,9 @@ public class CustomOauth2Service implements OAuth2UserService<OAuth2UserRequest,
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         Member member = findOrSave(attributes);
-        httpSession.setAttribute("member", new SessionMember(member));
+        httpSession.setAttribute("jwt", memberService.login(member.getMemberEmail(), member.getLoginType()));
         httpSession.setMaxInactiveInterval(30);
+
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey())),
@@ -50,15 +50,21 @@ public class CustomOauth2Service implements OAuth2UserService<OAuth2UserRequest,
 
     private Member findOrSave(OAuthAttributes attributes) {
         System.out.println("-----------------------findOrSave------------------------");
-        Optional<Member> memberOptional = memberRepository.findByMemberEmail(attributes.getEmail());
+        Optional<Member> memberOptional = memberService
+                .findByEmailAndNameAndLoginId(
+                        attributes.getEmail(),
+                        attributes.getName(),
+                        attributes.getLoginId());
+
         if (memberOptional.isPresent()) {
             System.out.println("-----------------------findOrSaveEnd : 존재하는 아이디------------------------");
             System.out.println("기존 email = " + memberOptional.get());
             return memberOptional.get();
         }
-        Member member = memberRepository.save(attributes.toEntity());
 
         System.out.println("-----------------------findOrSaveEnd : 새로운 아이디 생성------------------------");
+        Member member = memberService.save(attributes.toEntity());
+
         System.out.println("새로운 email = " + member.getMemberEmail());
         return member;
     }

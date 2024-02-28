@@ -6,16 +6,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -40,7 +35,9 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //회원 관련 정보와 로그인 정보는 분리
     private Long id;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
+    private String loginId;
+    @Column(nullable = false, unique = false)
     private String memberEmail;
     @Column(nullable = false)
     private String memberName;
@@ -52,7 +49,6 @@ public class Member {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
-    private String memberPassword;
     private String memberIntroduce;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
@@ -63,6 +59,7 @@ public class Member {
     public Member(MemberSaveRequestDto memberSaveRequestDto) {
         this.memberEmail = memberSaveRequestDto.getMemberEmail();
         this.memberName = memberSaveRequestDto.getMemberName();
+        this.loginId = memberSaveRequestDto.getLoginId();
         this.loginType = memberSaveRequestDto.getLoginType();
         this.role = memberSaveRequestDto.getRole();
         this.memberNickname = memberSaveRequestDto.getMemberNickname();

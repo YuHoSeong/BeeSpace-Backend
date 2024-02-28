@@ -1,5 +1,6 @@
 package com.creavispace.project.domain.member.service;
 
+import com.creavispace.project.config.auth.utils.JwtUtil;
 import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
 import com.creavispace.project.domain.member.dto.response.MemberResponseDto;
 import com.creavispace.project.domain.member.entity.Member;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
     @Transactional
     @Override
@@ -31,12 +36,16 @@ public class MemberServiceImpl implements MemberService {
         return memberSaveRequestDto;
     }
 
+    @Override
+    public Member save(Member member) {
+        return memberRepository.save(member);
+    }
+
     @Transactional
     @Override
     public void update(Long memberId, MemberUpdateRequestDto updateParam) {
         Member member = memberRepository.findById(memberId).orElseThrow();
         member.setMemberNickname(updateParam.getMemberNickname());
-        member.setMemberPassword(updateParam.getMemberPassword());
         memberRepository.save(member);
     }
 
@@ -49,10 +58,14 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponseDto findById(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow();
         MemberResponseDto dto = new MemberResponseDto();
-        dto.setMemberPassword(member.getMemberPassword());
         dto.setMemberNickname(member.getMemberNickname());
         dto.setIntroduce(member.getMemberIntroduce());
         return dto;
+    }
+
+    @Override
+    public Optional<Member> findByEmailAndNameAndLoginId(String email, String name, String loginId) {
+        return memberRepository.findByMemberEmailAndMemberNameAndLoginId(email, name, loginId);
     }
 
     @Override
@@ -63,5 +76,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<Member> findAllMembers() {
         return memberRepository.findAll();
+    }
+
+    @Override
+    public String login(String memberEmail, String loginType) {
+
+        return JwtUtil.createJwt(memberEmail, loginType, jwtSecret, 1000 * 60 * 60l);
     }
 }

@@ -1,6 +1,9 @@
 package com.creavispace.project.config.auth;
 
 import com.creavispace.project.domain.member.Role;
+import jakarta.servlet.http.HttpSession;
+import java.util.Arrays;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -20,6 +23,10 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -51,7 +58,8 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, HttpSession session) throws Exception {
+
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
@@ -60,14 +68,30 @@ public class SecurityConfig {
                                 .hasRole(Role.MEMBER.name()).anyRequest()
                                 .authenticated())
                 .logout(logout -> logout.logoutSuccessHandler(new LogoutHandler()).logoutUrl("/logout"))
-                .oauth2Login(login -> login.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service)))
+                .oauth2Login(login -> login.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service)).successHandler(new LoginSuccessHandler(session)))
                 /*.exceptionHandling(exception -> exception
                                 .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))
                         // 시작 페이지로 리디렉션
                 )*/;
+        System.out.println("SecurityConfig.filterChain");
 
         return httpSecurity.build();
     }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("https://creavispace.vercel.app", "localhost:8080/oauth2/authorization/naver","https://port-0-creavispace-backend-am952nlsse11uk.sel5.cloudtype.app/login/oauth2/code/naver"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+        configuration.setAllowedHeaders(Arrays.asList("Jwt"));
+        configuration.setExposedHeaders(Arrays.asList("Jwt"));
+        configuration.setExposedHeaders(Collections.singletonList("Jwt"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return new CorsFilter(source);
+    }
+
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
