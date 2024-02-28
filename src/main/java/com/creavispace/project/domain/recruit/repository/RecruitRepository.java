@@ -1,5 +1,6 @@
 package com.creavispace.project.domain.recruit.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -14,4 +15,5 @@ public interface RecruitRepository extends JpaRepository<Recruit, Long> {
     public Page<Recruit> findAllByStatusTrueAndCategory(String category, Pageable pageRequest);
     public Page<Recruit> findAllByStatusTrue(Pageable pageRequest);
     public Optional<Recruit> findByIdAndStatusTrue(Long recruitId);
+    public List<Recruit> findTop3ByStatusTrueOrderByEndDesc();
 }

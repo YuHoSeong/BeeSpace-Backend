@@ -357,8 +357,29 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public SuccessResponseDto<List<DeadLineRecruitListReadResponseDto>> readDeadlineRecruitList() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readDeadlineRecruitList'");
+        List<Recruit> recruits = recruitRepository.findTop3ByStatusTrueOrderByEndDesc();
+
+        List<DeadLineRecruitListReadResponseDto> readDeadLineList = recruits.stream()
+            .map(recruit -> DeadLineRecruitListReadResponseDto.builder()
+                .id(recruit.getId())
+                .postType(PostType.RECRUIT.getName())
+                .title(recruit.getTitle())
+                .content(recruit.getContent())
+                .end(recruit.getEnd())
+                .createdDate(recruit.getCreatedDate())
+                .modifiedDate(recruit.getModifiedDate())
+                .techStacks(recruit.getTechStacks().stream()
+                    .map(techStack -> RecruitTechStackResponseDto.builder()
+                        .techStackId(techStack.getTechStack().getId())
+                        .techStack(techStack.getTechStack().getTechStack())
+                        .iconUrl(techStack.getTechStack().getIconUrl())
+                        .build())
+                    .collect(Collectors.toList()))
+                .build())
+            .collect(Collectors.toList());
+        
+        return new SuccessResponseDto<>(true, "마감 모집 리스트 조회가 완료되었습니다.", readDeadLineList);
+
     }
     
 }

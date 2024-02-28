@@ -2,7 +2,7 @@ package com.creavispace.project.domain.recruit.dto.response;
 
 import java.util.List;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
