@@ -1,7 +1,6 @@
 package com.creavispace.project.domain.recruit.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -249,8 +248,28 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public SuccessResponseDto<RecruitDeleteResponseDto> deleteRecruit(Long recruitId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteRecruit'");
+        // JWT 토큰
+        Long memberId = 1L;
+
+        Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+        Recruit recruit = recruitRepository.findById(recruitId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
+
+        if(recruit.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
+            new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+        }
+
+        Recruit disableRecruit = recruit.toBuilder()
+            .status(false)
+            .build();
+
+        recruitRepository.save(disableRecruit);
+
+        RecruitDeleteResponseDto delete = RecruitDeleteResponseDto.builder()
+            .recruitId(disableRecruit.getId())
+            .postType(PostType.RECRUIT.getName())
+            .build();
+        
+        return new SuccessResponseDto<>(true, "모집 게시글 삭제가 완료되었습니다.", delete);
     }
 
     @Override
