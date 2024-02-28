@@ -13,7 +13,7 @@ public interface RecruitService {
     public SuccessResponseDto<RecruitResponseDto> createRecruit(RecruitRequestDto dto);
     public SuccessResponseDto<RecruitResponseDto> modifyRecruit(Long recruitId, RecruitRequestDto dto);
     public SuccessResponseDto<RecruitDeleteResponseDto> deleteRecruit(Long recruitId);
-    public SuccessResponseDto<List<RecruitListReadResponseDto>> readRecruitList(Integer size, Integer page);
+    public SuccessResponseDto<List<RecruitListReadResponseDto>> readRecruitList(Integer size, Integer page, String category);
     public SuccessResponseDto<RecruitResponseDto> readRecruit(Long recruitId);
     public SuccessResponseDto<List<DeadLineRecruitListReadResponseDto>> readDeadlineRecruitList();
 }

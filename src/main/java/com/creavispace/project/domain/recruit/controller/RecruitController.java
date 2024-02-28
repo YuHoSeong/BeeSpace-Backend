@@ -60,9 +60,10 @@ public class RecruitController {
     @Operation(summary = "모집 게시글 리스트")
     public ResponseEntity<SuccessResponseDto<List<RecruitListReadResponseDto>>> readRecruitList(
         @RequestParam(value = "size", required = false, defaultValue = "6") Integer size,
-        @RequestParam(value = "page", required = false, defaultValue = "1") Integer page
+        @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+        @RequestParam(value = "category", required = false) String category
     ){
-        return ResponseEntity.ok().body(recruitService.readRecruitList(size, page));
+        return ResponseEntity.ok().body(recruitService.readRecruitList(size, page,category));
     }
 
     @GetMapping(READ_RECRUIT)

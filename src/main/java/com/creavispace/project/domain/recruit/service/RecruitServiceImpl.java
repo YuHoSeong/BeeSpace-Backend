@@ -3,6 +3,9 @@ package com.creavispace.project.domain.recruit.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.common.dto.PostType;
@@ -273,9 +276,43 @@ public class RecruitServiceImpl implements RecruitService {
     }
 
     @Override
-    public SuccessResponseDto<List<RecruitListReadResponseDto>> readRecruitList(Integer size, Integer page) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readRecruitList'");
+    public SuccessResponseDto<List<RecruitListReadResponseDto>> readRecruitList(Integer size, Integer page, String category) {
+        Pageable pageRequest = PageRequest.of(page-1, size);
+        Page<Recruit> pageable;
+
+        if(category != null && !category.isEmpty()){
+            pageable = recruitRepository.findAllByStatusTrueAndCategory(category, pageRequest);
+        }else{
+            pageable = recruitRepository.findAllByStatusTrue(pageRequest);
+        }
+
+        if(!pageable.hasContent()) new CreaviCodeException(GlobalErrorCode.NOT_RECRUIT_CONTENT);
+        List<Recruit> recruits = pageable.getContent();
+
+        List<RecruitListReadResponseDto> reads = recruits.stream()
+            .map(recruit -> {
+                List<RecruitTechStackResponseDto> techStacks = recruit.getTechStacks().stream()
+                    .map(techStack -> RecruitTechStackResponseDto.builder()
+                        .techStackId(techStack.getTechStack().getId())
+                        .techStack(techStack.getTechStack().getTechStack())
+                        .iconUrl(techStack.getTechStack().getIconUrl())
+                        .build())
+                    .collect(Collectors.toList());
+                
+                return RecruitListReadResponseDto.builder()
+                    .id(recruit.getId())
+                    .postType(PostType.RECRUIT.getName())
+                    .category(recruit.getCategory())
+                    .title(recruit.getTitle())
+                    .content(recruit.getContent())
+                    .amount(recruit.getAmount())
+                    // .now()
+                    .techStacks(techStacks)
+                    .build();
+                })
+            .collect(Collectors.toList());
+
+        return new SuccessResponseDto<>(true,"모집 게시글 리스트 조회가 완료되었습니다.", reads);
     }
 
     @Override
