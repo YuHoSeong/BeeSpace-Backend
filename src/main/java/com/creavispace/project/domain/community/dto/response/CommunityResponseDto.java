@@ -13,17 +13,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommunityCreateResponseDto {
+public class CommunityResponseDto {
     private Long id;
     private String postType;
     // enum으로 교체
-    private String kind;
+    private String category;
     private Long memberId;
-    private Integer likeCount;
     private Integer viewCount;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private String title;
     private String content;
-    private List<String> hashTagList;
+    private List<String> hashTags;
 }
