@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
-import com.creavispace.project.domain.report.dto.request.ReportCreateRequestDto;
-import com.creavispace.project.domain.report.dto.response.ReportCreateResponseDto;
+import com.creavispace.project.domain.report.dto.request.ReportRequestDto;
+import com.creavispace.project.domain.report.dto.response.ReportResponseDto;
 import com.creavispace.project.domain.report.service.ReportService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +25,7 @@ public class ReportController {
 
     @PostMapping(CREATE_REPORT)
     @Operation(summary = "신고하기")
-    public ResponseEntity<SuccessResponseDto<ReportCreateResponseDto>> createReport(@RequestBody ReportCreateRequestDto requestBody){
+    public ResponseEntity<SuccessResponseDto<ReportResponseDto>> createReport(@RequestBody ReportRequestDto requestBody){
         return ResponseEntity.ok().body(reportService.createReport(requestBody));
     }
 }
