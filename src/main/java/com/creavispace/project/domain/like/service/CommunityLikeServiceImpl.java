@@ -50,8 +50,18 @@ public class CommunityLikeServiceImpl implements CommunityLikeService {
 
     @Override
     public SuccessResponseDto<LikeResponseDto> readCommunityLike(Long communityId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readCommunityLike'");
+        // JWT
+        Long memberId = 1L;
+
+        Boolean isMember = memberRepository.existsById(memberId);
+        if(!isMember) new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND);
+
+        Boolean isCommunity = communityRepository.existsById(communityId);
+        if(!isCommunity) new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND);
+
+        Boolean isCommunityLike = communityLikeRepository.existsByCommunityIdAndMemberId(communityId, memberId);
+
+        return new SuccessResponseDto<>(true, "좋아요 조회가 완료되었습니다.", new LikeResponseDto(isCommunityLike));
     }
     
 }
