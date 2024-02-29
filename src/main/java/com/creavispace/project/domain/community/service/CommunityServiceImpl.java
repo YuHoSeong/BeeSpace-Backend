@@ -196,8 +196,31 @@ public class CommunityServiceImpl implements CommunityService{
 
     @Override
     public SuccessResponseDto<CommunityResponseDto> readCommunity(Long communityId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readCommunity'");
+        Community community = communityRepository.findByIdAndStatusTrue(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+
+        // if(isJwt){
+        //     community = communityRepository.findById(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+        // }
+
+        CommunityResponseDto read = CommunityResponseDto.builder()
+            .id(community.getId())
+            .postType(PostType.COMMUNITY.getName())
+            .category(community.getCategory())
+            .memberId(community.getMember().getId())
+            .viewCount(community.getViewCount())
+            .createdDate(community.getCreatedDate())
+            .modifiedDate(community.getModifiedDate())
+            .title(community.getTitle())
+            .content(community.getContent())
+            .hashTags(community.getCommunityHashTags().stream()
+                .map(hashTag -> CommunityHashTagDto.builder()
+                    .hashTagId(hashTag.getHashTag().getId())
+                    .hashTag(hashTag.getHashTag().getHashTag())
+                    .build())
+                .collect(Collectors.toList()))
+            .build();
+
+        return new SuccessResponseDto<>(true, "커뮤니티 게시글 디테일 조회가 완료되었습니다.", read);
     }
 
     @Override
