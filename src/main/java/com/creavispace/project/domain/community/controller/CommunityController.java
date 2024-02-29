@@ -62,10 +62,13 @@ public class CommunityController {
     @GetMapping(READ_COMMUNITY_LIST)
     @Operation(summary = "커뮤니티 게시글 리스트 조회 / 인기 태그 게시글 조회")
     public ResponseEntity<SuccessResponseDto<List<CommunityResponseDto>>> readCommunityList(
-        @RequestParam(value = "hashTag", required = false) String hashTag,
-        @RequestParam(value = "type", required = false) String type
+        @RequestParam(value = "size", required = false, defaultValue = "6") Integer size,
+        @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+        @RequestParam(value = "category", required = false) String category,
+        @RequestParam(value = "hashTag", required = false) String hashTag
+
     ){
-        return ResponseEntity.ok().body(communityService.readCommunityList(hashTag, type));
+        return ResponseEntity.ok().body(communityService.readCommunityList(size, page, category, hashTag));
     }
 
 

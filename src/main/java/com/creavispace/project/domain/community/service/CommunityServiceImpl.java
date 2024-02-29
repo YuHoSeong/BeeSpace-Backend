@@ -3,6 +3,9 @@ package com.creavispace.project.domain.community.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.common.dto.PostType;
@@ -224,9 +227,47 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
-    public SuccessResponseDto<List<CommunityResponseDto>> readCommunityList(String hashTag, String type) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readCommunityList'");
+    public SuccessResponseDto<List<CommunityResponseDto>> readCommunityList(Integer size, Integer page, String category, String hashTag) {
+        Pageable pageRequest = PageRequest.of(page-1, size);
+        Page<Community> pageable;
+
+        if(category != null && !category.isEmpty() && hashTag != null && !hashTag.isEmpty()){
+            Long hashTagId = hashTagRepository.findByHashTag(hashTag).getId();
+            pageable = communityRepository.findAllByStatusTrueAndCategoryAndHashTagId(category, hashTagId, pageRequest);
+        }else if((category == null || category.isEmpty()) && hashTag != null && !hashTag.isEmpty()){
+            Long hashTagId = hashTagRepository.findByHashTag(hashTag).getId();
+            pageable = communityRepository.findAllByStatusTrueAndHashTagId(hashTagId, pageRequest);
+        }else if((hashTag == null || hashTag.isEmpty()) && category != null && !category.isEmpty()){
+            pageable = communityRepository.findAllByStatusTrueAndCategory(category, pageRequest);
+        }else{
+            pageable = communityRepository.findAllByStatusTrue(pageRequest);
+        }
+
+        if(!pageable.hasContent()) new CreaviCodeException(GlobalErrorCode.NOT_COMMUNITY_CONTENT);
+        List<Community> communities = pageable.getContent();
+
+        List<CommunityResponseDto> reads = communities.stream()
+            .map(community -> CommunityResponseDto.builder()
+                .id(community.getId())
+                .postType(PostType.COMMUNITY.getName())
+                .category(community.getCategory())
+                .memberId(community.getMember().getId())
+                .viewCount(community.getViewCount())
+                .createdDate(community.getCreatedDate())
+                .modifiedDate(community.getModifiedDate())
+                .title(community.getTitle())
+                .content(community.getContent())
+                .hashTags(community.getCommunityHashTags().stream()
+                    .map(communityHashTag -> CommunityHashTagDto.builder()
+                        .hashTagId(communityHashTag.getHashTag().getId())
+                        .hashTag(communityHashTag.getHashTag().getHashTag())
+                        .build())
+                    .collect(Collectors.toList()))
+                .build())
+            .collect(Collectors.toList());
+
+        return new SuccessResponseDto<>(true, "커뮤니티 게시글 리스트 조회가 완료되었습니다.", reads);
+                
     }
     
 }
