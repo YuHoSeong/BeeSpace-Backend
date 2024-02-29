@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
-import com.creavispace.project.domain.community.dto.response.CommunityListReadResponseDto;
+import com.creavispace.project.domain.community.dto.response.CommunityResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitListReadResponseDto;
 import com.creavispace.project.domain.search.dto.response.SearchListReadResponseDto;
@@ -60,7 +60,7 @@ public class SearchController {
 
     @GetMapping(READ_SEARCH_COMMUNITY)
     @Operation(summary = "통합 검색 커뮤니티 게시글 카드 정보 조회")
-    public ResponseEntity<SuccessResponseDto<CommunityListReadResponseDto>> readSearchCommunity(
+    public ResponseEntity<SuccessResponseDto<CommunityResponseDto>> readSearchCommunity(
         @PathVariable("communityId") Long communityId
     ){
         return ResponseEntity.ok().body(searchService.readSearchCommunity(communityId));
