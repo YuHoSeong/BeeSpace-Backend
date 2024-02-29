@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
-import com.creavispace.project.domain.community.dto.response.CommunityListReadResponseDto;
+import com.creavispace.project.domain.community.dto.response.CommunityResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitListReadResponseDto;
 import com.creavispace.project.domain.search.dto.response.SearchListReadResponseDto;
@@ -33,7 +33,7 @@ public class SearchServiceImpl implements SearchService{
     }
 
     @Override
-    public SuccessResponseDto<CommunityListReadResponseDto> readSearchCommunity(Long communityId) {
+    public SuccessResponseDto<CommunityResponseDto> readSearchCommunity(Long communityId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'readSearchCommunity'");
     }
