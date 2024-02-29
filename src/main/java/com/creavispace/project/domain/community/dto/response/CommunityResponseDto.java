@@ -1,8 +1,8 @@
 package com.creavispace.project.domain.community.dto.response;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import org.joda.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,5 +24,5 @@ public class CommunityResponseDto {
     private LocalDateTime modifiedDate;
     private String title;
     private String content;
-    private List<String> hashTags;
+    private List<CommunityHashTagDto> hashTags;
 }

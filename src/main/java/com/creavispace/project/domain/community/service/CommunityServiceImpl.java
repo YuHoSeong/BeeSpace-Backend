@@ -1,21 +1,101 @@
 package com.creavispace.project.domain.community.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.creavispace.project.domain.common.dto.PostType;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.community.dto.request.CommunityRequestDto;
 import com.creavispace.project.domain.community.dto.response.CommunityResponseDto;
+import com.creavispace.project.domain.community.entity.Community;
+import com.creavispace.project.domain.community.entity.CommunityHashTag;
+import com.creavispace.project.domain.community.repository.CommunityHashTagRepository;
+import com.creavispace.project.domain.community.repository.CommunityRepository;
+import com.creavispace.project.domain.hashTag.entity.HashTag;
+import com.creavispace.project.domain.hashTag.repository.HashTagRepository;
+import com.creavispace.project.domain.member.entity.Member;
+import com.creavispace.project.domain.member.repository.MemberRepository;
+import com.creavispace.project.global.exception.CreaviCodeException;
+import com.creavispace.project.global.exception.GlobalErrorCode;
+
+import lombok.RequiredArgsConstructor;
+
 import com.creavispace.project.domain.community.dto.response.CommunityDeleteResponseDto;
+import com.creavispace.project.domain.community.dto.response.CommunityHashTagDto;
 
 @Service
+@RequiredArgsConstructor
 public class CommunityServiceImpl implements CommunityService{
 
+    private final MemberRepository memberRepository;
+    private final CommunityRepository communityRepository;
+    private final HashTagRepository hashTagRepository;
+    private final CommunityHashTagRepository communityHashTagRepository;
+
     @Override
-    public SuccessResponseDto<CommunityResponseDto> createCommunity(CommunityRequestDto requestBody) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createCommunity'");
+    public SuccessResponseDto<CommunityResponseDto> createCommunity(CommunityRequestDto dto) {
+        Long memberId = 1L;
+        Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+        Community community = Community.builder()
+            .member(member)
+            .category(dto.getCategory())
+            .title(dto.getTitle())
+            .content(dto.getContent())
+            .viewCount(0)
+            .status(Boolean.TRUE)
+            .build();
+
+        communityRepository.save(community);
+
+        List<String> hashTagDtos = dto.getHashTags();
+
+        if(hashTagDtos != null && hashTagDtos.isEmpty()){
+            List<CommunityHashTag> communityHashTags = dto.getHashTags().stream()
+                .map(hashTagDto -> {
+                    Boolean hasHashTag = hashTagRepository.existsByHashTag(hashTagDto);
+                    HashTag hashTag;
+                    if(hasHashTag){
+                        hashTag = hashTagRepository.findByHashTag(hashTagDto);
+                    }else{
+                        hashTag = hashTagRepository.save(HashTag.builder().hashTag(hashTagDto).build());
+                    }
+                    return CommunityHashTag.builder()
+                    .community(community)
+                    .hashTag(hashTag)
+                    .build();
+                })
+                .collect(Collectors.toList());
+            
+            communityHashTagRepository.saveAll(communityHashTags);
+        }
+
+        List<CommunityHashTag> communityHashTags = communityHashTagRepository.findByCommunityId(community.getId());
+
+        List<CommunityHashTagDto> communityHashTagDtos = communityHashTags.stream()
+            .map(communityHashTag -> CommunityHashTagDto.builder()
+                .hashTagId(communityHashTag.getHashTag().getId())
+                .hashTag(communityHashTag.getHashTag().getHashTag())
+                .build())
+            .collect(Collectors.toList());
+        
+        CommunityResponseDto create = CommunityResponseDto.builder()
+            .id(community.getId())
+            .postType(PostType.COMMUNITY.getName())
+            .category(community.getCategory())
+            .memberId(community.getMember().getId())
+            .viewCount(community.getViewCount())
+            .createdDate(community.getCreatedDate())
+            .modifiedDate(community.getModifiedDate())
+            .title(community.getTitle())
+            .content(community.getContent())
+            .hashTags(communityHashTagDtos)
+            .build();
+
+        return new SuccessResponseDto<>(true, "커뮤니티 게시글 생성이 완료되었습니다.", create);
+        
     }
 
     @Override
