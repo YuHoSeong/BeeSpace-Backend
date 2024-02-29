@@ -171,8 +171,27 @@ public class CommunityServiceImpl implements CommunityService{
 
     @Override
     public SuccessResponseDto<CommunityDeleteResponseDto> deleteCommunity(Long communityId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteCommunity'");
+        // JWT 토큰
+        Long memberId = 1L;
+
+        Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+        Community community = communityRepository.findById(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+        if(community.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
+            new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+        }
+
+        Community disableCommunity = community.toBuilder()
+            .status(false)
+            .build();
+
+        communityRepository.save(disableCommunity);
+
+        CommunityDeleteResponseDto delete = CommunityDeleteResponseDto.builder()
+            .communityId(disableCommunity.getId())
+            .postType(PostType.COMMUNITY.getName())
+            .build();
+
+        return new SuccessResponseDto<>(true, "커뮤니티 게시글 삭제가 완료되었습니다.", delete);
     }
 
     @Override
