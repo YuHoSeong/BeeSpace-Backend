@@ -9,4 +9,5 @@ import com.creavispace.project.domain.like.entity.CommunityLike;
 public interface CommunityLikeRepository extends JpaRepository<CommunityLike, Long> {
     public CommunityLike findByCommunityIdAndMemberId(Long communityId, Long memberId);
     public Boolean existsByCommunityIdAndMemberId(Long communityId, Long memberId);
+    public Integer countByCommunityId(Long communityId);
 }
