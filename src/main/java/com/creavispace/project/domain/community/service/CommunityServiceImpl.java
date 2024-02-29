@@ -100,9 +100,73 @@ public class CommunityServiceImpl implements CommunityService{
 
     @Override
     public SuccessResponseDto<CommunityResponseDto> modifyCommunity(Long communityId,
-        CommunityRequestDto requestBody) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'modifyCommunity'");
+        CommunityRequestDto dto) {
+        //JWT
+        Long memberId = 1L;
+
+        Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+        Community community = communityRepository.findById(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+
+        if(community.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
+            new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+        }
+
+        Community modifyCommunity = community.toBuilder()
+            .category(dto.getCategory())
+            .title(dto.getTitle())
+            .content(dto.getContent())
+            .build();
+
+        communityRepository.save(modifyCommunity);
+
+        communityHashTagRepository.deleteByCommunityId(communityId);
+
+        List<String> hashTagDtos = dto.getHashTags();
+
+        if(hashTagDtos != null && hashTagDtos.isEmpty()){
+            List<CommunityHashTag> communityHashTags = hashTagDtos.stream()
+                .map(hashTagDto -> {
+                    Boolean hasHashTag = hashTagRepository.existsByHashTag(hashTagDto);
+                    HashTag hashTag;
+                    if(hasHashTag){
+                        hashTag = hashTagRepository.findByHashTag(hashTagDto);
+                    }else{
+                        hashTag = hashTagRepository.save(HashTag.builder().hashTag(hashTagDto).build());
+                    }
+                    return CommunityHashTag.builder()
+                    .community(community)
+                    .hashTag(hashTag)
+                    .build();
+                })
+                .collect(Collectors.toList());
+            
+            communityHashTagRepository.saveAll(communityHashTags);
+        }
+
+        List<CommunityHashTag> communityHashTags = communityHashTagRepository.findByCommunityId(communityId);
+
+        List<CommunityHashTagDto> hashTags = communityHashTags.stream()
+            .map(communityHashTag -> CommunityHashTagDto.builder()
+                .hashTagId(communityHashTag.getHashTag().getId())
+                .hashTag(communityHashTag.getHashTag().getHashTag())
+                .build())
+            .collect(Collectors.toList());
+
+        CommunityResponseDto modify = CommunityResponseDto.builder()
+            .id(modifyCommunity.getId())
+            .postType(PostType.COMMUNITY.getName())
+            .category(modifyCommunity.getCategory())
+            .memberId(modifyCommunity.getMember().getId())
+            .viewCount(modifyCommunity.getViewCount())
+            .createdDate(modifyCommunity.getCreatedDate())
+            .modifiedDate(modifyCommunity.getModifiedDate())
+            .title(modifyCommunity.getTitle())
+            .content(modifyCommunity.getContent())
+            .hashTags(hashTags)
+            .build();
+
+        return new SuccessResponseDto<>(true, "커뮤니티 게시글 수정이 완료되었습니다.", modify);
+
     }
 
     @Override

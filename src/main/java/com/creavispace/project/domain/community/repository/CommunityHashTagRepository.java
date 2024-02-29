@@ -10,4 +10,5 @@ import com.creavispace.project.domain.community.entity.CommunityHashTag;
 @Repository
 public interface CommunityHashTagRepository extends JpaRepository<CommunityHashTag, Long>{
     public List<CommunityHashTag> findByCommunityId(Long communityId);
+    public void deleteByCommunityId(Long communityId);
 }
