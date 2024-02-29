@@ -12,5 +12,5 @@ public interface CommunityService {
     public SuccessResponseDto<CommunityResponseDto> modifyCommunity(Long communityId, CommunityRequestDto requestBody);
     public SuccessResponseDto<CommunityDeleteResponseDto> deleteCommunity(Long communityId);
     public SuccessResponseDto<CommunityResponseDto> readCommunity(Long communityId);
-    public SuccessResponseDto<List<CommunityResponseDto>> readCommunityList(String hashTag, String type);
+    public SuccessResponseDto<List<CommunityResponseDto>> readCommunityList(Integer size, Integer page, String category, String hashTag);
 }
