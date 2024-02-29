@@ -1,8 +1,5 @@
 package com.creavispace.project.domain.member.controller;
 
-import com.creavispace.project.config.auth.dto.SessionMember;
-import com.creavispace.project.domain.member.dto.request.MemberInfoRequestDto;
-
 import com.creavispace.project.domain.member.dto.request.MemberJwtRequestDto;
 import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
 import com.creavispace.project.domain.member.dto.response.MemberResponseDto;

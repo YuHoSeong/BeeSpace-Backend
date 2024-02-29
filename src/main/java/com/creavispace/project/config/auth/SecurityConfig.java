@@ -1,6 +1,8 @@
 package com.creavispace.project.config.auth;
 
+import com.creavispace.project.config.JwtFilter;
 import com.creavispace.project.domain.member.Role;
+import com.creavispace.project.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -22,6 +25,7 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -44,6 +48,10 @@ public class SecurityConfig {
     @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
     private String naverClientSecret;
 
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
+    private final MemberService memberService;
 
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -63,12 +71,15 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
-                                .requestMatchers("/", "/login", "/join", "/swagger-ui/**", "/v3/api-docs/**")
+                                .requestMatchers("/","config/login", "member/login", "/join", "/swagger-ui/**", "/v3/api-docs/**")
                                 .permitAll().requestMatchers(HttpMethod.POST, "/member/**", "/review", "/upload")
                                 .hasRole(Role.MEMBER.name()).anyRequest()
                                 .authenticated())
                 .logout(logout -> logout.logoutSuccessHandler(new LogoutHandler()).logoutUrl("/logout"))
                 .oauth2Login(login -> login.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service)).successHandler(new LoginSuccessHandler(session)))
+                .sessionManagement(httpSecuritySessionManagementConfigurer ->
+                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JwtFilter(memberService, jwtSecret), UsernamePasswordAuthenticationFilter.class)
                 /*.exceptionHandling(exception -> exception
                                 .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/"))
                         // 시작 페이지로 리디렉션

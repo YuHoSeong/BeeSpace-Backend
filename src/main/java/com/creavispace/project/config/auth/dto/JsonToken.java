@@ -11,7 +11,7 @@ public class JsonToken implements Serializable {
     private String message;
 
     public JsonToken(Object token) {
-        this.token = token.toString();
+        this.token = validateTokenString(token);
         this.message = message(token);
     }
 
@@ -20,5 +20,12 @@ public class JsonToken implements Serializable {
             return "로그인 되지 않은 사용자";
         }
         return "로그인 성공";
+    }
+
+    public String validateTokenString(Object token) {
+        if (token == null) {
+            return "";
+        }
+        return token.toString();
     }
 }

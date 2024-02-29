@@ -1,10 +1,15 @@
 package com.creavispace.project.config.auth.utils;
 
+import com.creavispace.project.domain.member.dto.response.MemberJwtResponseDto;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class JwtUtil {
 
     public static String createJwt(String memberEmail, String loginType, String secretKey, Long expiredTimeStampMs) {
@@ -17,5 +22,22 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + expiredTimeStampMs))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+    }
+
+    public static MemberJwtResponseDto getUserInfo(String token, String secretKey) {
+        Claims body = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        String memberEmail = body.get("memberEmail", String.class);
+        String loginType = body.get("loginType", String.class);
+        return new MemberJwtResponseDto(memberEmail, loginType);
+    }
+
+    public static boolean isExpired(String token, String secretKey) {
+        log.info("JwtUtils.isExpired");
+        try {
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
+        return false;
     }
 }
