@@ -1,4 +1,4 @@
-package com.creavispace.project.domain.report.dto.response;
+package com.creavispace.project.domain.report.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReportCreateResponseDto {
+public class ReportRequestDto {
     private Long postId;
     // enum으로 관리 변경
     private String postType;
