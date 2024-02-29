@@ -59,8 +59,18 @@ public class ProjectLikeServiceImpl implements ProjectLikeService{
 
     @Override
     public SuccessResponseDto<LikeResponseDto> readProjectLike(Long projectId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readProjectLike'");
+        // JWT
+        Long memberId = 1L;
+
+        Boolean isMember = memberRepository.existsById(memberId);
+        if(!isMember) new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND);
+
+        Boolean isProject = projectRepository.existsById(projectId);
+        if(!isProject) new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND);
+
+        Boolean isProjectLike = projectLikeRepository.existsByProjectIdAndMemberId(projectId, memberId);
+
+        return new SuccessResponseDto<>(true, "좋아요 조회가 완료되었습니다.", new LikeResponseDto(isProjectLike));
     }
     
 }
