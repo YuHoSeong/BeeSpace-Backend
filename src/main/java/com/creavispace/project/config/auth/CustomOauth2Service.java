@@ -42,6 +42,7 @@ public class CustomOauth2Service implements OAuth2UserService<OAuth2UserRequest,
         httpSession.setMaxInactiveInterval(600);
 
 
+
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(member.getRoleKey())),
                 attributes.getAttributes(),

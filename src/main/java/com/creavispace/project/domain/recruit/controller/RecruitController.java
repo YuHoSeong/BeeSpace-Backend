@@ -14,14 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
-import com.creavispace.project.domain.recruit.dto.request.RecruitCreateRequestDto;
-import com.creavispace.project.domain.recruit.dto.request.RecruitModifyRequestDto;
+import com.creavispace.project.domain.recruit.dto.request.RecruitRequestDto;
 import com.creavispace.project.domain.recruit.dto.response.DeadLineRecruitListReadResponseDto;
-import com.creavispace.project.domain.recruit.dto.response.RecruitCreateResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitDeleteResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitListReadResponseDto;
-import com.creavispace.project.domain.recruit.dto.response.RecruitModifyResponseDto;
-import com.creavispace.project.domain.recruit.dto.response.RecruitReadResponseDto;
+import com.creavispace.project.domain.recruit.dto.response.RecruitResponseDto;
 import com.creavispace.project.domain.recruit.service.RecruitService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,13 +40,13 @@ public class RecruitController {
 
     @PostMapping(CREATE_RECRUIT)
     @Operation(summary = "모집 게시글 생성")
-    public ResponseEntity<SuccessResponseDto<RecruitCreateResponseDto>> createRecruit(@RequestBody RecruitCreateRequestDto requestBody){
+    public ResponseEntity<SuccessResponseDto<RecruitResponseDto>> createRecruit(@RequestBody RecruitRequestDto requestBody){
         return ResponseEntity.ok().body(recruitService.createRecruit(requestBody));
     }
 
     @PutMapping(MODIFY_RECRUIT)
     @Operation(summary = "모집 게시글 수정")
-    public ResponseEntity<SuccessResponseDto<RecruitModifyResponseDto>> modifyRecruit(@PathVariable("recruitId") Long recruitId, @RequestBody RecruitModifyRequestDto requestBody){
+    public ResponseEntity<SuccessResponseDto<RecruitResponseDto>> modifyRecruit(@PathVariable("recruitId") Long recruitId, @RequestBody RecruitRequestDto requestBody){
         return ResponseEntity.ok().body(recruitService.modifyRecruit(recruitId, requestBody));
     }
 
@@ -63,14 +60,15 @@ public class RecruitController {
     @Operation(summary = "모집 게시글 리스트")
     public ResponseEntity<SuccessResponseDto<List<RecruitListReadResponseDto>>> readRecruitList(
         @RequestParam(value = "size", required = false, defaultValue = "6") Integer size,
-        @RequestParam(value = "page", required = false, defaultValue = "1") Integer page
+        @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+        @RequestParam(value = "category", required = false) String category
     ){
-        return ResponseEntity.ok().body(recruitService.readRecruitList(size, page));
+        return ResponseEntity.ok().body(recruitService.readRecruitList(size, page,category));
     }
 
     @GetMapping(READ_RECRUIT)
     @Operation(summary = "모집 게시글 디테일")
-    public ResponseEntity<SuccessResponseDto<RecruitReadResponseDto>> readRecruit(@PathVariable("recruitId") Long recruitId){
+    public ResponseEntity<SuccessResponseDto<RecruitResponseDto>> readRecruit(@PathVariable("recruitId") Long recruitId){
         return ResponseEntity.ok().body(recruitService.readRecruit(recruitId));
     }
 

@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RecruitListReadResponseDto {
     private Long id;
+    private String postType;
     // enum으로 관리 변경
-    private String kind;
+    private String category;
     private String title;
     private String content;
-    private Boolean bookmark;
     private Integer amount;
     private Integer now;
-    private List<RecruitTechStackResponseDto> recruitTechStackList;
+    private List<RecruitTechStackResponseDto> techStacks;
 
 }

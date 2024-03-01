@@ -33,7 +33,6 @@ public class ProjectMember extends BaseTimeEntity{
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
-    // @ManyToOne(targetEntity = Position.class, fetch = FetchType.LAZY)
-    // @JoinColumn(name = "position_id", nullable = false)
-    // private Position position;
+    // enum으로 관리 변경
+    private String position;
 }

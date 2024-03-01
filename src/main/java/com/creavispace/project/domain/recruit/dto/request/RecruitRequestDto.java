@@ -9,10 +9,10 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class RecruitModifyRequestDto {
+public class RecruitRequestDto {
 
     // enum 관리로 변경
-    private String kind;
+    private String category;
     private int amount;
     private int workDay;
     private String contact;
@@ -23,6 +23,6 @@ public class RecruitModifyRequestDto {
     private LocalDateTime end;
     private String title;
     private String content;
-    private List<RecruitPositionRequestDto> recruitPositionList;
-    private List<RecruitTechStackRequestDto> recruitTechStackList;
+    private List<RecruitPositionRequestDto> positions;
+    private List<RecruitTechStackRequestDto> techStacks;
 }

@@ -11,14 +11,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectImage extends BaseTimeEntity{
+public class ProjectLink extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +29,10 @@ public class ProjectImage extends BaseTimeEntity{
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
-    @Column(name ="url", nullable = false)
+    // enum으로 관리 변경
+    @Column(nullable = false)
+    private String type;
+    
+    @Column(nullable = false)
     private String url;
-
 }

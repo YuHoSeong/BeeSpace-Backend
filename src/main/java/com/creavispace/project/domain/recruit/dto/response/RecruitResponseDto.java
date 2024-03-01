@@ -1,7 +1,5 @@
 package com.creavispace.project.domain.recruit.dto.response;
 
-import com.creavispace.project.domain.recruit.dto.request.RecruitImageDto;
-import com.creavispace.project.domain.recruit.dto.request.RecruitPositionRequestDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,12 +9,13 @@ import java.util.List;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class RecruitModifyResponseDto {
+public class RecruitResponseDto {
     private Long id;
+    private String postType;
     private Long memberId;
     private Integer viewCount;
     // enum으로 관리
-    private String kind;
+    private String category;
     // enum으로 관리
     private String contactWay;
     private String contact;
@@ -27,6 +26,9 @@ public class RecruitModifyResponseDto {
     private LocalDateTime end;
     private String title;
     private String content;
-    private List<RecruitPositionResponseDto> positionList;
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
+    private List<RecruitPositionResponseDto> positions;
+    private List<RecruitTechStackResponseDto> techStacks;
 }
 

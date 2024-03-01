@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProjectDeleteResponseDto {
     private Long projectId;
+    private String postType;
 }

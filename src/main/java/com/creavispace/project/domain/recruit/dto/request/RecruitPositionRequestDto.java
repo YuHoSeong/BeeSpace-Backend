@@ -10,5 +10,6 @@ public class RecruitPositionRequestDto {
     // enum 관리로 변경
     private String position;
     private int amount;
+    private int now;
     
 }

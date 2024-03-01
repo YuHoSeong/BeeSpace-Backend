@@ -7,4 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CommunityDeleteResponseDto {
     private Long communityId;
+    private String postType;
 }

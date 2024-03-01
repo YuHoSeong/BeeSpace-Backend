@@ -6,14 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
-import com.creavispace.project.domain.project.dto.request.ProjectCreateRequestDto;
-import com.creavispace.project.domain.project.dto.request.ProjectModifyRequestDto;
+import com.creavispace.project.domain.project.dto.request.ProjectRequestDto;
 import com.creavispace.project.domain.project.dto.response.PopularProjectReadResponseDto;
-import com.creavispace.project.domain.project.dto.response.ProjectCreateResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectDeleteResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
-import com.creavispace.project.domain.project.dto.response.ProjectModifyResponseDto;
-import com.creavispace.project.domain.project.dto.response.ProjectReadResponseDto;
 import com.creavispace.project.domain.project.service.ProjectService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,13 +41,13 @@ public class ProjectController {
 
     @PostMapping(CREATE_PROJECT)
     @Operation(summary = "프로젝트 게시글 생성")
-    public ResponseEntity<SuccessResponseDto<ProjectCreateResponseDto>> createProject(@RequestBody ProjectCreateRequestDto dto) {
+    public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> createProject(@RequestBody ProjectRequestDto dto) {
         return ResponseEntity.ok().body(projectService.createProject(dto));
     }
 
     @PutMapping(MODIFY_PROJECT)
     @Operation(summary = "프로젝트 게시글 수정")
-    public ResponseEntity<SuccessResponseDto<ProjectModifyResponseDto>> modifyProject(@PathVariable("projectId") Long projectId, @RequestBody ProjectModifyRequestDto dto) {
+    public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> modifyProject(@PathVariable("projectId") Long projectId, @RequestBody ProjectRequestDto dto) {
         return ResponseEntity.ok().body(projectService.modifyProject(projectId, dto));
     }
     
@@ -71,14 +68,14 @@ public class ProjectController {
     public ResponseEntity<SuccessResponseDto<List<ProjectListReadResponseDto>>> readProjectList(
         @RequestParam(value = "size", required = false, defaultValue = "6") Integer size,
         @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-        @RequestParam(value = "kind", required = false) String kind
+        @RequestParam(value = "kind", required = false) String category
         ) {
-        return ResponseEntity.ok().body(projectService.readProjectList(size, page, kind));
+        return ResponseEntity.ok().body(projectService.readProjectList(size, page, category));
     }
 
     @GetMapping(READ_PROJECT)
     @Operation(summary = "프로젝트 게시글 디테일")
-    public ResponseEntity<SuccessResponseDto<ProjectReadResponseDto>> readProject(@PathVariable("projectId") Long projectId) {
+    public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> readProject(@PathVariable("projectId") Long projectId) {
         return ResponseEntity.ok().body(projectService.readProject(projectId));
     }
     
