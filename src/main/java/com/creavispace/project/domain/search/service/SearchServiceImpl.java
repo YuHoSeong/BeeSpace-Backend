@@ -10,11 +10,19 @@ import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.common.dto.PostType;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.community.dto.response.CommunityHashTagDto;
 import com.creavispace.project.domain.community.dto.response.CommunityResponseDto;
+import com.creavispace.project.domain.community.entity.Community;
 import com.creavispace.project.domain.community.repository.CommunityRepository;
+import com.creavispace.project.domain.project.dto.response.ProjectLinkResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
+import com.creavispace.project.domain.project.entity.Project;
 import com.creavispace.project.domain.project.repository.ProjectRepository;
+import com.creavispace.project.domain.project.service.ProjectService;
 import com.creavispace.project.domain.recruit.dto.response.RecruitListReadResponseDto;
+import com.creavispace.project.domain.recruit.dto.response.RecruitTechStackResponseDto;
+import com.creavispace.project.domain.recruit.entity.Recruit;
+import com.creavispace.project.domain.recruit.repository.RecruitPositionRepository;
 import com.creavispace.project.domain.recruit.repository.RecruitRepository;
 import com.creavispace.project.domain.search.dto.response.SearchListReadResponseDto;
 import com.creavispace.project.domain.search.entity.SearchResult;
@@ -30,6 +38,7 @@ public class SearchServiceImpl implements SearchService{
     private final ProjectRepository projectRepository;
     private final CommunityRepository communityRepository;
     private final RecruitRepository recruitRepository;
+    private final RecruitPositionRepository recruitPositionRepository;
 
     @Override
     public SuccessResponseDto<List<SearchListReadResponseDto>> readSearchList(Integer size, Integer page, String text,
@@ -65,20 +74,76 @@ public class SearchServiceImpl implements SearchService{
 
     @Override
     public SuccessResponseDto<ProjectListReadResponseDto> readSearchProject(Long projectId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readSearchProject'");
+
+        Project project = projectRepository.findByIdAndStatusTrue(projectId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
+        
+        ProjectListReadResponseDto projectCard = ProjectListReadResponseDto.builder()
+            .id(project.getId())
+            .postType(PostType.PROJECT.getName())
+            .category(project.getCategory())
+            .title(project.getTitle())
+            .links(project.getLinks().stream()
+                .map(link -> ProjectLinkResponseDto.builder()
+                    .type(link.getType())
+                    .url(link.getUrl())
+                    .build())
+                .collect(Collectors.toList()))
+            .thumbnail(project.getThumbnail())
+            .bannerContent(project.getBannerContent())
+            .build();
+
+        return new SuccessResponseDto<>(true, "통합검색 프로젝트 카드 정보 조회가 완료되었습니다.", projectCard);
     }
 
     @Override
     public SuccessResponseDto<RecruitListReadResponseDto> readSearchRecruit(Long recruitId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readSearchRecruit'");
+
+        Recruit recruit = recruitRepository.findByIdAndStatusTrue(recruitId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
+        
+        RecruitListReadResponseDto recruitCard = RecruitListReadResponseDto.builder()
+            .id(recruit.getId())
+            .postType(PostType.RECRUIT.getName())
+            .category(recruit.getCategory())
+            .title(recruit.getTitle())
+            .content(recruit.getContent())
+            .amount(recruit.getAmount())
+            .now(recruitPositionRepository.countByNow(recruitId))
+            .techStacks(recruit.getTechStacks().stream()
+                .map(techStack -> RecruitTechStackResponseDto.builder()
+                    .techStackId(techStack.getTechStack().getId())
+                    .techStack(techStack.getTechStack().getTechStack())
+                    .iconUrl(techStack.getTechStack().getIconUrl())
+                    .build())
+                .collect(Collectors.toList()))
+            .build();
+
+        return new SuccessResponseDto<>(true, "통합검색 모집 카드 정보 조회가 완료되었습니다.", recruitCard);
     }
 
     @Override
     public SuccessResponseDto<CommunityResponseDto> readSearchCommunity(Long communityId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readSearchCommunity'");
+
+        Community community = communityRepository.findByIdAndStatusTrue(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+
+        CommunityResponseDto communityCard = CommunityResponseDto.builder()
+            .id(community.getId())
+            .postType(PostType.COMMUNITY.getName())
+            .category(community.getCategory())
+            .memberId(community.getMember().getId())
+            .viewCount(community.getViewCount())
+            .createdDate(community.getCreatedDate())
+            .modifiedDate(community.getModifiedDate())
+            .title(community.getTitle())
+            .content(community.getContent())
+            .hashTags(community.getCommunityHashTags().stream()
+                .map(hashTag -> CommunityHashTagDto.builder()
+                    .hashTagId(hashTag.getHashTag().getId())
+                    .hashTag(hashTag.getHashTag().getHashTag())
+                    .build())
+                .collect(Collectors.toList()))
+            .build();
+
+        return new SuccessResponseDto<>(true, "통합검색 커뮤니티 카드 정보 조회가 완료되었습니다.", communityCard);
     }
     
 }
