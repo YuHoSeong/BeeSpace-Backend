@@ -12,6 +12,6 @@ import com.creavispace.project.domain.community.entity.CommunityHashTag;
 public interface CommunityHashTagRepository extends JpaRepository<CommunityHashTag, Long>{
     public List<CommunityHashTag> findByCommunityId(Long communityId);
     public void deleteByCommunityId(Long communityId);
-    @Query(value = "SELECT ch FROM CommunityHashTag ch GROUP BY ch.hashTagId ORDER BY COUNT(ch.hashTagId) DESC LIMIT 10")
+    @Query(value = "SELECT ch FROM CommunityHashTag ch GROUP BY ch.hashTagId ORDER BY COUNT(ch.hashTagId) DESC LIMIT 10", nativeQuery = true)
     public List<CommunityHashTag> findTop10HashTag();
 }
