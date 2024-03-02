@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PopularHashTagReadResponseDto {
-    private Long id;
+    private Long hashTagId;
     private String hashTag;
 }
