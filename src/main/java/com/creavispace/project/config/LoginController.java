@@ -20,7 +20,9 @@ public class LoginController {
 
     @GetMapping("/config/login")
     public ResponseEntity<JsonToken> getJwt(HttpServletResponse response) {
+        System.out.println("LoginController.getJwt");
         Object jwt = httpSession.getAttribute("jwt");
+
         JsonToken jsonToken = new JsonToken(jwt);
         return ResponseEntity.status(HttpStatus.OK).body(jsonToken);
     }
