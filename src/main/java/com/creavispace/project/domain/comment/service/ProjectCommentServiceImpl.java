@@ -1,6 +1,7 @@
 package com.creavispace.project.domain.comment.service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -31,8 +32,21 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
 
     @Override
     public SuccessResponseDto<List<CommentResponseDto>> readProjectCommentList(Long projectId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readProjectComment'");
+        
+        List<ProjectComment> projectComments = projectCommentRepository.findByProjectId(projectId);
+
+        List<CommentResponseDto> reads = projectComments.stream()
+            .map(projectComment -> CommentResponseDto.builder()
+                .id(projectComment.getId())
+                .memberId(projectComment.getMember().getId())
+                .memberNickName(projectComment.getMember().getMemberNickname())
+                .memberProfileUrl(projectComment.getMember().getProfileUrl())
+                .modifiedDate(projectComment.getModifiedDate())
+                .content(projectComment.getContent())
+                .build())
+            .collect(Collectors.toList());
+
+        return new SuccessResponseDto<>(true, "해당 프로젝트 댓글 리스트 조회가 완료되었습니다.", reads);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.creavispace.project.domain.comment.dto.response;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
