@@ -58,13 +58,14 @@ public class JwtFilter extends OncePerRequestFilter {
         log.info("인증 성공 authorization = {}", authorization);
 
         MemberJwtResponseDto responseDto = JwtUtil.getUserInfo(authorization, jwtSecret);
+        Long memberId = responseDto.memberId();
         String memberEmail = responseDto.memberEmail();
         String loginType = responseDto.loginType();
 
         log.info("로그인 한 사용자 = {}, 로그인 타입 = {}",memberEmail, loginType);
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(memberEmail, loginType, List.of(new SimpleGrantedAuthority("MEMBER")));
+                new UsernamePasswordAuthenticationToken(memberId, loginType, List.of(new SimpleGrantedAuthority("MEMBER")));
 
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
