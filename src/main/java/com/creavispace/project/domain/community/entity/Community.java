@@ -3,6 +3,7 @@ package com.creavispace.project.domain.community.entity;
 import java.util.List;
 
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
+import com.creavispace.project.domain.community.dto.request.CommunityRequestDto;
 import com.creavispace.project.domain.like.entity.CommunityLike;
 import com.creavispace.project.domain.member.entity.Member;
 
@@ -21,11 +22,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder(toBuilder = true)
+@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Community extends BaseTimeEntity{
+public class Community extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -53,4 +54,13 @@ public class Community extends BaseTimeEntity{
     @OneToMany(mappedBy = "community")
     private List<CommunityLike> communityLikes;
 
+    public void modify(CommunityRequestDto dto){
+        this.category = dto.getCategory();
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+    }
+
+    public void disable(){
+        this.status = Boolean.FALSE;
+    }
 }

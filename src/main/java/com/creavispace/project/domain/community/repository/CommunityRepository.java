@@ -15,10 +15,23 @@ import com.creavispace.project.domain.search.entity.SearchResult;
 public interface CommunityRepository extends JpaRepository<Community, Long> {
     public Optional<Community> findByIdAndStatusTrue(Long communityId);
     
-    @Query(value = "SELECT * FROM community c JOIN community_hash_tag ch ON c.id = ch.community_id WHERE ch.hash_tag_id = :hashTagId AND category = :category AND status = true ORDER BY created_date DESC", nativeQuery = true)
+    @Query(value = "SELECT * " +
+    "FROM Community " +
+    "WHERE id IN (" +
+    "SELECT community_id " +
+    "FROM community_hash_tag " +
+    "WHERE hash_tag_id = :hashTagId) " +
+    "AND category = :category " +
+    "ORDER BY created_date DESC ", nativeQuery = true)
     public Page<Community> findAllByStatusTrueAndCategoryAndHashTagId(String category, Long hashTagId, Pageable pageable);
 
-    @Query(value = "SELECT * FROM community c JOIN community_hash_tag ch ON c.id = ch.community_id WHERE ch.hash_tag_id = :hashTagId AND status = true ORDER BY created_date DESC", nativeQuery = true)
+    @Query(value = "SELECT * " +
+    "FROM Community " +
+    "WHERE id IN (" +
+    "SELECT community_id " +
+    "FROM community_hash_tag " +
+    "WHERE hash_tag_id = :hashTagId) " +
+    "ORDER BY created_date DESC ", nativeQuery = true)
     public Page<Community> findAllByStatusTrueAndHashTagId(Long hashTagId, Pageable pageable);
 
     public Page<Community> findAllByStatusTrueAndCategory(String category, Pageable pageable);
