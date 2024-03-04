@@ -8,9 +8,9 @@ import com.creavispace.project.domain.community.dto.response.CommunityResponseDt
 import com.creavispace.project.domain.community.dto.response.CommunityDeleteResponseDto;
 
 public interface CommunityService {
-    public SuccessResponseDto<CommunityResponseDto> createCommunity(CommunityRequestDto requestBody);
-    public SuccessResponseDto<CommunityResponseDto> modifyCommunity(Long communityId, CommunityRequestDto requestBody);
-    public SuccessResponseDto<CommunityDeleteResponseDto> deleteCommunity(Long communityId);
+    public SuccessResponseDto<CommunityResponseDto> createCommunity(Long memberId, CommunityRequestDto requestBody);
+    public SuccessResponseDto<CommunityResponseDto> modifyCommunity(Long memberId, Long communityId, CommunityRequestDto requestBody);
+    public SuccessResponseDto<CommunityDeleteResponseDto> deleteCommunity(Long memberId, Long communityId);
     public SuccessResponseDto<CommunityResponseDto> readCommunity(Long communityId);
-    public SuccessResponseDto<List<CommunityResponseDto>> readCommunityList(Integer size, Integer page, String category, String hashTag);
+    public SuccessResponseDto<List<CommunityResponseDto>> readCommunityList(Integer size, Integer page, String category, String hashTag, String type);
 }

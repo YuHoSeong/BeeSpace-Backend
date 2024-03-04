@@ -3,6 +3,7 @@ package com.creavispace.project.domain.community.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,20 +38,30 @@ public class CommunityController {
 
     @PostMapping(CREATE_COMMUNITY)
     @Operation(summary = "커뮤니티 게시글 생성")
-    public ResponseEntity<SuccessResponseDto<CommunityResponseDto>> createCommunity(@RequestBody CommunityRequestDto requestBody){
-        return ResponseEntity.ok().body(communityService.createCommunity(requestBody));
+    public ResponseEntity<SuccessResponseDto<CommunityResponseDto>> createCommunity(
+        @AuthenticationPrincipal Long memberId, 
+        @RequestBody CommunityRequestDto requestBody
+    ){
+        return ResponseEntity.ok().body(communityService.createCommunity(memberId, requestBody));
     }
 
     @PutMapping(MODIFY_COMMUNITY)
     @Operation(summary = "커뮤니티 게시글 수정")
-    public ResponseEntity<SuccessResponseDto<CommunityResponseDto>> modifyCommunity(@PathVariable("communityId") Long communityId, @RequestBody CommunityRequestDto requestBody){
-        return ResponseEntity.ok().body(communityService.modifyCommunity(communityId, requestBody));
+    public ResponseEntity<SuccessResponseDto<CommunityResponseDto>> modifyCommunity(
+        @AuthenticationPrincipal Long memberId,
+        @PathVariable("communityId") Long communityId, 
+        @RequestBody CommunityRequestDto requestBody
+    ){
+        return ResponseEntity.ok().body(communityService.modifyCommunity(memberId, communityId, requestBody));
     }
 
     @DeleteMapping(DELETE_COMMUNITY)
     @Operation(summary = "커뮤니티 게시글 삭제")
-    public ResponseEntity<SuccessResponseDto<CommunityDeleteResponseDto>> deleteCommunity(@PathVariable("communityId") Long communityId){
-        return ResponseEntity.ok().body(communityService.deleteCommunity(communityId));
+    public ResponseEntity<SuccessResponseDto<CommunityDeleteResponseDto>> deleteCommunity(
+        @AuthenticationPrincipal Long memberId,
+        @PathVariable("communityId") Long communityId
+    ){
+        return ResponseEntity.ok().body(communityService.deleteCommunity(6L, communityId));
     }
 
     @GetMapping(READ_COMMUNITY)
@@ -65,10 +76,11 @@ public class CommunityController {
         @RequestParam(value = "size", required = false, defaultValue = "6") Integer size,
         @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
         @RequestParam(value = "category", required = false) String category,
-        @RequestParam(value = "hashTag", required = false) String hashTag
+        @RequestParam(value = "hashTag", required = false) String hashTag,
+        @RequestParam(value = "type", required = false, defaultValue = "생성일") String type
 
     ){
-        return ResponseEntity.ok().body(communityService.readCommunityList(size, page, category, hashTag));
+        return ResponseEntity.ok().body(communityService.readCommunityList(size, page, category, hashTag, type));
     }
 
 

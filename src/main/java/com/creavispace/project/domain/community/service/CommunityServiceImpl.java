@@ -23,6 +23,7 @@ import com.creavispace.project.domain.member.repository.MemberRepository;
 import com.creavispace.project.global.exception.CreaviCodeException;
 import com.creavispace.project.global.exception.GlobalErrorCode;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.creavispace.project.domain.community.dto.response.CommunityDeleteResponseDto;
@@ -38,8 +39,8 @@ public class CommunityServiceImpl implements CommunityService{
     private final CommunityHashTagRepository communityHashTagRepository;
 
     @Override
-    public SuccessResponseDto<CommunityResponseDto> createCommunity(CommunityRequestDto dto) {
-        Long memberId = 1L;
+    @Transactional
+    public SuccessResponseDto<CommunityResponseDto> createCommunity(Long memberId, CommunityRequestDto dto) {
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
         Community community = Community.builder()
@@ -55,7 +56,7 @@ public class CommunityServiceImpl implements CommunityService{
 
         List<String> hashTagDtos = dto.getHashTags();
 
-        if(hashTagDtos != null && hashTagDtos.isEmpty()){
+        if(hashTagDtos != null && !hashTagDtos.isEmpty()){
             List<CommunityHashTag> communityHashTags = dto.getHashTags().stream()
                 .map(hashTagDto -> {
                     Boolean hasHashTag = hashTagRepository.existsByHashTag(hashTagDto);
@@ -102,31 +103,25 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
-    public SuccessResponseDto<CommunityResponseDto> modifyCommunity(Long communityId,
+    @Transactional
+    public SuccessResponseDto<CommunityResponseDto> modifyCommunity(Long memberId, Long communityId,
         CommunityRequestDto dto) {
-        //JWT
-        Long memberId = 1L;
-
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
         Community community = communityRepository.findById(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
 
         if(community.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
-            new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+            throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
         }
 
-        Community modifyCommunity = community.toBuilder()
-            .category(dto.getCategory())
-            .title(dto.getTitle())
-            .content(dto.getContent())
-            .build();
+        community.modify(dto);
 
-        communityRepository.save(modifyCommunity);
+        communityRepository.save(community);
 
         communityHashTagRepository.deleteByCommunityId(communityId);
 
         List<String> hashTagDtos = dto.getHashTags();
 
-        if(hashTagDtos != null && hashTagDtos.isEmpty()){
+        if(hashTagDtos != null && !hashTagDtos.isEmpty()){
             List<CommunityHashTag> communityHashTags = hashTagDtos.stream()
                 .map(hashTagDto -> {
                     Boolean hasHashTag = hashTagRepository.existsByHashTag(hashTagDto);
@@ -156,15 +151,15 @@ public class CommunityServiceImpl implements CommunityService{
             .collect(Collectors.toList());
 
         CommunityResponseDto modify = CommunityResponseDto.builder()
-            .id(modifyCommunity.getId())
+            .id(community.getId())
             .postType(PostType.COMMUNITY.getName())
-            .category(modifyCommunity.getCategory())
-            .memberId(modifyCommunity.getMember().getId())
-            .viewCount(modifyCommunity.getViewCount())
-            .createdDate(modifyCommunity.getCreatedDate())
-            .modifiedDate(modifyCommunity.getModifiedDate())
-            .title(modifyCommunity.getTitle())
-            .content(modifyCommunity.getContent())
+            .category(community.getCategory())
+            .memberId(community.getMember().getId())
+            .viewCount(community.getViewCount())
+            .createdDate(community.getCreatedDate())
+            .modifiedDate(community.getModifiedDate())
+            .title(community.getTitle())
+            .content(community.getContent())
             .hashTags(hashTags)
             .build();
 
@@ -173,24 +168,20 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
-    public SuccessResponseDto<CommunityDeleteResponseDto> deleteCommunity(Long communityId) {
-        // JWT 토큰
-        Long memberId = 1L;
-
+    @Transactional
+    public SuccessResponseDto<CommunityDeleteResponseDto> deleteCommunity(Long memberId, Long communityId) {
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
         Community community = communityRepository.findById(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
         if(community.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
-            new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+            throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
         }
 
-        Community disableCommunity = community.toBuilder()
-            .status(false)
-            .build();
+        community.disable();
 
-        communityRepository.save(disableCommunity);
+        communityRepository.save(community);
 
         CommunityDeleteResponseDto delete = CommunityDeleteResponseDto.builder()
-            .communityId(disableCommunity.getId())
+            .communityId(community.getId())
             .postType(PostType.COMMUNITY.getName())
             .build();
 
@@ -200,10 +191,6 @@ public class CommunityServiceImpl implements CommunityService{
     @Override
     public SuccessResponseDto<CommunityResponseDto> readCommunity(Long communityId) {
         Community community = communityRepository.findByIdAndStatusTrue(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
-
-        // if(isJwt){
-        //     community = communityRepository.findById(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
-        // }
 
         CommunityResponseDto read = CommunityResponseDto.builder()
             .id(community.getId())
@@ -227,7 +214,7 @@ public class CommunityServiceImpl implements CommunityService{
     }
 
     @Override
-    public SuccessResponseDto<List<CommunityResponseDto>> readCommunityList(Integer size, Integer page, String category, String hashTag) {
+    public SuccessResponseDto<List<CommunityResponseDto>> readCommunityList(Integer size, Integer page, String category, String hashTag, String type) {
         Pageable pageRequest = PageRequest.of(page-1, size);
         Page<Community> pageable;
 
