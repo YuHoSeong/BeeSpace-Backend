@@ -24,10 +24,7 @@ public class CommunityLikeServiceImpl implements CommunityLikeService {
     private final CommunityLikeRepository communityLikeRepository;
 
     @Override
-    public SuccessResponseDto<LikeResponseDto> communityLike(Long communityId) {
-        // JWT
-        Long memberId =1L;
-
+    public SuccessResponseDto<LikeResponseDto> communityLike(Long memberId, Long communityId) {
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
         Community community = communityRepository.findById(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
@@ -49,15 +46,12 @@ public class CommunityLikeServiceImpl implements CommunityLikeService {
     }
 
     @Override
-    public SuccessResponseDto<LikeResponseDto> readCommunityLike(Long communityId) {
-        // JWT
-        Long memberId = 1L;
-
+    public SuccessResponseDto<LikeResponseDto> readCommunityLike(Long memberId, Long communityId) {
         Boolean isMember = memberRepository.existsById(memberId);
-        if(!isMember) new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND);
+        if(!isMember) throw new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND);
 
         Boolean isCommunity = communityRepository.existsById(communityId);
-        if(!isCommunity) new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND);
+        if(!isCommunity) throw new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND);
 
         Boolean isCommunityLike = communityLikeRepository.existsByCommunityIdAndMemberId(communityId, memberId);
 

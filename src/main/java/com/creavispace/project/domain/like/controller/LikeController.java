@@ -12,9 +12,11 @@ import com.creavispace.project.domain.like.service.LikeService;
 import com.creavispace.project.domain.like.service.ProjectLikeService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,34 +39,47 @@ public class LikeController {
 
     @PostMapping(PROJECT_LIKE)
     @Operation(summary = "프로젝트 좋아요 토글 기능")
-    public ResponseEntity<SuccessResponseDto<LikeResponseDto>> projectLike(@PathVariable("projectId") Long projectId) {
-        return ResponseEntity.ok().body(projectLikeService.projectLike(projectId));
+    public ResponseEntity<SuccessResponseDto<LikeResponseDto>> projectLike(
+        @AuthenticationPrincipal Long memberId,    
+        @PathVariable("projectId") Long projectId
+    ) {
+        return ResponseEntity.ok().body(projectLikeService.projectLike(memberId, projectId));
     }
 
     @GetMapping(READ_PROJECT_LIKE_STATUS)
     @Operation(summary = "프로젝트 좋아요 상태 조회 기능")
-    public ResponseEntity<SuccessResponseDto<LikeResponseDto>> readProjectLike(@PathVariable("projectId") Long projectId){
-        return ResponseEntity.ok().body(projectLikeService.readProjectLike(projectId));
+    public ResponseEntity<SuccessResponseDto<LikeResponseDto>> readProjectLike(
+        @AuthenticationPrincipal Long memberId,
+        @PathVariable("projectId") Long projectId
+    ){
+        return ResponseEntity.ok().body(projectLikeService.readProjectLike(memberId, projectId));
     }
 
     @GetMapping(READ_PROJECT_LIKE_COUNT)
     @Operation(summary = "프로젝트 좋아요 수 조회 기능")
     public ResponseEntity<SuccessResponseDto<LikeCountResponseDto>> likeCount(
         @RequestParam(value = "type") String postType,
-        @PathVariable("postId") Long postId){
-            return ResponseEntity.ok().body(likeService.likeCount(postType, postId));
-        }
+        @PathVariable("postId") Long postId
+    ){
+        return ResponseEntity.ok().body(likeService.likeCount(postType, postId));
+    }
 
     @PostMapping(COMMUNITY_LIKE)
     @Operation(summary = "커뮤니티 좋아요 토글 기능")
-    public ResponseEntity<SuccessResponseDto<LikeResponseDto>> communityLike(@PathVariable("communityId") Long communityId){
-        return ResponseEntity.ok().body(communityLikeService.communityLike(communityId));
+    public ResponseEntity<SuccessResponseDto<LikeResponseDto>> communityLike(
+        @AuthenticationPrincipal Long memberId,
+        @PathVariable("communityId") Long communityId
+    ){
+        return ResponseEntity.ok().body(communityLikeService.communityLike(memberId, communityId));
     }
 
     @GetMapping(READ_COMMUNITY_LIKE_STATUS)
     @Operation(summary = "커뮤니티 좋아요 상태 조회 기능")
-    public ResponseEntity<SuccessResponseDto<LikeResponseDto>> readCommunityLike(@PathVariable("communityId") Long communityId){
-        return ResponseEntity.ok().body(communityLikeService.readCommunityLike(communityId));
+    public ResponseEntity<SuccessResponseDto<LikeResponseDto>> readCommunityLike(
+        @AuthenticationPrincipal Long memberId,
+        @PathVariable("communityId") Long communityId
+    ){
+        return ResponseEntity.ok().body(communityLikeService.readCommunityLike(memberId, communityId));
     }
     
 }

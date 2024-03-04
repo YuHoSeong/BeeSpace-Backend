@@ -28,17 +28,11 @@ public class ProjectLikeServiceImpl implements ProjectLikeService{
     
     @Override
     @Transactional
-    public SuccessResponseDto<LikeResponseDto> projectLike(Long projectId) {
-        // todo : JWT 토큰의 member정보 사용 예정
-        Long memberId =1L;
-
-        // 회원 ID로 회원을 찾음
+    public SuccessResponseDto<LikeResponseDto> projectLike(Long memberId, Long projectId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
-
         Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
         Optional<Project> optionalProject = projectRepository.findById(projectId);
-
         Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
 
         ProjectLike projectLike = projectLikeRepository.findByProjectIdAndMemberId(projectId, memberId);
@@ -58,15 +52,12 @@ public class ProjectLikeServiceImpl implements ProjectLikeService{
     }
 
     @Override
-    public SuccessResponseDto<LikeResponseDto> readProjectLike(Long projectId) {
-        // JWT
-        Long memberId = 1L;
-
+    public SuccessResponseDto<LikeResponseDto> readProjectLike(Long memberId, Long projectId) {
         Boolean isMember = memberRepository.existsById(memberId);
-        if(!isMember) new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND);
+        if(!isMember) throw new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND);
 
         Boolean isProject = projectRepository.existsById(projectId);
-        if(!isProject) new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND);
+        if(!isProject) throw new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND);
 
         Boolean isProjectLike = projectLikeRepository.existsByProjectIdAndMemberId(projectId, memberId);
 
