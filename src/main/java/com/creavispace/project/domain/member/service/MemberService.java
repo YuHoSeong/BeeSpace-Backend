@@ -24,6 +24,6 @@ public interface MemberService {
 
     List<Member> findAllMembers();
 
-    String login(String memberEmail, String loginType);
+    String login(String memberEmail, String loginType, Long memberId);
 
 }
