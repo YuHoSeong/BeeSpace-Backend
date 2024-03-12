@@ -2,6 +2,7 @@ package com.creavispace.project.domain.recruit.entity;
 
 import java.util.List;
 
+import com.creavispace.project.domain.comment.entity.RecruitComment;
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.member.entity.Member;
 

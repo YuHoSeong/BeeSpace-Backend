@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.creavispace.project.domain.comment.dto.request.CommentRequestDto;
 import com.creavispace.project.domain.comment.dto.response.CommentResponseDto;
 import com.creavispace.project.domain.comment.dto.response.CommentDeleteResponseDto;
+import com.creavispace.project.domain.comment.service.CommentService;
 import com.creavispace.project.domain.comment.service.CommunityCommentService;
 import com.creavispace.project.domain.comment.service.ProjectCommentService;
 import com.creavispace.project.domain.comment.service.RecruitCommentService;
@@ -33,7 +34,12 @@ public class CommentController {
     private final ProjectCommentService projectCommentService;
     private final RecruitCommentService recruitCommentService;
     private final CommunityCommentService communityCommentService;
+    private final CommentService commentService;
 
+    private static final String READ_COMMENT_LIST = "";
+    private static final String CREATE_COMMENT = "";
+    private static final String MODIFY_COMMENT = "/{commentId}";
+    private static final String DELETE_COMMENT = "/{commentId}";
     private static final String READ_PROJECT_COMMENT_LIST = "/project";
     private static final String CREATE_PROJECT_COMMENT = "/project";
     private static final String MODIFY_PROJECT_COMMENT = "/project/{projectCommentId}";
@@ -46,6 +52,41 @@ public class CommentController {
     private static final String CREATE_COMMUNITY_COMMENT = "/community";
     private static final String MODIFY_COMMUNITY_COMMENT = "/community/{communityCommentId}";
     private static final String DELETE_COMMUNITY_COMMENT = "/community/{communityCommentId}";
+
+    @GetMapping(READ_COMMENT_LIST)
+    @Operation(summary = "댓글 리스트 조회")
+    public ResponseEntity<SuccessResponseDto<List<CommentResponseDto>>> readCommentList(
+        @RequestParam("postId") Long postId,
+        @RequestParam("type") String type
+    ){
+        return ResponseEntity.ok().body(commentService.readCommentList(postId, type));
+    }
+
+    @PostMapping(CREATE_COMMENT)
+    @Operation(summary = "댓글 등록")
+    public ResponseEntity<SuccessResponseDto<CommentResponseDto>> createComment(
+        @RequestParam("postId") Long postId,
+        @RequestParam("type") String type,
+        @RequestBody CommentRequestDto requestBody) {
+        return ResponseEntity.ok().body(commentService.createComment(postId, type, requestBody));
+    }
+
+    @PutMapping(MODIFY_COMMENT)
+    @Operation(summary = "댓글 수정")
+    public ResponseEntity<SuccessResponseDto<CommentResponseDto>> modifyComment(
+        @PathVariable("commentId") Long commentId, 
+        @RequestBody CommentRequestDto requestBody
+    ) {
+        return ResponseEntity.ok().body(commentService.modifyComment(commentId, requestBody));
+    }
+
+    @DeleteMapping(DELETE_COMMENT)
+    @Operation(summary = "댓글 삭제")
+    public ResponseEntity<SuccessResponseDto<CommentDeleteResponseDto>> deleteComment(
+        @PathVariable("commentId") Long commentId
+    ){
+        return ResponseEntity.ok().body(commentService.deleteComment(commentId));
+    }
 
     @GetMapping(READ_PROJECT_COMMENT_LIST)
     @Operation(summary = "프로젝트 댓글 리스트 조회")
