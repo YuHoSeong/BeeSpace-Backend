@@ -1,5 +1,6 @@
 package com.creavispace.project.domain.comment.entity;
 
+import com.creavispace.project.domain.comment.dto.request.CommentRequestDto;
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.recruit.entity.Recruit;
@@ -26,4 +27,8 @@ public class RecruitComment extends BaseTimeEntity {
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    public void modify(CommentRequestDto dto){
+        this.content = dto.getContent();
+    }
 }

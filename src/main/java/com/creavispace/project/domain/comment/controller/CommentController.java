@@ -77,19 +77,21 @@ public class CommentController {
     @Operation(summary = "댓글 수정")
     public ResponseEntity<SuccessResponseDto<CommentResponseDto>> modifyComment(
         @AuthenticationPrincipal Long memberId,
-        @PathVariable("commentId") Long commentId, 
+        @PathVariable("commentId") Long commentId,
+        @RequestParam("type") String type,
         @RequestBody CommentRequestDto requestBody
     ) {
-        return ResponseEntity.ok().body(commentService.modifyComment(memberId, commentId, requestBody));
+        return ResponseEntity.ok().body(commentService.modifyComment(memberId, commentId, type, requestBody));
     }
 
     @DeleteMapping(DELETE_COMMENT)
     @Operation(summary = "댓글 삭제")
     public ResponseEntity<SuccessResponseDto<CommentDeleteResponseDto>> deleteComment(
         @AuthenticationPrincipal Long memberId,
-        @PathVariable("commentId") Long commentId
+        @PathVariable("commentId") Long commentId,
+        @RequestParam("type") String type
     ){
-        return ResponseEntity.ok().body(commentService.deleteComment(memberId, commentId));
+        return ResponseEntity.ok().body(commentService.deleteComment(memberId, commentId, type));
     }
 
     @GetMapping(READ_PROJECT_COMMENT_LIST)

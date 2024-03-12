@@ -88,7 +88,7 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
         Long memberId = 1L;
         
         Optional<ProjectComment> optionalProjectComment = projectCommentRepository.findById(projectCommentId);
-        ProjectComment projectComment = optionalProjectComment.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_COMMENT_NOT_FOUND));
+        ProjectComment projectComment = optionalProjectComment.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMENT_NOT_FOUND));
 
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
@@ -119,7 +119,7 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
         Long memberId = 1L;
 
         Optional<ProjectComment> optionalProjectComment = projectCommentRepository.findById(projectCommentId);
-        ProjectComment projectComment = optionalProjectComment.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_COMMENT_NOT_FOUND));
+        ProjectComment projectComment = optionalProjectComment.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMENT_NOT_FOUND));
 
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
