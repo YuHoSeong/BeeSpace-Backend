@@ -64,7 +64,6 @@ public class SecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity, HttpSession session) throws Exception {
 
@@ -73,8 +72,8 @@ public class SecurityConfig {
                         auth -> auth.requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                                 .requestMatchers("/","config/login", "member/login", "/join", "/swagger-ui/**", "/v3/api-docs/**")
                                 .permitAll()
-                                .requestMatchers(HttpMethod.GET, "/community/**", "/hashtag/**", "/file/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/member/**", "/review", "/file/**")
+                                .requestMatchers(HttpMethod.GET, "/community/**", "/hashtag/**", "/project/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/member/**", "/review", "/file/**", "/like/**","/project/**")
                                 .hasRole(Role.MEMBER.name()).anyRequest()
                                 .authenticated())
                 .logout(logout -> logout.logoutSuccessHandler(new LogoutHandler()).logoutUrl("/logout"))

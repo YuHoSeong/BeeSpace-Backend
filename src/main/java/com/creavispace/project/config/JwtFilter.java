@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -65,7 +64,7 @@ public class JwtFilter extends OncePerRequestFilter {
         log.info("로그인 한 사용자 = {}, 로그인 타입 = {}",memberEmail, loginType);
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(memberId, loginType, List.of(new SimpleGrantedAuthority("MEMBER")));
+                new UsernamePasswordAuthenticationToken(memberId, loginType, List.of(new SimpleGrantedAuthority("ROLE_MEMBER")));
 
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
