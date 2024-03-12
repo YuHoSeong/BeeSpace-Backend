@@ -39,7 +39,7 @@ public class BookmarkController {
     }
     
     @GetMapping(READ_BOOKMARK)
-    @Operation(summary = "북마크 조회 기능")
+    @Operation(summary = "북마크 상태 조회 기능")
     public ResponseEntity<SuccessResponseDto<BookmarkResponseDto>> readBookmark(
         @AuthenticationPrincipal Long memberId,
         @PathVariable("postId") Long postId,

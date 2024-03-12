@@ -104,8 +104,44 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public SuccessResponseDto<BookmarkResponseDto> readBookmark(Long memberId, Long postId, String type) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'readBookmark'");
+        BookmarkResponseDto data;
+
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+        switch (type) {
+            case "project":
+                ProjectBookmark projectBookmark = projectBookmarkRepository.findByProjectIdAndMemberId(postId, memberId);
+                if(projectBookmark == null){
+                    data = BookmarkResponseDto.builder().bookmarkStatus(false).build();
+                }else{
+                    data = BookmarkResponseDto.builder().bookmarkStatus(true).build();
+                }
+                break;
+        
+            case "recruit":
+                RecruitBookmark recruitBookmark = recruitBookmarkRepository.findByRecruitIdAndMemberId(postId, memberId);
+                if(recruitBookmark == null){
+                    data = BookmarkResponseDto.builder().bookmarkStatus(false).build();
+                }else{
+                    data = BookmarkResponseDto.builder().bookmarkStatus(true).build();
+                }
+                break;
+        
+            case "community":
+                CommunityBookmark communityBookmark = communityBookmarkRepository.findByCommunityIdAndMemberId(postId, memberId);
+                if(communityBookmark == null){
+                    data = BookmarkResponseDto.builder().bookmarkStatus(false).build();
+                }else{
+                    data = BookmarkResponseDto.builder().bookmarkStatus(true).build();
+                }
+                break;
+        
+            default:
+                throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
+        }
+        
+        return new SuccessResponseDto<BookmarkResponseDto>(true, "북마크 조회가 완료되었습니다.", data);
     }
     
 }
