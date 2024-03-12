@@ -10,10 +10,10 @@ import com.creavispace.project.domain.project.dto.response.ProjectListReadRespon
 import com.creavispace.project.domain.project.dto.response.ProjectResponseDto;
 
 public interface ProjectService {
-    public SuccessResponseDto<ProjectResponseDto> createProject(ProjectRequestDto dto);
-    public SuccessResponseDto<ProjectResponseDto> modifyProject(Long projectId, ProjectRequestDto dto);
-    public SuccessResponseDto<ProjectDeleteResponseDto> deleteProject(Long projectId);
+    public SuccessResponseDto<ProjectResponseDto> createProject(Long memberId, ProjectRequestDto dto);
+    public SuccessResponseDto<ProjectResponseDto> modifyProject(Long memberId, Long projectId, ProjectRequestDto dto);
+    public SuccessResponseDto<ProjectDeleteResponseDto> deleteProject(Long memberId, Long projectId);
     public SuccessResponseDto<List<PopularProjectReadResponseDto>> readPopularProjectList();
     public SuccessResponseDto<List<ProjectListReadResponseDto>> readProjectList(Integer size, Integer page, String category);
-    public SuccessResponseDto<ProjectResponseDto> readProject(Long projectId);
+    public SuccessResponseDto<ProjectResponseDto> readProject(Long memberId, Long projectId);
 }

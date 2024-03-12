@@ -54,10 +54,7 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     @Transactional
-    public SuccessResponseDto<ProjectResponseDto> createProject(ProjectRequestDto dto) {
-        // todo 현재 토큰 미구현
-        // jwt 토큰
-        long memberId = 1;
+    public SuccessResponseDto<ProjectResponseDto> createProject(Long memberId, ProjectRequestDto dto) {
         List<ProjectMemberRequestDto> memberDtos = dto.getMemberDtos();
         List<ProjectTechStackRequestDto> techStackDtos = dto.getTechStackDtos();
         List<ProjectLinkRequestDto> linkDtos = dto.getLinkDtos();
@@ -182,9 +179,7 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     @Transactional
-    public SuccessResponseDto<ProjectResponseDto> modifyProject(Long projectId, ProjectRequestDto dto) {
-        // todo 현재 토큰 미구현
-        long memberId = 1;
+    public SuccessResponseDto<ProjectResponseDto> modifyProject(Long memberId, Long projectId, ProjectRequestDto dto) {
         List<ProjectMemberRequestDto> memberDtos = dto.getMemberDtos();
         List<ProjectTechStackRequestDto> techStackDtos = dto.getTechStackDtos();
         List<ProjectLinkRequestDto> linkDtos = dto.getLinkDtos();
@@ -196,7 +191,7 @@ public class ProjectServiceImpl implements ProjectService{
         Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
 
         if(project.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
-            new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+            throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
         }
 
         Project modifyProject = project.toBuilder()
@@ -317,11 +312,7 @@ public class ProjectServiceImpl implements ProjectService{
 
     @Override
     @Transactional
-    public SuccessResponseDto<ProjectDeleteResponseDto> deleteProject(Long projectId) {
-        // todo 현재 토큰 미구현
-        // jwt 토큰
-        long memberId = 1;
-
+    public SuccessResponseDto<ProjectDeleteResponseDto> deleteProject(Long memberId, Long projectId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
         
@@ -329,7 +320,7 @@ public class ProjectServiceImpl implements ProjectService{
         Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
         
         if(project.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
-            new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+            throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
         }
 
         Project disableProject = project.toBuilder()
@@ -403,21 +394,16 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
-    public SuccessResponseDto<ProjectResponseDto> readProject(Long projectId) {
-        Optional<Project> optionalProject = projectRepository.findByIdAndStatusTrue(projectId);
+    public SuccessResponseDto<ProjectResponseDto> readProject(Long memberId, Long projectId) {
+        Optional<Project> optionalProject;
+
+        boolean isWriter = projectRepository.existsByIdAndMemberId(projectId, memberId);
         
-        // // todo 현재 토큰 미구현
-        // // 토큰이 있다면
-        // Boolean isJwt = true;
-        // if(isJwt){
-        //     // jwt 토큰
-        //     long memberId = 1;
-        //     // 해당 프로젝트 ID의 회원정보가 토큰 회원 ID와 일치하면
-        //     if(projectRepository.existsByIdAndMemberId(projectId,memberId)){
-        //         // 해당 ID로 프로젝트 게시글 찾아옴
-        //         optionalProject = projectRepository.findById(projectId);
-        //     }
-        // }
+        if(isWriter){
+            optionalProject = projectRepository.findByIdAndStatusTrue(projectId);
+        }else{
+            optionalProject = projectRepository.findById(projectId);
+        }
 
         Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
 

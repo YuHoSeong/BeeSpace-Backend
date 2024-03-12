@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,20 +42,30 @@ public class ProjectController {
 
     @PostMapping(CREATE_PROJECT)
     @Operation(summary = "프로젝트 게시글 생성")
-    public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> createProject(@RequestBody ProjectRequestDto dto) {
-        return ResponseEntity.ok().body(projectService.createProject(dto));
+    public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> createProject(
+        @AuthenticationPrincipal Long memberId,
+        @RequestBody ProjectRequestDto dto
+    ) {
+        return ResponseEntity.ok().body(projectService.createProject(memberId, dto));
     }
 
     @PutMapping(MODIFY_PROJECT)
     @Operation(summary = "프로젝트 게시글 수정")
-    public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> modifyProject(@PathVariable("projectId") Long projectId, @RequestBody ProjectRequestDto dto) {
-        return ResponseEntity.ok().body(projectService.modifyProject(projectId, dto));
+    public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> modifyProject(
+        @AuthenticationPrincipal Long memberId,
+        @PathVariable("projectId") Long projectId, 
+        @RequestBody ProjectRequestDto dto
+    ) {
+        return ResponseEntity.ok().body(projectService.modifyProject(memberId, projectId, dto));
     }
     
     @DeleteMapping(DELETE_PROJECT)
     @Operation(summary = "프로젝트 게시글 삭제")
-    public ResponseEntity<SuccessResponseDto<ProjectDeleteResponseDto>> deleteProject(@PathVariable("projectId") Long projectId){
-        return ResponseEntity.ok().body(projectService.deleteProject(projectId));
+    public ResponseEntity<SuccessResponseDto<ProjectDeleteResponseDto>> deleteProject(
+        @AuthenticationPrincipal Long memberId,
+        @PathVariable("projectId") Long projectId
+    ){
+        return ResponseEntity.ok().body(projectService.deleteProject(memberId, projectId));
     }
 
     @GetMapping(READ_POPULAR_PROJECT)
@@ -75,8 +86,11 @@ public class ProjectController {
 
     @GetMapping(READ_PROJECT)
     @Operation(summary = "프로젝트 게시글 디테일")
-    public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> readProject(@PathVariable("projectId") Long projectId) {
-        return ResponseEntity.ok().body(projectService.readProject(projectId));
+    public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> readProject(
+        @AuthenticationPrincipal Long memberId,
+        @PathVariable("projectId") Long projectId
+    ) {
+        return ResponseEntity.ok().body(projectService.readProject(memberId, projectId));
     }
     
 }
