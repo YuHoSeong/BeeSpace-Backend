@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,27 +66,30 @@ public class CommentController {
     @PostMapping(CREATE_COMMENT)
     @Operation(summary = "댓글 등록")
     public ResponseEntity<SuccessResponseDto<CommentResponseDto>> createComment(
+        @AuthenticationPrincipal Long memberId,
         @RequestParam("postId") Long postId,
         @RequestParam("type") String type,
         @RequestBody CommentRequestDto requestBody) {
-        return ResponseEntity.ok().body(commentService.createComment(postId, type, requestBody));
+        return ResponseEntity.ok().body(commentService.createComment(memberId, postId, type, requestBody));
     }
 
     @PutMapping(MODIFY_COMMENT)
     @Operation(summary = "댓글 수정")
     public ResponseEntity<SuccessResponseDto<CommentResponseDto>> modifyComment(
+        @AuthenticationPrincipal Long memberId,
         @PathVariable("commentId") Long commentId, 
         @RequestBody CommentRequestDto requestBody
     ) {
-        return ResponseEntity.ok().body(commentService.modifyComment(commentId, requestBody));
+        return ResponseEntity.ok().body(commentService.modifyComment(memberId, commentId, requestBody));
     }
 
     @DeleteMapping(DELETE_COMMENT)
     @Operation(summary = "댓글 삭제")
     public ResponseEntity<SuccessResponseDto<CommentDeleteResponseDto>> deleteComment(
+        @AuthenticationPrincipal Long memberId,
         @PathVariable("commentId") Long commentId
     ){
-        return ResponseEntity.ok().body(commentService.deleteComment(commentId));
+        return ResponseEntity.ok().body(commentService.deleteComment(memberId, commentId));
     }
 
     @GetMapping(READ_PROJECT_COMMENT_LIST)
