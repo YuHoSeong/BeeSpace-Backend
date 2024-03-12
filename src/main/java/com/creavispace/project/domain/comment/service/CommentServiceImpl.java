@@ -177,13 +177,84 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public SuccessResponseDto<CommentResponseDto> modifyComment(Long memberId, Long commentId, CommentRequestDto dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'modifyComment'");
+    public SuccessResponseDto<CommentResponseDto> modifyComment(Long memberId, Long commentId, String type, CommentRequestDto dto) {
+        CommentResponseDto data;
+
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+        
+        switch (type) {
+            case "project":
+                ProjectComment projectComment = projectCommentRepository.findById(commentId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMENT_NOT_FOUND));
+
+                if(memberId != projectComment.getMember().getId() && !member.getRole().equals("Administrator")){
+                    throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+                }
+
+                projectComment.modify(dto);
+                projectCommentRepository.save(projectComment);
+
+                data = CommentResponseDto.builder()
+                    .id(projectComment.getId())
+                    .memberId(projectComment.getMember().getId())
+                    .memberNickName(projectComment.getMember().getMemberNickname())
+                    .memberProfileUrl(projectComment.getMember().getProfileUrl())
+                    .modifiedDate(projectComment.getModifiedDate())
+                    .content(projectComment.getContent())
+                    .build();
+                break;
+        
+            case "recruit":
+                RecruitComment recruitComment = recruitCommentRepository.findById(commentId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMENT_NOT_FOUND));
+
+                if(memberId != recruitComment.getMember().getId() && !member.getRole().equals("Administrator")){
+                    throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+                }
+
+                recruitComment.modify(dto);
+                recruitCommentRepository.save(recruitComment);
+
+                data = CommentResponseDto.builder()
+                    .id(recruitComment.getId())
+                    .memberId(recruitComment.getMember().getId())
+                    .memberNickName(recruitComment.getMember().getMemberNickname())
+                    .memberProfileUrl(recruitComment.getMember().getProfileUrl())
+                    .modifiedDate(recruitComment.getModifiedDate())
+                    .content(recruitComment.getContent())
+                    .build();
+                break;
+        
+            case "community":
+                CommunityComment communityComment = communityCommentRepository.findById(commentId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMENT_NOT_FOUND));
+
+                if(memberId != communityComment.getMember().getId() && !member.getRole().equals("Administrator")){
+                    throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+                }
+
+                communityComment.modify(dto);
+                communityCommentRepository.save(communityComment);
+
+                data = CommentResponseDto.builder()
+                    .id(communityComment.getId())
+                    .memberId(communityComment.getMember().getId())
+                    .memberNickName(communityComment.getMember().getMemberNickname())
+                    .memberProfileUrl(communityComment.getMember().getProfileUrl())
+                    .modifiedDate(communityComment.getModifiedDate())
+                    .content(communityComment.getContent())
+                    .build();
+                    
+                break;
+        
+            default:
+                throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
+        }
+
+        return new SuccessResponseDto<>(true, "댓글 수정이 완료되었습니다.", data);
     }
 
     @Override
-    public SuccessResponseDto<CommentDeleteResponseDto> deleteComment(Long memberId, Long commentId) {
+    public SuccessResponseDto<CommentDeleteResponseDto> deleteComment(Long memberId, Long commentId, String type) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteComment'");
     }
