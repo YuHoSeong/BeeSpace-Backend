@@ -255,8 +255,52 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public SuccessResponseDto<CommentDeleteResponseDto> deleteComment(Long memberId, Long commentId, String type) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteComment'");
+        CommentDeleteResponseDto data;
+
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+        switch (type) {
+            case "project":
+                ProjectComment projectComment = projectCommentRepository.findById(commentId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMENT_NOT_FOUND));
+                
+                if(memberId != projectComment.getMember().getId() && !member.getRole().equals("Administrator")){
+                    throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+                }
+
+                projectCommentRepository.deleteById(commentId);
+
+                break;
+        
+            case "recruit":
+                RecruitComment recruitComment = recruitCommentRepository.findById(commentId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMENT_NOT_FOUND));
+                
+                if(memberId != recruitComment.getMember().getId() && !member.getRole().equals("Administrator")){
+                    throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+                }
+
+                recruitCommentRepository.deleteById(commentId);
+                
+                break;
+        
+            case "community":
+                CommunityComment communityComment = communityCommentRepository.findById(commentId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMENT_NOT_FOUND));
+                    
+                if(memberId != communityComment.getMember().getId() && !member.getRole().equals("Administrator")){
+                    throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
+                }
+
+                communityCommentRepository.deleteById(commentId);
+                
+                break;
+        
+            default:
+                throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
+        }
+
+        data = CommentDeleteResponseDto.builder().commentId(commentId).postType(type).build();
+
+        return new SuccessResponseDto<CommentDeleteResponseDto>(true, "댓글 삭제가 완료되었습니다.", data);
     }
 
 }

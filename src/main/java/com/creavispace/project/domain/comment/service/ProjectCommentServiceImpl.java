@@ -130,7 +130,7 @@ public class ProjectCommentServiceImpl implements ProjectCommentService{
 
         projectCommentRepository.deleteById(projectCommentId);
 
-        return new SuccessResponseDto<>(true, "댓글을 삭제하였습니다.", new CommentDeleteResponseDto(projectCommentId));
+        return new SuccessResponseDto<>(true, "댓글을 삭제하였습니다.", new CommentDeleteResponseDto(projectCommentId, "project"));
     }
     
 }

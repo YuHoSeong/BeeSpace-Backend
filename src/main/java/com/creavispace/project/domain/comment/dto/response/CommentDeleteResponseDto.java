@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentDeleteResponseDto {
     private Long commentId;
+    private String postType;
 }
