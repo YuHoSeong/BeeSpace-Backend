@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommunityBookmarkResponseDto {
+public class BookmarkResponseDto {
     private boolean bookmarkStatus;
 }
