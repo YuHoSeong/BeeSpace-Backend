@@ -1,6 +1,7 @@
 package com.creavispace.project.domain.comment.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -15,6 +16,14 @@ import com.creavispace.project.domain.comment.repository.CommunityCommentReposit
 import com.creavispace.project.domain.comment.repository.ProjectCommentRepository;
 import com.creavispace.project.domain.comment.repository.RecruitCommentRepository;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.community.entity.Community;
+import com.creavispace.project.domain.community.repository.CommunityRepository;
+import com.creavispace.project.domain.member.entity.Member;
+import com.creavispace.project.domain.member.repository.MemberRepository;
+import com.creavispace.project.domain.project.entity.Project;
+import com.creavispace.project.domain.project.repository.ProjectRepository;
+import com.creavispace.project.domain.recruit.entity.Recruit;
+import com.creavispace.project.domain.recruit.repository.RecruitRepository;
 import com.creavispace.project.global.exception.CreaviCodeException;
 import com.creavispace.project.global.exception.GlobalErrorCode;
 
@@ -27,6 +36,10 @@ public class CommentServiceImpl implements CommentService {
     private final ProjectCommentRepository projectCommentRepository;
     private final RecruitCommentRepository recruitCommentRepository;
     private final CommunityCommentRepository communityCommentRepository;
+    private final MemberRepository memberRepository;
+    private final ProjectRepository projectRepository;
+    private final RecruitRepository recruitRepository;
+    private final CommunityRepository communityRepository;
 
     @Override
     public SuccessResponseDto<List<CommentResponseDto>> readCommentList(Long postId, String type) {
@@ -83,19 +96,94 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public SuccessResponseDto<CommentResponseDto> createComment(Long postId, String type, CommentRequestDto dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createComment'");
+    public SuccessResponseDto<CommentResponseDto> createComment(Long memberId, Long postId, String type, CommentRequestDto dto) {
+        CommentResponseDto data;
+
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+        switch (type) {
+            case "project":
+                Optional<Project> optionalProject = projectRepository.findById(postId);
+                Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
+
+                ProjectComment projectComment = ProjectComment.builder()
+                    .project(project)
+                    .member(member)
+                    .content(dto.getContent())
+                    .build();
+
+                projectCommentRepository.save(projectComment);
+
+                data = CommentResponseDto.builder()
+                    .id(projectComment.getId())
+                    .memberId(projectComment.getMember().getId())
+                    .memberNickName(projectComment.getMember().getMemberNickname())
+                    .memberProfileUrl(projectComment.getMember().getProfileUrl())
+                    .modifiedDate(projectComment.getModifiedDate())
+                    .content(projectComment.getContent())
+                    .build();
+                break;
+        
+            case "recruit":
+                Optional<Recruit> optionalRecruit = recruitRepository.findById(postId);
+                Recruit recruit = optionalRecruit.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
+
+                RecruitComment recruitComment = RecruitComment.builder()
+                    .recruit(recruit)
+                    .member(member)
+                    .content(dto.getContent())
+                    .build();
+
+                recruitCommentRepository.save(recruitComment);
+
+                data = CommentResponseDto.builder()
+                    .id(recruitComment.getId())
+                    .memberId(recruitComment.getMember().getId())
+                    .memberNickName(recruitComment.getMember().getMemberNickname())
+                    .memberProfileUrl(recruitComment.getMember().getProfileUrl())
+                    .modifiedDate(recruitComment.getModifiedDate())
+                    .content(recruitComment.getContent())
+                    .build();
+                break;
+        
+            case "community":
+                Optional<Community> optionalCommunity = communityRepository.findById(postId);
+                Community community = optionalCommunity.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+
+                CommunityComment communityComment = CommunityComment.builder()
+                    .community(community)
+                    .member(member)
+                    .content(dto.getContent())
+                    .build();
+
+                communityCommentRepository.save(communityComment);
+
+                data = CommentResponseDto.builder()
+                    .id(communityComment.getId())
+                    .memberId(communityComment.getMember().getId())
+                    .memberNickName(communityComment.getMember().getMemberNickname())
+                    .memberProfileUrl(communityComment.getMember().getProfileUrl())
+                    .modifiedDate(communityComment.getModifiedDate())
+                    .content(communityComment.getContent())
+                    .build();
+                break;
+        
+            default:
+                throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
+        }
+
+        return new SuccessResponseDto<CommentResponseDto>(true, "댓글 생성이 완료되었습니다.", data);
     }
 
     @Override
-    public SuccessResponseDto<CommentResponseDto> modifyComment(Long commentId, CommentRequestDto dto) {
+    public SuccessResponseDto<CommentResponseDto> modifyComment(Long memberId, Long commentId, CommentRequestDto dto) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'modifyComment'");
     }
 
     @Override
-    public SuccessResponseDto<CommentDeleteResponseDto> deleteComment(Long commentId) {
+    public SuccessResponseDto<CommentDeleteResponseDto> deleteComment(Long memberId, Long commentId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteComment'");
     }
