@@ -1,7 +1,8 @@
-package com.creavispace.project.domain.recruit.entity;
+package com.creavispace.project.domain.bookmark.entity;
 
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.member.entity.Member;
+import com.creavispace.project.domain.recruit.entity.Recruit;
 
 import jakarta.persistence.*;
 import lombok.*;
