@@ -2,6 +2,7 @@ package com.creavispace.project.domain.recruit.dto.response;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class RecruitResponseDto {
     // enum으로 관리
     private String proceedWay;
     private int workDay;
-    private LocalDateTime end;
+    private LocalDate end;
     private String title;
     private String content;
     private LocalDateTime createdDate;

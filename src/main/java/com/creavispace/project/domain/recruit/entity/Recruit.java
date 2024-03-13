@@ -6,11 +6,13 @@ import com.creavispace.project.domain.bookmark.entity.RecruitBookmark;
 import com.creavispace.project.domain.comment.entity.RecruitComment;
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.member.entity.Member;
+import com.creavispace.project.domain.recruit.dto.request.RecruitRequestDto;
+import com.creavispace.project.global.util.TimeUtil;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -36,7 +38,7 @@ public class Recruit extends BaseTimeEntity {
 
     private int workDay;
 
-    private LocalDateTime end;
+    private LocalDate end;
 
     @Column(nullable = false)
     private String contactWay;
@@ -66,4 +68,24 @@ public class Recruit extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "recruit")
     private List<RecruitBookmark> bookmarks;
+
+    public void modify(RecruitRequestDto dto){
+        this.category = dto.getCategory();
+        this.amount = dto.getAmount();
+        this.workDay = dto.getWorkDay();
+        this.contact = dto.getContact();
+        this.contactWay = dto.getContactWay();
+        this.proceedWay = dto.getProceedWay();
+        this.end = TimeUtil.getRecruitEnd(dto.getEnd(), dto.getEndFormat());
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+    }
+
+    public void disable(){
+        this.status = false;
+    }
+
+    public void plusViewCount(){
+        this.viewCount++;
+    }
 }

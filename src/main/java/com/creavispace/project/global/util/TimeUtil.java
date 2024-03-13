@@ -3,9 +3,11 @@ package com.creavispace.project.global.util;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
@@ -22,5 +24,10 @@ public class TimeUtil {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime midnight = now.toLocalDate().atTime(LocalTime.MAX).plusDays(1);
         return (int) now.until(midnight, ChronoUnit.SECONDS);
+    }
+
+    public static LocalDate getRecruitEnd(String end, String format){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return LocalDate.parse(end, formatter);
     }
 }
