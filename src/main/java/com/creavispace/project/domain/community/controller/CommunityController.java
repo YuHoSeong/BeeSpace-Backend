@@ -21,6 +21,8 @@ import com.creavispace.project.domain.community.dto.response.CommunityResponseDt
 import com.creavispace.project.domain.community.service.CommunityService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -66,8 +68,13 @@ public class CommunityController {
 
     @GetMapping(READ_COMMUNITY)
     @Operation(summary = "커뮤니티 게시글 디테일")
-    public ResponseEntity<SuccessResponseDto<CommunityResponseDto>> readCommunity(@PathVariable("communityId") Long communityId){
-        return ResponseEntity.ok().body(communityService.readCommunity(communityId));
+    public ResponseEntity<SuccessResponseDto<CommunityResponseDto>> readCommunity(
+        @AuthenticationPrincipal Long memberId,
+        @PathVariable("communityId") Long communityId,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ){
+        return ResponseEntity.ok().body(communityService.readCommunity(memberId, communityId, request, response));
     }
     
     @GetMapping(READ_COMMUNITY_LIST)
@@ -77,10 +84,10 @@ public class CommunityController {
         @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
         @RequestParam(value = "category", required = false) String category,
         @RequestParam(value = "hashTag", required = false) String hashTag,
-        @RequestParam(value = "type", required = false, defaultValue = "생성일") String type
+        @RequestParam(value = "orderby", required = false, defaultValue = "최신활동순") String orderby
 
     ){
-        return ResponseEntity.ok().body(communityService.readCommunityList(size, page, category, hashTag, type));
+        return ResponseEntity.ok().body(communityService.readCommunityList(size, page, category, hashTag, orderby));
     }
 
 
