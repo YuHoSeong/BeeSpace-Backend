@@ -1,6 +1,7 @@
 package com.creavispace.project.domain.community.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -22,7 +23,11 @@ import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.member.repository.MemberRepository;
 import com.creavispace.project.global.exception.CreaviCodeException;
 import com.creavispace.project.global.exception.GlobalErrorCode;
+import com.creavispace.project.global.util.TimeUtil;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -41,8 +46,10 @@ public class CommunityServiceImpl implements CommunityService{
     @Override
     @Transactional
     public SuccessResponseDto<CommunityResponseDto> createCommunity(Long memberId, CommunityRequestDto dto) {
+        // JWT에 저장된 회원이 존재하는지
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
+        // 커뮤니티 게시글 생성
         Community community = Community.builder()
             .member(member)
             .category(dto.getCategory())
@@ -52,10 +59,11 @@ public class CommunityServiceImpl implements CommunityService{
             .status(Boolean.TRUE)
             .build();
 
+        // 커뮤니티 게시글 저장
         communityRepository.save(community);
 
         List<String> hashTagDtos = dto.getHashTags();
-
+        // 커뮤니티 해시태그 정보가 있는지
         if(hashTagDtos != null && !hashTagDtos.isEmpty()){
             List<CommunityHashTag> communityHashTags = dto.getHashTags().stream()
                 .map(hashTagDto -> {
@@ -73,11 +81,14 @@ public class CommunityServiceImpl implements CommunityService{
                 })
                 .collect(Collectors.toList());
             
+            // 커뮤니티 해시태그 정보 저장
             communityHashTagRepository.saveAll(communityHashTags);
         }
 
+        // 저장한 커뮤니티 해시태그 정보 가져오기
         List<CommunityHashTag> communityHashTags = communityHashTagRepository.findByCommunityId(community.getId());
 
+        // 가져온 커뮤니티 해시태그 정보 DTO 변환
         List<CommunityHashTagDto> communityHashTagDtos = communityHashTags.stream()
             .map(communityHashTag -> CommunityHashTagDto.builder()
                 .hashTagId(communityHashTag.getHashTag().getId())
@@ -85,6 +96,7 @@ public class CommunityServiceImpl implements CommunityService{
                 .build())
             .collect(Collectors.toList());
         
+        // 커뮤니티 게시글 생성 DTO
         CommunityResponseDto create = CommunityResponseDto.builder()
             .id(community.getId())
             .postType(PostType.COMMUNITY.getName())
@@ -98,6 +110,7 @@ public class CommunityServiceImpl implements CommunityService{
             .hashTags(communityHashTagDtos)
             .build();
 
+        // 성공 응답 반환
         return new SuccessResponseDto<>(true, "커뮤니티 게시글 생성이 완료되었습니다.", create);
         
     }
@@ -106,21 +119,26 @@ public class CommunityServiceImpl implements CommunityService{
     @Transactional
     public SuccessResponseDto<CommunityResponseDto> modifyCommunity(Long memberId, Long communityId,
         CommunityRequestDto dto) {
+        // JWT에 저장된 회원이 존재하는지
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+        // 수정할 커뮤니티 게시글이 존재하는지
         Community community = communityRepository.findById(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
 
+        // 수정 권한이 있는지
         if(community.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
             throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
         }
 
+        // 커뮤니티 게시글 수정 및 저장
         community.modify(dto);
-
         communityRepository.save(community);
 
+        // 기존 커뮤니티 해시태그 삭제
         communityHashTagRepository.deleteByCommunityId(communityId);
 
         List<String> hashTagDtos = dto.getHashTags();
-
+        // 수정 DTO에 해시태그 정보가 있는지
         if(hashTagDtos != null && !hashTagDtos.isEmpty()){
             List<CommunityHashTag> communityHashTags = hashTagDtos.stream()
                 .map(hashTagDto -> {
@@ -137,12 +155,14 @@ public class CommunityServiceImpl implements CommunityService{
                     .build();
                 })
                 .collect(Collectors.toList());
-            
+            // 수정 DTO의 해시태그 정보 저장
             communityHashTagRepository.saveAll(communityHashTags);
         }
 
+        // 저장한 커뮤니티 해시태그 가져오기
         List<CommunityHashTag> communityHashTags = communityHashTagRepository.findByCommunityId(communityId);
 
+        // 가져온 커뮤니티 해시태그 정보를 DTO 변환
         List<CommunityHashTagDto> hashTags = communityHashTags.stream()
             .map(communityHashTag -> CommunityHashTagDto.builder()
                 .hashTagId(communityHashTag.getHashTag().getId())
@@ -150,6 +170,7 @@ public class CommunityServiceImpl implements CommunityService{
                 .build())
             .collect(Collectors.toList());
 
+        // 커뮤니티 수정 DTO
         CommunityResponseDto modify = CommunityResponseDto.builder()
             .id(community.getId())
             .postType(PostType.COMMUNITY.getName())
@@ -163,6 +184,7 @@ public class CommunityServiceImpl implements CommunityService{
             .hashTags(hashTags)
             .build();
 
+        // 성공 응답 반환
         return new SuccessResponseDto<>(true, "커뮤니티 게시글 수정이 완료되었습니다.", modify);
 
     }
@@ -170,28 +192,86 @@ public class CommunityServiceImpl implements CommunityService{
     @Override
     @Transactional
     public SuccessResponseDto<CommunityDeleteResponseDto> deleteCommunity(Long memberId, Long communityId) {
+        // JWT에 저장된 회원이 존재하는지
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+        // 삭제할 커뮤니티 게시글이 존재하는지
         Community community = communityRepository.findById(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+
+        // 삭제할 권한이 있는지
         if(community.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
             throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
         }
 
+        // 커뮤니티 비활성화 및 저장
         community.disable();
-
         communityRepository.save(community);
 
+        // 커뮤니티 삭제 결과 DTO변환
         CommunityDeleteResponseDto delete = CommunityDeleteResponseDto.builder()
             .communityId(community.getId())
             .postType(PostType.COMMUNITY.getName())
             .build();
 
+        // 성공 응답 반환
         return new SuccessResponseDto<>(true, "커뮤니티 게시글 삭제가 완료되었습니다.", delete);
     }
 
     @Override
-    public SuccessResponseDto<CommunityResponseDto> readCommunity(Long communityId) {
-        Community community = communityRepository.findByIdAndStatusTrue(communityId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+    @Transactional
+    public SuccessResponseDto<CommunityResponseDto> readCommunity(Long memberId, Long communityId, HttpServletRequest request, HttpServletResponse response) {
+        Optional<Community> optionalCommunity;
+        // JWT 회원과 커뮤니티 게시글 작성자와 일치하는지
+        boolean isWriter = communityRepository.existsByIdAndMemberId(communityId, memberId);
+        // 일치하면 비활성화 커뮤니티 게시글도 조회가능
+        if(isWriter){
+            optionalCommunity = communityRepository.findById(communityId);
+        }
+        // 일치하지 않으면 활성화된 커뮤니티 게시글만 조회가능
+        else{
+            optionalCommunity = communityRepository.findByIdAndStatusTrue(communityId);
+        }
 
+        Community community = optionalCommunity.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+
+        // 조회수 증가 (하루에 한번)
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
+        // 쿠키가 있다면 key가 communityView인 쿠키를 찾기
+        if(cookies != null){
+            for(Cookie cookie : cookies){
+                if(cookie.getName().equals("communityView")){
+                    oldCookie = cookie;
+                }
+            }
+        }
+        // communityView 쿠키가 있다면
+        if(oldCookie != null){
+            // 조회한 적 없는 커뮤니티일 경우
+            if(!oldCookie.getValue().contains("["+ communityId.toString() + "]")){
+                // 조회수 +1
+                community.plusViewCount();
+                communityRepository.save(community);
+                // communityView 쿠기에 해당 커뮤니티ID 추가
+                oldCookie.setValue(oldCookie.getValue() + "_[" + communityId + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(TimeUtil.getUntilMidnight());
+                response.addCookie(oldCookie);
+            }
+        }
+        // communityView 쿠키가 없다면
+        else{
+            // 조회수 +1
+            community.plusViewCount();
+            communityRepository.save(community);
+            // communityView 쿠기 등록 후 커뮤니티ID 추가
+            Cookie newCookie = new Cookie("communityView", "[" + communityId + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(TimeUtil.getUntilMidnight());
+            response.addCookie(newCookie);
+        }
+
+        // 커뮤니티 디테일 DTO변환
         CommunityResponseDto read = CommunityResponseDto.builder()
             .id(community.getId())
             .postType(PostType.COMMUNITY.getName())
@@ -210,29 +290,89 @@ public class CommunityServiceImpl implements CommunityService{
                 .collect(Collectors.toList()))
             .build();
 
+        // 성공 응답 반환
         return new SuccessResponseDto<>(true, "커뮤니티 게시글 디테일 조회가 완료되었습니다.", read);
     }
 
     @Override
-    public SuccessResponseDto<List<CommunityResponseDto>> readCommunityList(Integer size, Integer page, String category, String hashTag, String type) {
+    public SuccessResponseDto<List<CommunityResponseDto>> readCommunityList(Integer size, Integer page, String category, String hashTag, String orderby) {
         Pageable pageRequest = PageRequest.of(page-1, size);
         Page<Community> pageable;
 
-        if(category != null && !category.isEmpty() && hashTag != null && !hashTag.isEmpty()){
-            Long hashTagId = hashTagRepository.findByHashTag(hashTag).getId();
-            pageable = communityRepository.findAllByStatusTrueAndCategoryAndHashTagId(category, hashTagId, pageRequest);
-        }else if((category == null || category.isEmpty()) && hashTag != null && !hashTag.isEmpty()){
-            Long hashTagId = hashTagRepository.findByHashTag(hashTag).getId();
-            pageable = communityRepository.findAllByStatusTrueAndHashTagId(hashTagId, pageRequest);
-        }else if((hashTag == null || hashTag.isEmpty()) && category != null && !category.isEmpty()){
-            pageable = communityRepository.findAllByStatusTrueAndCategory(category, pageRequest);
-        }else{
-            pageable = communityRepository.findAllByStatusTrue(pageRequest);
+        // 정렬 조건
+        switch (orderby) {
+            case "최신활동순":
+                // 카테고리와 해시태그 둘다 존재할 경우
+                if(category != null && hashTag != null){
+                    Long hashTagId = hashTagRepository.findByHashTag(hashTag).getId();
+                    pageable = communityRepository.findAllByStatusTrueAndCategoryAndHashTagId(category, hashTagId, pageRequest);
+                }
+                // 해시태그만 존재할 경우
+                else if(category == null && hashTag != null){
+                    Long hashTagId = hashTagRepository.findByHashTag(hashTag).getId();
+                    pageable = communityRepository.findAllByStatusTrueAndHashTagId(hashTagId, pageRequest);
+                }
+                // 카테고리만 존재할 경우
+                else if(hashTag == null && category != null){
+                    pageable = communityRepository.findAllByStatusTrueAndCategory(category, pageRequest);
+                }
+                // 카테고리,해시태그 둘다 null 일경우
+                else{
+                    pageable = communityRepository.findAllByStatusTrue(pageRequest);
+                }
+                break;
+        
+            case "추천순":
+                // 카테고리와 해시태그 둘다 존재할 경우
+                if(category != null && hashTag != null){
+                    Long hashTagId = hashTagRepository.findByHashTag(hashTag).getId();
+                    pageable = communityRepository.findAllByStatusTrueAndCategoryAndHashTagIdOrderByLikeCountDesc(category, hashTagId, pageRequest);
+                }
+                // 해시태그만 존재할 경우
+                else if(category == null && hashTag != null){
+                    Long hashTagId = hashTagRepository.findByHashTag(hashTag).getId();
+                    pageable = communityRepository.findAllByStatusTrueAndHashTagIdOrderByLikeCountDesc(hashTagId, pageRequest);
+                }
+                // 카테고리만 존재할 경우
+                else if(hashTag == null && category != null){
+                    pageable = communityRepository.findAllByStatusTrueAndCategoryOrderByLikeCountDesc(category, pageRequest);
+                }
+                // 카테고리,해시태그 둘다 null 일경우
+                else{
+                    pageable = communityRepository.findAllByStatusTrueOrderByLikeCountDesc(pageRequest);
+                }
+                break;
+        
+            case "조회수순":
+                // 카테고리와 해시태그 둘다 존재할 경우
+                if(category != null && hashTag != null){
+                    Long hashTagId = hashTagRepository.findByHashTag(hashTag).getId();
+                    pageable = communityRepository.findAllByStatusTrueAndCategoryAndHashTagId(category, hashTagId, pageRequest);
+                }
+                // 해시태그만 존재할 경우
+                else if(category == null && hashTag != null){
+                    Long hashTagId = hashTagRepository.findByHashTag(hashTag).getId();
+                    pageable = communityRepository.findAllByStatusTrueAndHashTagId(hashTagId, pageRequest);
+                }
+                // 카테고리만 존재할 경우
+                else if(hashTag == null && category != null){
+                    pageable = communityRepository.findAllByStatusTrueAndCategoryOrderByViewCountDesc(category, pageRequest);
+                }
+                // 카테고리,해시태그 둘다 null 일경우
+                else{
+                    pageable = communityRepository.findAllByStatusTrueOrderByViewCountDesc(pageRequest);
+                }
+                break;
+        
+            default:
+                throw new CreaviCodeException(GlobalErrorCode.ORDERBY_NOT_FOUND);
         }
 
-        if(!pageable.hasContent()) new CreaviCodeException(GlobalErrorCode.NOT_COMMUNITY_CONTENT);
+        // 조건에 맞는 커뮤니티 게시글이 존재하는지
+        if(!pageable.hasContent()) throw new CreaviCodeException(GlobalErrorCode.NOT_COMMUNITY_CONTENT);
         List<Community> communities = pageable.getContent();
 
+        // 조건에 맞는 게시글 리스트 DTO 변환
         List<CommunityResponseDto> reads = communities.stream()
             .map(community -> CommunityResponseDto.builder()
                 .id(community.getId())
@@ -253,6 +393,7 @@ public class CommunityServiceImpl implements CommunityService{
                 .build())
             .collect(Collectors.toList());
 
+        // 성공 응답 반환
         return new SuccessResponseDto<>(true, "커뮤니티 게시글 리스트 조회가 완료되었습니다.", reads);
                 
     }

@@ -440,6 +440,7 @@ public class ProjectServiceImpl implements ProjectService{
     }
 
     @Override
+    @Transactional
     public SuccessResponseDto<ProjectResponseDto> readProject(Long memberId, Long projectId, HttpServletRequest request, HttpServletResponse response) {
         Optional<Project> optionalProject;
 

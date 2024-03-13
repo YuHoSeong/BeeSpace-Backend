@@ -19,7 +19,8 @@ public enum GlobalErrorCode {
     NOT_COMMUNITY_CONTENT(204, "커뮤니티 게시글 조회 결과가 0건입니다."),
     LIKE_COUNT_NOT_FOUND(400, "좋아요 수 조회에 실패하였습니다."),
     TYPE_NOT_FOUND(400,"게시글 타입을 찾을수 없습니다."),
-    NOT_SEARCH_CONTENT(204, "검색 결과가 0건입니다.");
+    NOT_SEARCH_CONTENT(204, "검색 결과가 0건입니다."),
+    ORDERBY_NOT_FOUND(400,"정렬 타입을 찾을수 없습니다.");
 
     private Integer code;
     private String message;

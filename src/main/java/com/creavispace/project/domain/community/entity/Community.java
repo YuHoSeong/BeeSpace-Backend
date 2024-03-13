@@ -63,4 +63,8 @@ public class Community extends BaseTimeEntity {
     public void disable(){
         this.status = Boolean.FALSE;
     }
+
+    public void plusViewCount(){
+        this.viewCount++;
+    }
 }
