@@ -4,7 +4,9 @@ import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Getter
@@ -14,5 +16,11 @@ public class TimeUtil {
     public LocalDateTime getCurrentLocalDate() {
         Date date = new Date();
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    public static int getUntilMidnight(){
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime midnight = now.toLocalDate().atTime(LocalTime.MAX).plusDays(1);
+        return (int) now.until(midnight, ChronoUnit.SECONDS);
     }
 }

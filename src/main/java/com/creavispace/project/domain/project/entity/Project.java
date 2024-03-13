@@ -7,6 +7,7 @@ import com.creavispace.project.domain.comment.entity.ProjectComment;
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.like.entity.ProjectLike;
 import com.creavispace.project.domain.member.entity.Member;
+import com.creavispace.project.domain.project.dto.request.ProjectRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -77,5 +78,23 @@ public class Project extends BaseTimeEntity{
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectTechStack> techStacks;
+
+    public void modify(ProjectRequestDto dto){
+        this.category = dto.getCategory();
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.field = dto.getField();
+        this.thumbnail = dto.getThumbnail();
+        this.bannerContent = dto.getBannerContent();
+    }
+
+    public void disable(){
+        this.status = false;
+    }
+    
+    public void plusViewCount(){
+        this.viewCount++;
+        this.weekViewCount++;
+    }
 
 }

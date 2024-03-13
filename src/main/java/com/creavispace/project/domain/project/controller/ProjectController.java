@@ -14,6 +14,8 @@ import com.creavispace.project.domain.project.dto.response.ProjectListReadRespon
 import com.creavispace.project.domain.project.service.ProjectService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -64,7 +66,7 @@ public class ProjectController {
     public ResponseEntity<SuccessResponseDto<ProjectDeleteResponseDto>> deleteProject(
         @AuthenticationPrincipal Long memberId,
         @PathVariable("projectId") Long projectId
-    ){
+    ) {
         return ResponseEntity.ok().body(projectService.deleteProject(memberId, projectId));
     }
 
@@ -79,8 +81,8 @@ public class ProjectController {
     public ResponseEntity<SuccessResponseDto<List<ProjectListReadResponseDto>>> readProjectList(
         @RequestParam(value = "size", required = false, defaultValue = "6") Integer size,
         @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-        @RequestParam(value = "kind", required = false) String category
-        ) {
+        @RequestParam(value = "category", required = false) String category
+    ) {
         return ResponseEntity.ok().body(projectService.readProjectList(size, page, category));
     }
 
@@ -88,9 +90,11 @@ public class ProjectController {
     @Operation(summary = "프로젝트 게시글 디테일")
     public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> readProject(
         @AuthenticationPrincipal Long memberId,
-        @PathVariable("projectId") Long projectId
+        @PathVariable("projectId") Long projectId,
+        HttpServletRequest request,
+        HttpServletResponse response
     ) {
-        return ResponseEntity.ok().body(projectService.readProject(memberId, projectId));
+        return ResponseEntity.ok().body(projectService.readProject(memberId, projectId, request, response));
     }
     
 }
