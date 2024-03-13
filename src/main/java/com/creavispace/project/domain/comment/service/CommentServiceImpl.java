@@ -27,6 +27,7 @@ import com.creavispace.project.domain.recruit.repository.RecruitRepository;
 import com.creavispace.project.global.exception.CreaviCodeException;
 import com.creavispace.project.global.exception.GlobalErrorCode;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -48,6 +49,7 @@ public class CommentServiceImpl implements CommentService {
 
         switch (type) {
             case "project":
+                projectRepository.findById(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
                 List<ProjectComment> projectComments = projectCommentRepository.findByProjectId(postId);
                 data = projectComments.stream()
                     .map(projectComment -> CommentResponseDto.builder()
@@ -62,6 +64,7 @@ public class CommentServiceImpl implements CommentService {
                 break;
         
             case "community":
+                communityRepository.findById(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
                 List<CommunityComment> communityComments = communityCommentRepository.findByCommunityId(postId);
                 data = communityComments.stream()
                     .map(communityComment -> CommentResponseDto.builder()
@@ -76,6 +79,7 @@ public class CommentServiceImpl implements CommentService {
                 break;
                 
             case "recruit":
+                recruitRepository.findById(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
                 List<RecruitComment> recruitComments = recruitCommentRepository.findByRecruitId(postId);
                 data = recruitComments.stream()
                     .map(recruitComment -> CommentResponseDto.builder()
@@ -96,6 +100,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public SuccessResponseDto<CommentResponseDto> createComment(Long memberId, Long postId, String type, CommentRequestDto dto) {
         CommentResponseDto data;
 
@@ -177,6 +182,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public SuccessResponseDto<CommentResponseDto> modifyComment(Long memberId, Long commentId, String type, CommentRequestDto dto) {
         CommentResponseDto data;
 
@@ -254,6 +260,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public SuccessResponseDto<CommentDeleteResponseDto> deleteComment(Long memberId, Long commentId, String type) {
         CommentDeleteResponseDto data;
 
