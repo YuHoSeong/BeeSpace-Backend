@@ -3,6 +3,7 @@ package com.creavispace.project.domain.recruit.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,8 @@ import com.creavispace.project.domain.recruit.dto.response.RecruitResponseDto;
 import com.creavispace.project.domain.recruit.service.RecruitService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -40,20 +43,30 @@ public class RecruitController {
 
     @PostMapping(CREATE_RECRUIT)
     @Operation(summary = "모집 게시글 생성")
-    public ResponseEntity<SuccessResponseDto<RecruitResponseDto>> createRecruit(@RequestBody RecruitRequestDto requestBody){
-        return ResponseEntity.ok().body(recruitService.createRecruit(requestBody));
+    public ResponseEntity<SuccessResponseDto<RecruitResponseDto>> createRecruit(
+        @AuthenticationPrincipal Long memberId,
+        @RequestBody RecruitRequestDto requestBody
+    ){
+        return ResponseEntity.ok().body(recruitService.createRecruit(memberId, requestBody));
     }
 
     @PutMapping(MODIFY_RECRUIT)
     @Operation(summary = "모집 게시글 수정")
-    public ResponseEntity<SuccessResponseDto<RecruitResponseDto>> modifyRecruit(@PathVariable("recruitId") Long recruitId, @RequestBody RecruitRequestDto requestBody){
-        return ResponseEntity.ok().body(recruitService.modifyRecruit(recruitId, requestBody));
+    public ResponseEntity<SuccessResponseDto<RecruitResponseDto>> modifyRecruit(
+        @AuthenticationPrincipal Long memberId,
+        @PathVariable("recruitId") Long recruitId, 
+        @RequestBody RecruitRequestDto requestBody
+    ){
+        return ResponseEntity.ok().body(recruitService.modifyRecruit(memberId, recruitId, requestBody));
     }
 
     @DeleteMapping(DELETE_RECRUIT)
     @Operation(summary = "모집 게시글 삭제")
-    public ResponseEntity<SuccessResponseDto<RecruitDeleteResponseDto>> deleteRecruit(@PathVariable("recruitId") Long recruitId){
-        return ResponseEntity.ok().body(recruitService.deleteRecruit(recruitId));
+    public ResponseEntity<SuccessResponseDto<RecruitDeleteResponseDto>> deleteRecruit(
+        @AuthenticationPrincipal Long memberId,
+        @PathVariable("recruitId") Long recruitId
+    ){
+        return ResponseEntity.ok().body(recruitService.deleteRecruit(memberId, recruitId));
     }
 
     @GetMapping(READ_RECRUIT_LIST)
@@ -68,8 +81,13 @@ public class RecruitController {
 
     @GetMapping(READ_RECRUIT)
     @Operation(summary = "모집 게시글 디테일")
-    public ResponseEntity<SuccessResponseDto<RecruitResponseDto>> readRecruit(@PathVariable("recruitId") Long recruitId){
-        return ResponseEntity.ok().body(recruitService.readRecruit(recruitId));
+    public ResponseEntity<SuccessResponseDto<RecruitResponseDto>> readRecruit(
+        @AuthenticationPrincipal Long memberId,
+        @PathVariable("recruitId") Long recruitId,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ){
+        return ResponseEntity.ok().body(recruitService.readRecruit(memberId, recruitId, request, response));
     }
 
     @GetMapping(READ_DEADLINE_RECRUIT_LIST)

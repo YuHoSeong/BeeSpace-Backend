@@ -9,11 +9,14 @@ import com.creavispace.project.domain.recruit.dto.response.RecruitDeleteResponse
 import com.creavispace.project.domain.recruit.dto.response.RecruitListReadResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitResponseDto;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 public interface RecruitService {
-    public SuccessResponseDto<RecruitResponseDto> createRecruit(RecruitRequestDto dto);
-    public SuccessResponseDto<RecruitResponseDto> modifyRecruit(Long recruitId, RecruitRequestDto dto);
-    public SuccessResponseDto<RecruitDeleteResponseDto> deleteRecruit(Long recruitId);
+    public SuccessResponseDto<RecruitResponseDto> createRecruit(Long memberId, RecruitRequestDto dto);
+    public SuccessResponseDto<RecruitResponseDto> modifyRecruit(Long memberId, Long recruitId, RecruitRequestDto dto);
+    public SuccessResponseDto<RecruitDeleteResponseDto> deleteRecruit(Long memberId, Long recruitId);
     public SuccessResponseDto<List<RecruitListReadResponseDto>> readRecruitList(Integer size, Integer page, String category);
-    public SuccessResponseDto<RecruitResponseDto> readRecruit(Long recruitId);
+    public SuccessResponseDto<RecruitResponseDto> readRecruit(Long memberId, Long recruitId, HttpServletRequest request, HttpServletResponse response);
     public SuccessResponseDto<List<DeadLineRecruitListReadResponseDto>> readDeadlineRecruitList();
 }

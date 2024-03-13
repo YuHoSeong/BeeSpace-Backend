@@ -2,7 +2,6 @@ package com.creavispace.project.domain.recruit.dto.request;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -20,7 +19,8 @@ public class RecruitRequestDto {
     private String contactWay;
     // enum 관리로 변경
     private String proceedWay;
-    private LocalDateTime end;
+    private String end;
+    private String endFormat;
     private String title;
     private String content;
     private List<RecruitPositionRequestDto> positions;
