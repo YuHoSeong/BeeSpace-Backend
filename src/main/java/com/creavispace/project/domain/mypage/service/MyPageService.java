@@ -1,6 +1,6 @@
 package com.creavispace.project.domain.mypage.service;
 
-import com.creavispace.project.domain.bookmark.service.ProjectBookmarkService;
+import com.creavispace.project.domain.bookmark.service.BookmarkService;
 import com.creavispace.project.domain.feedback.service.FeedbackService;
 import com.creavispace.project.domain.like.service.ProjectLikeService;
 import com.creavispace.project.domain.member.service.MemberService;
@@ -41,7 +41,7 @@ public class MyPageService {
     //게시글 리스트
     private ProjectService projectService;
     //북마크 리스트
-    private ProjectBookmarkService projectBookmarkService;
+    private BookmarkService projectBookmarkService;
     //좋아요 누른 게시글 리스트
     private ProjectLikeService projectLikeService;
     //받은 피드백
