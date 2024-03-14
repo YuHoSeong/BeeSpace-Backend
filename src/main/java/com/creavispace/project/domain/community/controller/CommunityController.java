@@ -63,7 +63,7 @@ public class CommunityController {
         @AuthenticationPrincipal Long memberId,
         @PathVariable("communityId") Long communityId
     ){
-        return ResponseEntity.ok().body(communityService.deleteCommunity(6L, communityId));
+        return ResponseEntity.ok().body(communityService.deleteCommunity(memberId, communityId));
     }
 
     @GetMapping(READ_COMMUNITY)
