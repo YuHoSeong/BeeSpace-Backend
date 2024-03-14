@@ -45,7 +45,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
         switch (type) {
             case "project":
-                Project project = projectRepository.findById(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
+                Project project = projectRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
                 ProjectBookmark projectBookmark = projectBookmarkRepository.findByProjectIdAndMemberId(postId, memberId);
 
                 if(projectBookmark == null){
@@ -62,7 +62,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                     return new SuccessResponseDto<BookmarkResponseDto>(true, "북마크 취소가 완료되었습니다.", data);
                 }
             case "recruit":
-                Recruit recruit = recruitRepository.findById(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
+                Recruit recruit = recruitRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
                 RecruitBookmark recruitBookmark = recruitBookmarkRepository.findByRecruitIdAndMemberId(postId, memberId);
 
                 if(recruitBookmark == null){
@@ -80,7 +80,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                 }
         
             case "community":
-                Community community = communityRepository.findById(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+                Community community = communityRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
                 CommunityBookmark communityBookmark = communityBookmarkRepository.findByCommunityIdAndMemberId(postId, memberId);
 
                 if(communityBookmark == null){
@@ -106,11 +106,12 @@ public class BookmarkServiceImpl implements BookmarkService {
     public SuccessResponseDto<BookmarkResponseDto> readBookmark(Long memberId, Long postId, String type) {
         BookmarkResponseDto data;
 
-        Optional<Member> optionalMember = memberRepository.findById(memberId);
-        Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+        memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
         switch (type) {
             case "project":
+                projectRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
+
                 ProjectBookmark projectBookmark = projectBookmarkRepository.findByProjectIdAndMemberId(postId, memberId);
                 if(projectBookmark == null){
                     data = BookmarkResponseDto.builder().bookmarkStatus(false).build();
@@ -120,6 +121,8 @@ public class BookmarkServiceImpl implements BookmarkService {
                 break;
         
             case "recruit":
+                recruitRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
+
                 RecruitBookmark recruitBookmark = recruitBookmarkRepository.findByRecruitIdAndMemberId(postId, memberId);
                 if(recruitBookmark == null){
                     data = BookmarkResponseDto.builder().bookmarkStatus(false).build();
@@ -129,6 +132,8 @@ public class BookmarkServiceImpl implements BookmarkService {
                 break;
         
             case "community":
+                communityRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+
                 CommunityBookmark communityBookmark = communityBookmarkRepository.findByCommunityIdAndMemberId(postId, memberId);
                 if(communityBookmark == null){
                     data = BookmarkResponseDto.builder().bookmarkStatus(false).build();
