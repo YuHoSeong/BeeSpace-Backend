@@ -24,7 +24,7 @@ public class LikeController {
     
     private final LikeService likeService;
 
-    private static final String LIKE_TOGGLE = "/toggle";
+    private static final String LIKE_TOGGLE = "";
     private static final String READ_LIKE = "";
     private static final String READ_LIKE_COUNT = "/count";
 

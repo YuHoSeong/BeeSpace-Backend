@@ -18,6 +18,7 @@ import com.creavispace.project.domain.project.repository.ProjectRepository;
 import com.creavispace.project.global.exception.CreaviCodeException;
 import com.creavispace.project.global.exception.GlobalErrorCode;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,6 +32,7 @@ public class LikeServiceImpl implements LikeService{
     private final CommunityRepository communityRepository;
 
     @Override
+    @Transactional
     public SuccessResponseDto<LikeResponseDto> likeToggle(Long memberId, Long postId, String type) {
         LikeResponseDto data;
         String message;
@@ -51,7 +53,7 @@ public class LikeServiceImpl implements LikeService{
                     message = "좋아요가 등록되었습니다.";
                     data = new LikeResponseDto(true);
                 }else{
-                    projectRepository.deleteById(projectLike.getId());
+                    projectLikeRepository.deleteById(projectLike.getId());
                     message = "좋아요가 취소 되었습니다.";
                     data = new LikeResponseDto(false);
                 }
@@ -85,7 +87,7 @@ public class LikeServiceImpl implements LikeService{
     @Override
     public SuccessResponseDto<LikeResponseDto> readLike(Long memberId, Long postId, String type) {
         LikeResponseDto data;
-        memberRepository.findById(postId).orElseThrow(() -> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+        memberRepository.findById(memberId).orElseThrow(() -> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
         switch (type) {
             case "project":
