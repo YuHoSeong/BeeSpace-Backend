@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
@@ -25,14 +24,14 @@ public class BookmarkController {
     
     private final BookmarkService bookmarkService;
 
-    private static final String TOGGLE_BOOKMARK = "/{postId}";
-    private static final String READ_BOOKMARK = "/{postId}";
+    private static final String TOGGLE_BOOKMARK = "";
+    private static final String READ_BOOKMARK = "";
 
     @PostMapping(TOGGLE_BOOKMARK)
     @Operation(summary = "북마크 토글 기능")
     public ResponseEntity<SuccessResponseDto<BookmarkResponseDto>> bookmark(
         @AuthenticationPrincipal Long memberId,
-        @PathVariable("postId") Long postId,
+        @RequestParam("postId") Long postId,
         @RequestParam("type") String type
     ) {
         return ResponseEntity.ok().body(bookmarkService.bookmarkToggle(memberId, postId, type));
@@ -42,7 +41,7 @@ public class BookmarkController {
     @Operation(summary = "북마크 상태 조회 기능")
     public ResponseEntity<SuccessResponseDto<BookmarkResponseDto>> readBookmark(
         @AuthenticationPrincipal Long memberId,
-        @PathVariable("postId") Long postId,
+        @RequestParam("postId") Long postId,
         @RequestParam("type") String type
     ){
         return ResponseEntity.ok().body(bookmarkService.readBookmark(memberId, postId, type));
