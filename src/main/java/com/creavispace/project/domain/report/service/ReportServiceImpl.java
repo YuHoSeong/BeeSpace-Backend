@@ -22,10 +22,7 @@ public class ReportServiceImpl implements ReportService{
     private final MemberRepository memberRepository;
 
     @Override
-    public SuccessResponseDto<ReportResponseDto> createReport(ReportRequestDto dto) {
-        // JWT 토큰
-        Long memberId = 1L;
-
+    public SuccessResponseDto<ReportResponseDto> createReport(Long memberId, ReportRequestDto dto) {
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
         Report report = Report.builder()
