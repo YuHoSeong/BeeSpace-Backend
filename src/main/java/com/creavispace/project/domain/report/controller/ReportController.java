@@ -1,6 +1,7 @@
 package com.creavispace.project.domain.report.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,10 @@ public class ReportController {
 
     @PostMapping(CREATE_REPORT)
     @Operation(summary = "신고하기")
-    public ResponseEntity<SuccessResponseDto<ReportResponseDto>> createReport(@RequestBody ReportRequestDto requestBody){
-        return ResponseEntity.ok().body(reportService.createReport(requestBody));
+    public ResponseEntity<SuccessResponseDto<ReportResponseDto>> createReport(
+        @AuthenticationPrincipal Long memberId,
+        @RequestBody ReportRequestDto requestBody
+    ){
+        return ResponseEntity.ok().body(reportService.createReport(memberId, requestBody));
     }
 }
