@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.search.constant.SwaggerExample;
 import com.creavispace.project.domain.search.dto.response.SearchListReadResponseDto;
 import com.creavispace.project.domain.search.service.SearchService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,7 +29,12 @@ public class SearchController {
     private final static String READ_SEARCH_LIST = "";
 
     @GetMapping(READ_SEARCH_LIST)
-    @Operation(summary = "통합 검색 리스트 조회")
+    @Operation(
+        summary = "통합 검색 리스트 조회",
+        responses = {
+            @ApiResponse(responseCode = "200", content = {@Content(mediaType ="application/json", schema = @Schema(example = SwaggerExample.READ_SEARCH_LIST))})
+        }
+    )
     public ResponseEntity<SuccessResponseDto<List<SearchListReadResponseDto>>> readSearchList(
         @RequestParam(value = "size", required = false, defaultValue = "6") Integer size,
         @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
