@@ -23,6 +23,7 @@ import com.creavispace.project.domain.recruit.repository.RecruitRepository;
 import com.creavispace.project.global.exception.CreaviCodeException;
 import com.creavispace.project.global.exception.GlobalErrorCode;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -38,6 +39,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     private final CommunityRepository communityRepository;
 
     @Override
+    @Transactional
     public SuccessResponseDto<BookmarkResponseDto> bookmarkToggle(Long memberId, Long postId, String type) {
         BookmarkResponseDto data;
         Optional<Member> optionalMember = memberRepository.findById(memberId);
