@@ -109,7 +109,7 @@ public class CommentServiceImpl implements CommentService {
 
         switch (type) {
             case "project":
-                Optional<Project> optionalProject = projectRepository.findById(postId);
+                Optional<Project> optionalProject = projectRepository.findByIdAndStatusTrue(postId);
                 Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
 
                 ProjectComment projectComment = ProjectComment.builder()
@@ -131,7 +131,7 @@ public class CommentServiceImpl implements CommentService {
                 break;
         
             case "recruit":
-                Optional<Recruit> optionalRecruit = recruitRepository.findById(postId);
+                Optional<Recruit> optionalRecruit = recruitRepository.findByIdAndStatusTrue(postId);
                 Recruit recruit = optionalRecruit.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
 
                 RecruitComment recruitComment = RecruitComment.builder()
@@ -153,7 +153,7 @@ public class CommentServiceImpl implements CommentService {
                 break;
         
             case "community":
-                Optional<Community> optionalCommunity = communityRepository.findById(postId);
+                Optional<Community> optionalCommunity = communityRepository.findByIdAndStatusTrue(postId);
                 Community community = optionalCommunity.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
 
                 CommunityComment communityComment = CommunityComment.builder()
