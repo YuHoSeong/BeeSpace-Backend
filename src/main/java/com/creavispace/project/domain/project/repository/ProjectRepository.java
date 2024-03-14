@@ -7,10 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.creavispace.project.domain.project.entity.Project;
-import com.creavispace.project.domain.search.entity.SearchResult;
+import com.creavispace.project.domain.search.entity.SearchResultSet;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long>{
@@ -20,15 +21,25 @@ public interface ProjectRepository extends JpaRepository<Project, Long>{
     public Optional<Project> findByIdAndStatusTrue(Long projectId);
     public Boolean existsByIdAndMemberId(Long projectId, Long memberId);
 
-    @Query(value = "SELECT 'project' AS postType, p.id AS postId FROM Project p WHERE (p.content LIKE %:text% OR p.title LIKE %:text%) AND p.status = true ORDER BY created_date DESC", nativeQuery = true)
-    Page<SearchResult> findProjectSearchData(String text, Pageable pageable);
+    @Query(value = "SELECT 'project' AS postType, p.id AS postId, p.created_date AS createdDate FROM Project p WHERE (p.content LIKE %:text% OR p.title LIKE %:text%) AND p.status = true ORDER BY createdDate DESC", nativeQuery = true)
+    public Page<SearchResultSet> findProjectSearchData(@Param("text") String text, Pageable pageable);
 
-    @Query(value = "SELECT 'project' AS postType, p.id AS postId FROM Project p WHERE (p.content LIKE %:text% OR p.title LIKE %:text%) AND p.status = true " +
-           "UNION " +
-           "SELECT 'recruit' AS postType, r.id AS postId FROM Recruit r WHERE (r.content LIKE %:text% OR r.title LIKE %:text%) AND r.status = true " +
-           "UNION " +
-           "SELECT 'community' AS postType, c.id AS postId FROM Community c WHERE (c.content LIKE %:text% OR c.title LIKE %:text%) AND c.status = true " +
-           "ORDER BY created_date DESC ",nativeQuery = true)
-    Page<SearchResult> findIntegratedSearchData(String text, Pageable pageable);
+    @Query(value = "SELECT postType, postId, createdDate FROM ( " +
+                   "SELECT 'project' AS postType, p.id AS postId, p.created_date AS createdDate FROM Project p WHERE (p.content LIKE %:text% OR p.title LIKE %:text%) AND p.status = true " +
+                   "UNION ALL " +
+                   "SELECT 'recruit' AS postType, r.id AS postId, r.created_date AS createdDate FROM Recruit r WHERE (r.content LIKE %:text% OR r.title LIKE %:text%) AND r.status = true " +
+                   "UNION ALL " +
+                   "SELECT 'community' AS postType, c.id AS postId, c.created_date AS createdDate FROM Community c WHERE (c.content LIKE %:text% OR c.title LIKE %:text%) AND c.status = true " +
+                   ") AS subquery_alias " +
+                   "ORDER BY createdDate DESC",
+           countQuery = "SELECT COUNT(*) FROM ( " +
+                        "SELECT 'project' AS postType, p.id AS postId, p.created_date AS createdDate FROM Project p WHERE (p.content LIKE %:text% OR p.title LIKE %:text%) AND p.status = true " +
+                        "UNION ALL " +
+                        "SELECT 'recruit' AS postType, r.id AS postId, r.created_date AS createdDate FROM Recruit r WHERE (r.content LIKE %:text% OR r.title LIKE %:text%) AND r.status = true " +
+                        "UNION ALL " +
+                        "SELECT 'community' AS postType, c.id AS postId, c.created_date AS createdDate FROM Community c WHERE (c.content LIKE %:text% OR c.title LIKE %:text%) AND c.status = true " +
+                        ") AS subquery_alias",
+           nativeQuery = true)
+    public Page<SearchResultSet> findIntegratedSearchData(@Param("text") String text, Pageable pageable);
     
 }
