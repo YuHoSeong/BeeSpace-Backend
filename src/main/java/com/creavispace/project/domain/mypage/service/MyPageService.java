@@ -2,7 +2,7 @@ package com.creavispace.project.domain.mypage.service;
 
 import com.creavispace.project.domain.bookmark.service.BookmarkService;
 import com.creavispace.project.domain.feedback.service.FeedbackService;
-import com.creavispace.project.domain.like.service.ProjectLikeService;
+import com.creavispace.project.domain.like.service.LikeService;
 import com.creavispace.project.domain.member.service.MemberService;
 import com.creavispace.project.domain.project.service.ProjectService;
 import java.util.HashMap;
@@ -43,7 +43,7 @@ public class MyPageService {
     //북마크 리스트
     private BookmarkService projectBookmarkService;
     //좋아요 누른 게시글 리스트
-    private ProjectLikeService projectLikeService;
+    private LikeService projectLikeService;
     //받은 피드백
     private FeedbackService feedbackService;
 
