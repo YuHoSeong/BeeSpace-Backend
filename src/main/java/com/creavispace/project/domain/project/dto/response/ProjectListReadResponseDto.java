@@ -2,6 +2,8 @@ package com.creavispace.project.domain.project.dto.response;
 
 import java.util.List;
 
+import com.creavispace.project.domain.search.dto.response.SearchListReadResponseDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectListReadResponseDto {
+public class ProjectListReadResponseDto implements SearchListReadResponseDto{
     private Long id;
     private String postType;
     private String category;
