@@ -2,7 +2,10 @@ package com.creavispace.project.domain.like.service;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.like.dto.response.LikeCountResponseDto;
+import com.creavispace.project.domain.like.dto.response.LikeResponseDto;
 
 public interface LikeService {
-    public SuccessResponseDto<LikeCountResponseDto> likeCount(String postType, Long postId);
+    public SuccessResponseDto<LikeResponseDto> likeToggle(Long memberId, Long postId, String type);
+    public SuccessResponseDto<LikeResponseDto> readLike(Long memberId, Long postId, String type);
+    public SuccessResponseDto<LikeCountResponseDto> likeCount(Long postId, String type);
 }

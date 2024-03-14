@@ -7,7 +7,7 @@ import com.creavispace.project.domain.like.entity.ProjectLike;
 
 @Repository
 public interface ProjectLikeRepository extends JpaRepository<ProjectLike, Long> {
-    public Boolean existsByProjectIdAndMemberId(Long projectId, Long memberId);
+    public boolean existsByProjectIdAndMemberId(Long projectId, Long memberId);
     public ProjectLike findByProjectIdAndMemberId(Long projectId, Long memberId);
-    public Integer countByProjectId(Long projectId);
+    public int countByProjectId(Long projectId);
 }
