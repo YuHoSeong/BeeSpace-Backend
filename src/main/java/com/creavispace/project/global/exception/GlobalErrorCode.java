@@ -20,7 +20,8 @@ public enum GlobalErrorCode {
     LIKE_COUNT_NOT_FOUND(400, "좋아요 수 조회에 실패하였습니다."),
     TYPE_NOT_FOUND(400,"게시글 타입을 찾을수 없습니다."),
     NOT_SEARCH_CONTENT(204, "검색 결과가 0건입니다."),
-    ORDERBY_NOT_FOUND(400,"정렬 타입을 찾을수 없습니다.");
+    ORDERBY_NOT_FOUND(400,"정렬 타입을 찾을수 없습니다."),
+    RECRUIT_END_IS_BEFORE_NOW(302, "모집 마감일이 오늘보다 이전 날짜 입니다.");
 
     private Integer code;
     private String message;
