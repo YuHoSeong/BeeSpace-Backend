@@ -95,5 +95,5 @@ public class RecruitController {
     public ResponseEntity<SuccessResponseDto<List<DeadLineRecruitListReadResponseDto>>> readDeadlineRecruitList(){
         return ResponseEntity.ok().body(recruitService.readDeadlineRecruitList());
     }
-    
+
 }

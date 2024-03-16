@@ -1,11 +1,10 @@
 package com.creavispace.project.domain.member.service;
 
 import com.creavispace.project.config.auth.utils.JwtUtil;
-import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
 import com.creavispace.project.domain.member.dto.response.MemberResponseDto;
 import com.creavispace.project.domain.member.entity.Member;
-import com.creavispace.project.domain.member.dto.request.MemberUpdateRequestDto;
 import com.creavispace.project.domain.member.repository.MemberRepository;
+import com.creavispace.project.domain.mypage.dto.request.MyPageModifyRequestDto;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -23,19 +22,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Value("${jwt.secret}")
     private String jwtSecret;
-
     @Transactional
-    @Override
-    public MemberSaveRequestDto save(MemberSaveRequestDto memberSaveRequestDto) {
-        Member member = new Member(memberSaveRequestDto);
-        if (memberRepository.existsByMemberEmail(member.getMemberEmail())) {
-            log.info("이미 존재하는 아이디={}", member.getMemberEmail());
-            return memberSaveRequestDto;
-        }
-        memberRepository.save(member);
-        return memberSaveRequestDto;
-    }
-
     @Override
     public Member save(Member member) {
         return memberRepository.save(member);
@@ -43,9 +30,13 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public void update(Long memberId, MemberUpdateRequestDto updateParam) {
-        Member member = memberRepository.findById(memberId).orElseThrow();
-        member.setMemberNickname(updateParam.getMemberNickname());
+    public void update(Member member, MyPageModifyRequestDto updateParam) {
+        member.setMemberNickname(updateParam.nickName());
+        member.setMemberIntroduce(updateParam.introduce());
+        member.setMemberPosition(updateParam.position());
+        member.setMemberCareer(updateParam.career());
+        member.setInterestedStack(updateParam.interestedStack());
+        member.setProfileUrl(updateParam.profileUrl());
         memberRepository.save(member);
     }
 
@@ -82,5 +73,10 @@ public class MemberServiceImpl implements MemberService {
     public String login(String memberEmail, String loginType, Long memberId) {
 
         return JwtUtil.createJwt(memberEmail, loginType, memberId, jwtSecret, 1000 * 60 * 60L);
+    }
+
+    @Override
+    public Optional<Member> findByEmailAndLoginTypeAndMemberId(String memberEmail, String loginType, Long memberId) {
+        return memberRepository.findByMemberEmailAndLoginTypeAndId(memberEmail, loginType, memberId);
     }
 }

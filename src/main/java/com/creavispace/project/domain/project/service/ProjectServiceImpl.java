@@ -50,7 +50,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ProjectServiceImpl implements ProjectService{
+public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
@@ -72,64 +72,64 @@ public class ProjectServiceImpl implements ProjectService{
 
         // 프로젝트 생성
         Project project = Project.builder()
-            .member(member)
-            .category(dto.getCategory())
-            .title(dto.getTitle())
-            .content(dto.getContent())
-            .thumbnail(dto.getThumbnail())
-            .bannerContent(dto.getBannerContent())
-            .viewCount(0)
-            .weekViewCount(0)
-            .status(Boolean.TRUE)
-            .build();
-        
+                .member(member)
+                .category(dto.getCategory())
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .thumbnail(dto.getThumbnail())
+                .bannerContent(dto.getBannerContent())
+                .viewCount(0)
+                .weekViewCount(0)
+                .status(Boolean.TRUE)
+                .build();
+
         // 프로젝트 저장
         projectRepository.save(project);
 
         // 프로젝트 맴버가 있다면
         if(memberDtos != null && !memberDtos.isEmpty()){
             List<ProjectMember> projectMembers = memberDtos.stream()
-                .map(memberDto -> {
-                    Member projectMember = memberRepository.findById(memberDto.getMemberId()).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
-                    return ProjectMember.builder()
-                        .member(projectMember)
-                        .project(project)
-                        .position(memberDto.getPosition())
-                        .build();
-                })
-                .collect(Collectors.toList());
+                    .map(memberDto -> {
+                        Member projectMember = memberRepository.findById(memberDto.getMemberId()).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+                        return ProjectMember.builder()
+                                .member(projectMember)
+                                .project(project)
+                                .position(memberDto.getPosition())
+                                .build();
+                    })
+                    .collect(Collectors.toList());
 
             // 프로젝트 맴버 저장
             projectMemberRepository.saveAll(projectMembers);
         }
-        
+
         // 프로젝트 기술스택이 있다면
         if(techStackDtos != null && !techStackDtos.isEmpty()){
             List<ProjectTechStack> projectTechStacks = techStackDtos.stream()
-                .map(techStackDto ->{
-                    TechStack projectTechStack = techStackRepository.findById(techStackDto.getTechStackId()).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.TECHSTACK_NOT_FOUND));
-                    return ProjectTechStack.builder()
-                        .techStack(projectTechStack)
-                        .project(project)
-                        .build();
-                })
-                .collect(Collectors.toList());
+                    .map(techStackDto ->{
+                        TechStack projectTechStack = techStackRepository.findById(techStackDto.getTechStackId()).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.TECHSTACK_NOT_FOUND));
+                        return ProjectTechStack.builder()
+                                .techStack(projectTechStack)
+                                .project(project)
+                                .build();
+                    })
+                    .collect(Collectors.toList());
 
             // 프로젝트 기술스택 저장
             projectTechStackRepository.saveAll(projectTechStacks);
         }
-        
+
         // 프로젝트 링크가 있다면
         if(linkDtos != null && !linkDtos.isEmpty()){
             List<ProjectLink> projectLinks = linkDtos.stream()
-                .map(techStackDto ->{
-                    return ProjectLink.builder()
-                        .project(project)
-                        .type(techStackDto.getType())
-                        .url(techStackDto.getUrl())
-                        .build();
-                })
-                .collect(Collectors.toList());
+                    .map(techStackDto ->{
+                        return ProjectLink.builder()
+                                .project(project)
+                                .type(techStackDto.getType())
+                                .url(techStackDto.getUrl())
+                                .build();
+                    })
+                    .collect(Collectors.toList());
             // 프로젝트 링크 저장
             projectLinkRepository.saveAll(projectLinks);
         }
@@ -148,53 +148,53 @@ public class ProjectServiceImpl implements ProjectService{
 
         // position으로 그룹화된 맴버 결과를 DTO로 변환
         List<ProjectPositionResponseDto> positions = positionMap.entrySet().stream()
-            .map(entry -> ProjectPositionResponseDto.builder()
-                .position(entry.getKey())
-                .members(entry.getValue().stream()
-                    .map(value -> ProjectMemberResponseDto.builder()
-                        .memberId(value.getId())
-                        .memberNickname(value.getMemberNickname())
-                        .memberProfile(value.getProfileUrl())
+                .map(entry -> ProjectPositionResponseDto.builder()
+                        .position(entry.getKey())
+                        .members(entry.getValue().stream()
+                                .map(value -> ProjectMemberResponseDto.builder()
+                                        .memberId(value.getId())
+                                        .memberNickname(value.getMemberNickname())
+                                        .memberProfile(value.getProfileUrl())
+                                        .build())
+                                .collect(Collectors.toList()))
                         .build())
-                    .collect(Collectors.toList()))
-                .build())
-            .collect(Collectors.toList());
+                .collect(Collectors.toList());
 
         // 링크 결과를 DTO로 변환
         List<ProjectLinkResponseDto> links = projectLinks.stream()
-            .map(projectLink -> ProjectLinkResponseDto.builder()
-                .type(projectLink.getType())
-                .url(projectLink.getUrl())
-                .build())
-            .collect(Collectors.toList());
+                .map(projectLink -> ProjectLinkResponseDto.builder()
+                        .type(projectLink.getType())
+                        .url(projectLink.getUrl())
+                        .build())
+                .collect(Collectors.toList());
 
         // 기술스택 결과를 DTO로 변환
         List<ProjectTechStackResponseDto> techStacks = projectTechStacks.stream()
-            .map(projectTechStack -> ProjectTechStackResponseDto.builder()
-                .techStackId(projectTechStack.getTechStack().getId())
-                .techStack(projectTechStack.getTechStack().getTechStack())
-                .iconUrl(projectTechStack.getTechStack().getIconUrl())
-                .build())
-            .collect(Collectors.toList());
-            
+                .map(projectTechStack -> ProjectTechStackResponseDto.builder()
+                        .techStackId(projectTechStack.getTechStack().getId())
+                        .techStack(projectTechStack.getTechStack().getTechStack())
+                        .iconUrl(projectTechStack.getTechStack().getIconUrl())
+                        .build())
+                .collect(Collectors.toList());
+
         // 프로젝트 생성 결과 DTO
         ProjectResponseDto create = ProjectResponseDto.builder()
-            .id(project.getId())
-            .postType(PostType.PROJECT.getName())
-            .memberId(memberId)
-            .category(project.getCategory())
-            .field(project.getField())
-            .title(project.getTitle())
-            .content(project.getContent())
-            .thumbnail(project.getThumbnail())
-            .bannerContent(project.getBannerContent())
-            .viewCount(project.getViewCount())
-            .createdDate(project.getCreatedDate())
-            .modifiedDate(project.getModifiedDate())
-            .positions(positions)
-            .links(links)
-            .techStacks(techStacks)
-            .build();
+                .id(project.getId())
+                .postType(PostType.PROJECT.getName())
+                .memberId(memberId)
+                .category(project.getCategory())
+                .field(project.getField())
+                .title(project.getTitle())
+                .content(project.getContent())
+                .thumbnail(project.getThumbnail())
+                .bannerContent(project.getBannerContent())
+                .viewCount(project.getViewCount())
+                .createdDate(project.getCreatedDate())
+                .modifiedDate(project.getModifiedDate())
+                .positions(positions)
+                .links(links)
+                .techStacks(techStacks)
+                .build();
 
         // 성공적인 응답 반환
         return new SuccessResponseDto<>(true, "프로젝트 게시글 생성이 완료 되었습니다.", create);
@@ -230,15 +230,15 @@ public class ProjectServiceImpl implements ProjectService{
         // DTO에 프로젝트 맴버가 존재하는지
         if(memberDtos != null && !memberDtos.isEmpty()){
             List<ProjectMember> projectMembers = memberDtos.stream()
-                .map(memberDto -> {
-                    Member projectMember = memberRepository.findById(memberDto.getMemberId()).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
-                    return ProjectMember.builder()
-                        .member(projectMember)
-                        .project(project)
-                        .position(memberDto.getPosition())
-                        .build();
-                })
-                .collect(Collectors.toList());
+                    .map(memberDto -> {
+                        Member projectMember = memberRepository.findById(memberDto.getMemberId()).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+                        return ProjectMember.builder()
+                                .member(projectMember)
+                                .project(project)
+                                .position(memberDto.getPosition())
+                                .build();
+                    })
+                    .collect(Collectors.toList());
             // 프로젝트 맴버 저장
             projectMemberRepository.saveAll(projectMembers);
         }
@@ -249,14 +249,14 @@ public class ProjectServiceImpl implements ProjectService{
         // DTO에 기술스택이 존재하는지
         if(techStackDtos != null && !techStackDtos.isEmpty()){
             List<ProjectTechStack> projectTechStacks = techStackDtos.stream()
-                .map(techStackDto ->{
-                    TechStack projectTechStack = techStackRepository.findById(techStackDto.getTechStackId()).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.TECHSTACK_NOT_FOUND));
-                    return ProjectTechStack.builder()
-                        .techStack(projectTechStack)
-                        .project(project)
-                        .build();
-                })
-                .collect(Collectors.toList());
+                    .map(techStackDto ->{
+                        TechStack projectTechStack = techStackRepository.findById(techStackDto.getTechStackId()).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.TECHSTACK_NOT_FOUND));
+                        return ProjectTechStack.builder()
+                                .techStack(projectTechStack)
+                                .project(project)
+                                .build();
+                    })
+                    .collect(Collectors.toList());
             // 기술스택 저장
             projectTechStackRepository.saveAll(projectTechStacks);
         }
@@ -267,14 +267,14 @@ public class ProjectServiceImpl implements ProjectService{
         // DTO에 링크가 존재하는지
         if(linkDtos != null && !linkDtos.isEmpty()){
             List<ProjectLink> projectLinks = linkDtos.stream()
-                .map(techStackDto ->{
-                    return ProjectLink.builder()
-                        .project(project)
-                        .type(techStackDto.getType())
-                        .url(techStackDto.getUrl())
-                        .build();
-                })
-                .collect(Collectors.toList());
+                    .map(techStackDto ->{
+                        return ProjectLink.builder()
+                                .project(project)
+                                .type(techStackDto.getType())
+                                .url(techStackDto.getUrl())
+                                .build();
+                    })
+                    .collect(Collectors.toList());
             // 링크 저장
             projectLinkRepository.saveAll(projectLinks);
         }
@@ -292,53 +292,53 @@ public class ProjectServiceImpl implements ProjectService{
 
         // position으로 그룹화된 맴버 결과를 DTO로 변환
         List<ProjectPositionResponseDto> positions = positionMap.entrySet().stream()
-            .map(entry -> ProjectPositionResponseDto.builder()
-                .position(entry.getKey())
-                .members(entry.getValue().stream()
-                    .map(value -> ProjectMemberResponseDto.builder()
-                        .memberId(value.getId())
-                        .memberNickname(value.getMemberNickname())
-                        .memberProfile(value.getProfileUrl())
+                .map(entry -> ProjectPositionResponseDto.builder()
+                        .position(entry.getKey())
+                        .members(entry.getValue().stream()
+                                .map(value -> ProjectMemberResponseDto.builder()
+                                        .memberId(value.getId())
+                                        .memberNickname(value.getMemberNickname())
+                                        .memberProfile(value.getProfileUrl())
+                                        .build())
+                                .collect(Collectors.toList()))
                         .build())
-                    .collect(Collectors.toList()))
-                .build())
-            .collect(Collectors.toList());
+                .collect(Collectors.toList());
 
         // 링크 결과를 DTO로 변환
         List<ProjectLinkResponseDto> links = projectLinks.stream()
-            .map(projectLink -> ProjectLinkResponseDto.builder()
-                .type(projectLink.getType())
-                .url(projectLink.getUrl())
-                .build())
-            .collect(Collectors.toList());
+                .map(projectLink -> ProjectLinkResponseDto.builder()
+                        .type(projectLink.getType())
+                        .url(projectLink.getUrl())
+                        .build())
+                .collect(Collectors.toList());
 
         // 기술스택 결과를 DTO로 변환
         List<ProjectTechStackResponseDto> techStacks = projectTechStacks.stream()
-            .map(projectTechStack -> ProjectTechStackResponseDto.builder()
-                .techStackId(projectTechStack.getTechStack().getId())
-                .techStack(projectTechStack.getTechStack().getTechStack())
-                .iconUrl(projectTechStack.getTechStack().getIconUrl())
-                .build())
-            .collect(Collectors.toList());
-            
+                .map(projectTechStack -> ProjectTechStackResponseDto.builder()
+                        .techStackId(projectTechStack.getTechStack().getId())
+                        .techStack(projectTechStack.getTechStack().getTechStack())
+                        .iconUrl(projectTechStack.getTechStack().getIconUrl())
+                        .build())
+                .collect(Collectors.toList());
+
         // 프로젝트 수정 결과 DTO
         ProjectResponseDto modify = ProjectResponseDto.builder()
-            .id(project.getId())
-            .postType(PostType.PROJECT.getName())
-            .memberId(memberId)
-            .category(project.getCategory())
-            .field(project.getField())
-            .title(project.getTitle())
-            .content(project.getContent())
-            .thumbnail(project.getThumbnail())
-            .bannerContent(project.getBannerContent())
-            .viewCount(project.getViewCount())
-            .createdDate(project.getCreatedDate())
-            .modifiedDate(project.getModifiedDate())
-            .positions(positions)
-            .links(links)
-            .techStacks(techStacks)
-            .build();
+                .id(project.getId())
+                .postType(PostType.PROJECT.getName())
+                .memberId(memberId)
+                .category(project.getCategory())
+                .field(project.getField())
+                .title(project.getTitle())
+                .content(project.getContent())
+                .thumbnail(project.getThumbnail())
+                .bannerContent(project.getBannerContent())
+                .viewCount(project.getViewCount())
+                .createdDate(project.getCreatedDate())
+                .modifiedDate(project.getModifiedDate())
+                .positions(positions)
+                .links(links)
+                .techStacks(techStacks)
+                .build();
 
         // 성공 응답 반환
         return new SuccessResponseDto<>(true, "프로젝트 게시글의 수정이 완료되었습니다.", modify);
@@ -350,11 +350,11 @@ public class ProjectServiceImpl implements ProjectService{
         // JWT에 저장된 회원이 존재하는지
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
-        
+
         // 삭제할 프로젝트가 존재하는지
         Optional<Project> optionalProject = projectRepository.findByIdAndStatusTrue(projectId);
         Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
-        
+
         // 삭제할 권한이 있는지
         if(project.getMember().getId() != memberId && !member.getRole().equals("Administrator")){
             throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
@@ -366,9 +366,9 @@ public class ProjectServiceImpl implements ProjectService{
 
         // 프로젝트 삭제 결과 DTO
         ProjectDeleteResponseDto delete = ProjectDeleteResponseDto.builder()
-            .projectId(project.getId())
-            .postType(PostType.PROJECT.getName())
-            .build();
+                .projectId(project.getId())
+                .postType(PostType.PROJECT.getName())
+                .build();
 
         // 성공 응답 반환
         return new SuccessResponseDto<>(true, "프로젝트 게시글 삭제가 완료되었습니다.", delete);
@@ -381,15 +381,15 @@ public class ProjectServiceImpl implements ProjectService{
 
         // 인기 프로젝트 결과 DTO
         List<PopularProjectReadResponseDto> readPopularList = projects.stream()
-            .map(project -> PopularProjectReadResponseDto.builder()
-                .id(project.getId())
-                .postType(PostType.PROJECT.getName())
-                .title(project.getTitle())
-                .thumbnail(project.getThumbnail())
-                .category(project.getCategory())
-                .bannerContent(project.getBannerContent())
-                .build())
-            .collect(Collectors.toList());
+                .map(project -> PopularProjectReadResponseDto.builder()
+                        .id(project.getId())
+                        .postType(PostType.PROJECT.getName())
+                        .title(project.getTitle())
+                        .thumbnail(project.getThumbnail())
+                        .category(project.getCategory())
+                        .bannerContent(project.getBannerContent())
+                        .build())
+                .collect(Collectors.toList());
 
         // 성공 응답 반환
         return new SuccessResponseDto<>(true, "인기 프로젝트 조회가 완료 되었습니다.", readPopularList);
@@ -414,26 +414,7 @@ public class ProjectServiceImpl implements ProjectService{
         List<Project> projects = pageable.getContent();
 
         // 프로젝트 리스트 결과 DTO
-        List<ProjectListReadResponseDto> reads = projects.stream()
-            .map(project -> {
-                List<ProjectLinkResponseDto> links = project.getLinks().stream()
-                    .map(link -> ProjectLinkResponseDto.builder()
-                        .type(link.getType())
-                        .url(link.getUrl())
-                        .build())
-                    .collect(Collectors.toList());
-
-                return ProjectListReadResponseDto.builder()
-                .id(project.getId())
-                .postType(PostType.PROJECT.getName())
-                .category(project.getCategory())
-                .title(project.getTitle())
-                .thumbnail(project.getThumbnail())
-                .bannerContent(project.getBannerContent())
-                .links(links)
-                .build();
-                })
-            .collect(Collectors.toList());
+        List<ProjectListReadResponseDto> reads = getProjectListReadResponseDtos(projects);
 
         // 성공 응답 반환
         return new SuccessResponseDto<>(true, "프로젝트 게시글 리스트 조회가 완료되었습니다.", reads);
@@ -502,57 +483,107 @@ public class ProjectServiceImpl implements ProjectService{
 
         // 그룹화한 맴버를 DTO로 변환
         List<ProjectPositionResponseDto> positions = positionMap.entrySet().stream()
-            .map(entry -> ProjectPositionResponseDto.builder()
-                .position(entry.getKey())
-                .members(entry.getValue().stream()
-                    .map(value -> ProjectMemberResponseDto.builder()
-                        .memberId(value.getId())
-                        .memberNickname(value.getMemberNickname())
-                        .memberProfile(value.getProfileUrl())
+                .map(entry -> ProjectPositionResponseDto.builder()
+                        .position(entry.getKey())
+                        .members(entry.getValue().stream()
+                                .map(value -> ProjectMemberResponseDto.builder()
+                                        .memberId(value.getId())
+                                        .memberNickname(value.getMemberNickname())
+                                        .memberProfile(value.getProfileUrl())
+                                        .build())
+                                .collect(Collectors.toList()))
                         .build())
-                    .collect(Collectors.toList()))
-                .build())
-            .collect(Collectors.toList());
+                .collect(Collectors.toList());
 
         // 프로젝트의 링크를 DTO로 변환
         List<ProjectLinkResponseDto> links = project.getLinks().stream()
-        .map(projectLink -> ProjectLinkResponseDto.builder()
-            .type(projectLink.getType())
-            .url(projectLink.getUrl())
-            .build())
-        .collect(Collectors.toList());
+                .map(projectLink -> ProjectLinkResponseDto.builder()
+                        .type(projectLink.getType())
+                        .url(projectLink.getUrl())
+                        .build())
+                .collect(Collectors.toList());
 
         // 프로젝트의 기술스택을 DTO로 변환
         List<ProjectTechStackResponseDto> techStacks = project.getTechStacks().stream()
-            .map(projectTechStack -> ProjectTechStackResponseDto.builder()
-                .techStackId(projectTechStack.getTechStack().getId())
-                .techStack(projectTechStack.getTechStack().getTechStack())
-                .iconUrl(projectTechStack.getTechStack().getIconUrl())
-                .build())
-            .collect(Collectors.toList());
-        
+                .map(projectTechStack -> ProjectTechStackResponseDto.builder()
+                        .techStackId(projectTechStack.getTechStack().getId())
+                        .techStack(projectTechStack.getTechStack().getTechStack())
+                        .iconUrl(projectTechStack.getTechStack().getIconUrl())
+                        .build())
+                .collect(Collectors.toList());
+
         // 프로젝트 디테일 결과 DTO
         ProjectResponseDto read = ProjectResponseDto.builder()
-            .id(project.getId())
-            .postType(PostType.PROJECT.getName())
-            .memberId(project.getMember().getId())
-            .category(project.getCategory())
-            .field(project.getField())
-            .title(project.getTitle())
-            .content(project.getContent())
-            .thumbnail(project.getThumbnail())
-            .bannerContent(project.getBannerContent())
-            .viewCount(project.getViewCount())
-            .createdDate(project.getCreatedDate())
-            .modifiedDate(project.getModifiedDate())
-            .positions(positions)
-            .links(links)
-            .techStacks(techStacks)
-            .build();
+                .id(project.getId())
+                .postType(PostType.PROJECT.getName())
+                .memberId(project.getMember().getId())
+                .category(project.getCategory())
+                .field(project.getField())
+                .title(project.getTitle())
+                .content(project.getContent())
+                .thumbnail(project.getThumbnail())
+                .bannerContent(project.getBannerContent())
+                .viewCount(project.getViewCount())
+                .createdDate(project.getCreatedDate())
+                .modifiedDate(project.getModifiedDate())
+                .positions(positions)
+                .links(links)
+                .techStacks(techStacks)
+                .build();
 
         // 성공 응답 반환
         return new SuccessResponseDto<>(true, "프로젝트 게시글 상세조회가 완료되었습니다.", read);
     }
 
+    //ky
 
+    @Override
+    public SuccessResponseDto<List<ProjectListReadResponseDto>> readMyProjectList(Member member, Integer size,
+                                                                                  Integer page, String sortType) {
+        Pageable pageRequest = PageRequest.of(page - 1, size);
+        Page<Project> pageable = null;
+
+        if (sortType.equals("asc")) {
+            pageable = projectRepository.findAllByStatusTrueAndMemberOrderByCreatedDateAsc(pageRequest, member);
+        }
+        if (sortType.equals("desc")) {
+            pageable = projectRepository.findAllByStatusTrueAndMemberOrderByCreatedDateDesc(pageRequest, member);
+        }
+        if (pageable == null) {
+            pageable = projectRepository.findAllByStatusTrueAndMemberOrderByCreatedDateAsc(pageRequest, member);
+        }
+
+
+        if (!pageable.hasContent()) {
+            throw new CreaviCodeException(GlobalErrorCode.NOT_PROJECT_CONTENT);
+        }
+        List<Project> projects = pageable.getContent();
+
+        List<ProjectListReadResponseDto> reads = getProjectListReadResponseDtos(projects);
+
+        return new SuccessResponseDto<>(true, "프로젝트 게시글 리스트 조회가 완료되었습니다.", reads);
+    }
+
+    private static List<ProjectListReadResponseDto> getProjectListReadResponseDtos(List<Project> projects) {
+        return projects.stream()
+                .map(project -> {
+                    List<ProjectLinkResponseDto> links = project.getLinks().stream()
+                            .map(link -> ProjectLinkResponseDto.builder()
+                                    .type(link.getType())
+                                    .url(link.getUrl())
+                                    .build())
+                            .collect(Collectors.toList());
+
+                    return ProjectListReadResponseDto.builder()
+                            .id(project.getId())
+                            .postType(PostType.PROJECT.getName())
+                            .category(project.getCategory())
+                            .title(project.getTitle())
+                            .thumbnail(project.getThumbnail())
+                            .bannerContent(project.getBannerContent())
+                            .links(links)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
 }

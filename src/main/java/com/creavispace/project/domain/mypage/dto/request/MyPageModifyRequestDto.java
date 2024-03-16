@@ -1,11 +1,17 @@
 package com.creavispace.project.domain.mypage.dto.request;
 
-public class MyPageModifyRequestDto {
+import java.util.List;
+import lombok.Getter;
 
-    //jwt 인증
-    private String nickName;
-    private String introduce;
-    private String position;
-    private String career;
-    private String interestedStack;
+
+/*
+ * 사용자 닉네임
+ * 자기소개
+ * 직무
+ * 경력
+ * 관심 스택
+ * */
+public record MyPageModifyRequestDto(String nickName, String introduce, String position, Integer career,
+                                     List<String> interestedStack, String profileUrl) {
+
 }

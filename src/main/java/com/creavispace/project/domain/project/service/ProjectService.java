@@ -1,5 +1,6 @@
 package com.creavispace.project.domain.project.service;
 
+import com.creavispace.project.domain.member.entity.Member;
 import java.util.List;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
@@ -19,4 +20,7 @@ public interface ProjectService {
     public SuccessResponseDto<List<PopularProjectReadResponseDto>> readPopularProjectList();
     public SuccessResponseDto<List<ProjectListReadResponseDto>> readProjectList(Integer size, Integer page, String category);
     public SuccessResponseDto<ProjectResponseDto> readProject(Long memberId, Long projectId, HttpServletRequest request, HttpServletResponse response);
+
+    SuccessResponseDto<List<ProjectListReadResponseDto>> readMyProjectList(Member member, Integer size, Integer page, String category);
+
 }

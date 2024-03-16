@@ -1,10 +1,15 @@
 package com.creavispace.project.global.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
-@AllArgsConstructor
 public class CreaviCodeException extends RuntimeException{
     private GlobalErrorCode errorCode;
+
+    public CreaviCodeException(GlobalErrorCode errorCode) {
+        this.errorCode = errorCode;
+        log.info("에러 = {}, code = {}", errorCode.getMessage(), errorCode.getCode());
+    }
 }
