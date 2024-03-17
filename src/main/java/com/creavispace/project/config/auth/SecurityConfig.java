@@ -99,7 +99,7 @@ public class SecurityConfig {
                         "https://port-0-creavispace-backend-am952nlsse11uk.sel5.cloudtype.app/login/oauth2/code/naver"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
 
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(false);
         configuration.addAllowedOrigin("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
