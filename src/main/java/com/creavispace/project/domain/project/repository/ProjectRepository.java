@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.creavispace.project.domain.project.entity.Project;
+import com.creavispace.project.domain.search.entity.SearchResultSet;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long>{

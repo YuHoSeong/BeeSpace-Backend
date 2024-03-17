@@ -5,7 +5,6 @@ import com.creavispace.project.domain.member.Role;
 import com.creavispace.project.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Arrays;
-import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -67,8 +66,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity, HttpSession session) throws Exception {
 
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                    .authorizeHttpRequests(
+        httpSecurity.csrf(AbstractHttpConfigurer::disable).cors(httpSecurityCorsConfigurer -> corsFilter())
+                .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
                                 .requestMatchers("/","config/login", "member/login", "/join", "/swagger-ui/**", "/v3/api-docs/**")
                                 .permitAll()
@@ -92,12 +91,19 @@ public class SecurityConfig {
 
     @Bean
     public CorsFilter corsFilter() {
+        System.out.println("SecurityConfig.corsFilter");
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://creavispace.vercel.app", "localhost:8080/oauth2/authorization/naver","https://port-0-creavispace-backend-am952nlsse11uk.sel5.cloudtype.app/login/oauth2/code/naver"));
+        configuration.setAllowedOrigins(
+                Arrays.asList("https://creavispace.vercel.app",
+                        "localhost:8080/oauth2/authorization/naver",
+                        "https://port-0-creavispace-backend-am952nlsse11uk.sel5.cloudtype.app/login/oauth2/code/naver"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
-        configuration.setAllowedHeaders(Arrays.asList("Jwt"));
-        configuration.setExposedHeaders(Arrays.asList("Jwt"));
-        configuration.setExposedHeaders(Collections.singletonList("Jwt"));
+
+        configuration.setAllowCredentials(false);
+        configuration.addAllowedOrigin("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setMaxAge(6000L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -107,7 +113,8 @@ public class SecurityConfig {
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
-        return new InMemoryClientRegistrationRepository(this.googleClientRegistration(),this.naverClientRegistration());
+        return new InMemoryClientRegistrationRepository(this.googleClientRegistration(),
+                this.naverClientRegistration());
     }
 
     private ClientRegistration naverClientRegistration() {
