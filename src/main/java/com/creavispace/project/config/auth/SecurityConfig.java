@@ -5,7 +5,6 @@ import com.creavispace.project.domain.member.Role;
 import com.creavispace.project.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Arrays;
-import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -28,7 +27,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -67,17 +65,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity, HttpSession session) throws Exception {
 
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                    .authorizeHttpRequests(
+        httpSecurity.csrf(AbstractHttpConfigurer::disable).cors(httpSecurityCorsConfigurer -> corsFilter())
+                .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
-                                .requestMatchers("/","config/login", "member/login", "/join", "/swagger-ui/**", "/v3/api-docs/**")
+                                .requestMatchers("/", "config/login", "member/login", "/join", "/swagger-ui/**",
+                                        "/v3/api-docs/**")
                                 .permitAll()
-                                .requestMatchers(HttpMethod.GET, "/community/**", "/hashtag/**", "/project/**", "/comment/**", "/recruit/**", "/bookmark/**", "/like/**", "/search/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/member/**", "/review", "/file/**", "/like/**","/project/**", "/comment/**", "/recruit/**", "/bookmark/**", "/report/**")
+                                .requestMatchers(HttpMethod.GET, "/community/**", "/hashtag/**", "/project/**",
+                                        "/comment/**", "/recruit/**", "/bookmark/**", "/like/**", "/search/**")
+                                .permitAll()
+                                .requestMatchers(HttpMethod.POST, "/member/**", "/review", "/file/**", "/like/**",
+                                        "/project/**", "/comment/**", "/recruit/**", "/bookmark/**", "/report/**")
                                 .hasRole(Role.MEMBER.name()).anyRequest()
                                 .authenticated())
                 .logout(logout -> logout.logoutSuccessHandler(new LogoutHandler()).logoutUrl("/logout"))
-                .oauth2Login(login -> login.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service)).successHandler(new LoginSuccessHandler(session)))
+                .oauth2Login(login -> login.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service))
+                        .successHandler(new LoginSuccessHandler(session)))
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtFilter(memberService, jwtSecret), UsernamePasswordAuthenticationFilter.class)
@@ -92,12 +95,19 @@ public class SecurityConfig {
 
     @Bean
     public CorsFilter corsFilter() {
+        System.out.println("SecurityConfig.corsFilter");
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://creavispace.vercel.app", "localhost:8080/oauth2/authorization/naver","https://port-0-creavispace-backend-am952nlsse11uk.sel5.cloudtype.app/login/oauth2/code/naver"));
+        configuration.setAllowedOrigins(
+                Arrays.asList("https://creavispace.vercel.app",
+                        "localhost:8080/oauth2/authorization/naver",
+                        "https://port-0-creavispace-backend-am952nlsse11uk.sel5.cloudtype.app/login/oauth2/code/naver"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
-        configuration.setAllowedHeaders(Arrays.asList("Jwt"));
-        configuration.setExposedHeaders(Arrays.asList("Jwt"));
-        configuration.setExposedHeaders(Collections.singletonList("Jwt"));
+
+        configuration.setAllowCredentials(false);
+        configuration.addAllowedOrigin("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setMaxAge(6000L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -107,7 +117,8 @@ public class SecurityConfig {
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
-        return new InMemoryClientRegistrationRepository(this.googleClientRegistration(),this.naverClientRegistration());
+        return new InMemoryClientRegistrationRepository(this.googleClientRegistration(),
+                this.naverClientRegistration());
     }
 
     private ClientRegistration naverClientRegistration() {
