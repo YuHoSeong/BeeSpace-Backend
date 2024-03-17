@@ -13,19 +13,21 @@ public class OAuthAttributes {
     private Map<String, Object> attributes;
     private String nameAttributeKey;
     private String name;
+    private String nickName;
     private String email;
     private String loginId;
     private String loginType;
 
     @Builder
     public OAuthAttributes(Map<String, Object> attributes, String nameAttributeKey, String name, String email,
-                           String loginType, String loginId) {
+                           String loginType, String loginId, String nickName) {
         this.attributes = attributes;
         this.nameAttributeKey = nameAttributeKey;
         this.name = name;
         this.email = email;
         this.loginType = loginType;
         this.loginId = loginId;
+        this.nickName = nickName;
     }
 
     public static OAuthAttributes of(String registrationId, String memberNameAttributeName,
@@ -45,6 +47,7 @@ public class OAuthAttributes {
                 .name((String) response.get("name"))
                 .email((String) response.get("email"))
                 .loginId((String) response.get("id"))
+                .nickName((String) response.get("nickname"))
                 .loginType(registrationId)
                 .attributes(response)
                 .nameAttributeKey(userNameAttributeName)
@@ -56,9 +59,10 @@ public class OAuthAttributes {
         System.out.println("------------------------구글 로그인----------------------------");
         System.out.println("attributes = " + attributes);
         return OAuthAttributes.builder()
-                .name((String) attributes.get("name"))
+                .name((String) attributes.get("family_name") + attributes.get("given_name"))
                 .email((String) attributes.get("email"))
                 .loginId((String) attributes.get("sub"))
+                .nickName((String) attributes.get("name"))
                 .loginType(registrationId)
                 .attributes(attributes)
                 .nameAttributeKey(memberNameAttributeName)
@@ -66,15 +70,15 @@ public class OAuthAttributes {
     }
 
     public Member toEntity() {
-        String randomNickName = UUID.randomUUID().toString().substring(0, 8);
         MemberSaveRequestDto dto = MemberSaveRequestDto.builder()
                 .memberEmail(email)
                 .memberName(name)
                 .loginId(loginId)
                 .loginType(loginType)
-                .memberNickname(randomNickName)
+                .memberNickname(nickName)
+                .memberName(name)
                 .role(Role.MEMBER).build();
 
-        return new Member(dto);
+        return new Member(dto, this);
     }
 }

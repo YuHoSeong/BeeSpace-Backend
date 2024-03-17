@@ -1,5 +1,6 @@
 package com.creavispace.project.domain.member.entity;
 
+import com.creavispace.project.config.auth.dto.OAuthAttributes;
 import com.creavispace.project.domain.member.Role;
 import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
 import jakarta.persistence.Column;
@@ -11,6 +12,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -56,6 +60,11 @@ public class Member {
     private boolean expired;
     private boolean enabled;
 
+    private String idTag;
+    private String memberPosition;
+    private Integer memberCareer;
+    private List<String> interestedStack;
+
     public Member(MemberSaveRequestDto memberSaveRequestDto) {
         this.memberEmail = memberSaveRequestDto.getMemberEmail();
         this.memberName = memberSaveRequestDto.getMemberName();
@@ -67,6 +76,26 @@ public class Member {
         modifiedDate = LocalDateTime.now();
         expired = false;
         enabled = true;
+    }
+
+    public Member(MemberSaveRequestDto dto, OAuthAttributes oAuthAttributes) {
+        this.idTag = UUID.randomUUID().toString().substring(0,7);
+        this.memberEmail = dto.getMemberEmail();
+        this.memberName = dto.getMemberName();
+        this.loginId = dto.getLoginId();
+        this.loginType = dto.getLoginType();
+        this.role = dto.getRole();
+        this.memberNickname = dto.getMemberNickname();
+        this.interestedStack = new ArrayList<>();
+        this.memberCareer = 0;
+        this.memberPosition = "";
+        this.profileUrl = "";
+        this.memberIntroduce= "";
+        createdDate = LocalDateTime.now();
+        modifiedDate = LocalDateTime.now();
+        expired = false;
+        enabled = true;
+
     }
 
     public String getRoleKey() {
