@@ -1,7 +1,5 @@
 package com.creavispace.project.domain.project.repository;
 
-import com.creavispace.project.domain.member.entity.Member;
-import com.creavispace.project.domain.search.entity.SearchResultSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.creavispace.project.domain.project.entity.Project;
+import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.search.entity.SearchResultSet;
 
 @Repository
