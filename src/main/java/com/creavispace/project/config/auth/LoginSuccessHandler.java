@@ -24,7 +24,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         System.out.println("authentication = " + authentication.getAuthorities().stream().collect(Collectors.toList()));
         String jsonToken = httpSession.getAttribute("jwt").toString();
         System.out.println("jsonToken = " + jsonToken);
-        response.addCookie(new Cookie("jwt", jsonToken));
-        getRedirectStrategy().sendRedirect(request, response, "https://creavispace.vercel.app/");
+        Cookie cookie = new Cookie("jwt", jsonToken);
+        cookie.setMaxAge(60000);
+        response.addCookie(cookie);
+        response.setHeader("jwtHeader", cookie.getAttribute("jwt"));
+        getRedirectStrategy().sendRedirect(request, response, "http://localhost:3000/");
     }
 }
