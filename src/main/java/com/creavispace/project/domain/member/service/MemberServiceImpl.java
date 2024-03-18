@@ -48,9 +48,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberResponseDto findById(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow();
-        MemberResponseDto dto = new MemberResponseDto();
-        dto.setMemberNickname(member.getMemberNickname());
-        dto.setIntroduce(member.getMemberIntroduce());
+        MemberResponseDto dto = new MemberResponseDto(member);
         return dto;
     }
 
