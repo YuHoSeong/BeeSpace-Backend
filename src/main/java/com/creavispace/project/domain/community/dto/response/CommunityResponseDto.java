@@ -20,6 +20,8 @@ public class CommunityResponseDto implements SearchListReadResponseDto{
     // enum으로 교체
     private String category;
     private Long memberId;
+    private String memberNickName;
+    private String memberProfile;
     private Integer viewCount;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;

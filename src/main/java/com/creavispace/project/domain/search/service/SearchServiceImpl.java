@@ -113,6 +113,8 @@ public class SearchServiceImpl implements SearchService{
                             .postType("community")
                             .category(community.getCategory())
                             .memberId(community.getMember().getId())
+                            .memberNickName(community.getMember().getMemberNickname())
+                            .memberProfile(community.getMember().getProfileUrl())
                             .viewCount(community.getViewCount())
                             .createdDate(community.getCreatedDate())
                             .modifiedDate(community.getModifiedDate())

@@ -14,6 +14,8 @@ public class RecruitResponseDto {
     private Long id;
     private String postType;
     private Long memberId;
+    private String memberNickName;
+    private String memberProfile;
     private Integer viewCount;
     // enum으로 관리
     private String category;
