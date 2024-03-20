@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.community.dto.request.CommunityRequestDto;
 import com.creavispace.project.domain.community.dto.response.CommunityDeleteResponseDto;
+import com.creavispace.project.domain.community.dto.response.CommunityReadResponseDto;
 import com.creavispace.project.domain.community.dto.response.CommunityResponseDto;
 import com.creavispace.project.domain.community.service.CommunityService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -68,13 +68,12 @@ public class CommunityController {
 
     @GetMapping(READ_COMMUNITY)
     @Operation(summary = "커뮤니티 게시글 디테일")
-    public ResponseEntity<SuccessResponseDto<CommunityResponseDto>> readCommunity(
+    public ResponseEntity<SuccessResponseDto<CommunityReadResponseDto>> readCommunity(
         @AuthenticationPrincipal Long memberId,
         @PathVariable("communityId") Long communityId,
-        HttpServletRequest request,
-        HttpServletResponse response
+        HttpServletRequest request
     ){
-        return ResponseEntity.ok().body(communityService.readCommunity(memberId, communityId, request, response));
+        return ResponseEntity.ok().body(communityService.readCommunity(memberId, communityId, request));
     }
     
     @GetMapping(READ_COMMUNITY_LIST)

@@ -29,6 +29,7 @@ import com.creavispace.project.domain.project.dto.response.ProjectLinkResponseDt
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectMemberResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectPositionResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectReadResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectTechStackResponseDto;
 import com.creavispace.project.domain.project.entity.Project;
 import com.creavispace.project.domain.project.entity.ProjectLink;
@@ -40,11 +41,8 @@ import com.creavispace.project.domain.project.repository.ProjectRepository;
 import com.creavispace.project.domain.project.repository.ProjectTechStackRepository;
 import com.creavispace.project.global.exception.CreaviCodeException;
 import com.creavispace.project.global.exception.GlobalErrorCode;
-import com.creavispace.project.global.util.TimeUtil;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -426,7 +424,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public SuccessResponseDto<ProjectResponseDto> readProject(Long memberId, Long projectId, HttpServletRequest request, HttpServletResponse response) {
+    public SuccessResponseDto<ProjectReadResponseDto> readProject(Long memberId, Long projectId, HttpServletRequest request) {
         Optional<Project> optionalProject;
 
         // JWT 회원과 프로젝트 게시글 작성자와 일치하는지
@@ -442,41 +440,24 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project project = optionalProject.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
 
-        // 조회수 증가 (하루에 한번)
-        Cookie oldCookie = null;
-        Cookie[] cookies = request.getCookies();
-        // 쿠키가 있다면 key가 projectView인 쿠키를 찾기
-        if(cookies != null){
-            for(Cookie cookie : cookies){
-                if(cookie.getName().equals("projectView")){
-                    oldCookie = cookie;
-                }
-            }
+        // 조회수 증가
+        String projectViewLogHeader = request.getHeader("projectViewLog");
+        // 해더에 projectView값이 없으면
+        if(projectViewLogHeader == null){
+			// 조회수 +1
+			project.plusViewCount();
+			projectRepository.save(project);
+			projectViewLogHeader = "["+ projectId + "]";
         }
-        // projectView 쿠키가 있다면
-        if(oldCookie != null){
-            // 조회한 적 없는 프로젝트일 경우
-            if(!oldCookie.getValue().contains("["+ projectId.toString() + "]")){
-                // 조회수 +1
-                project.plusViewCount();
-                projectRepository.save(project);
-                // projectView 쿠기에 해당 프로젝트ID 추가
-                oldCookie.setValue(oldCookie.getValue() + "_[" + projectId + "]");
-                oldCookie.setPath("/");
-                oldCookie.setMaxAge(TimeUtil.getUntilMidnight());
-                response.addCookie(oldCookie);
-            }
-        }
-        // projectView 쿠키가 없다면
-        else{
-            // 조회수 +1
-            project.plusViewCount();
-            projectRepository.save(project);
-            // projectView 쿠기 등록 후 프로젝트ID 추가
-            Cookie newCookie = new Cookie("projectView", "[" + projectId + "]");
-            newCookie.setPath("/");
-            newCookie.setMaxAge(TimeUtil.getUntilMidnight());
-            response.addCookie(newCookie);
+		// 헤더에 projectView값이 있으면
+		else{
+			// 조회한적이 없는 프로젝트일 경우
+			if(!projectViewLogHeader.contains("[" + projectId + "]")){
+				// 조회수 +1
+				project.plusViewCount();
+				projectRepository.save(project);
+				projectViewLogHeader += "_[" + projectId + "]";
+			}
         }
 
         // 프로젝트 맴버를 position을 기준으로 그룹화
@@ -517,7 +498,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .collect(Collectors.toList());
 
         // 프로젝트 디테일 결과 DTO
-        ProjectResponseDto read = ProjectResponseDto.builder()
+        ProjectReadResponseDto read = ProjectReadResponseDto.builder()
                 .id(project.getId())
                 .postType(PostType.PROJECT.getName())
                 .memberId(project.getMember().getId())
@@ -535,6 +516,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .positions(positions)
                 .links(links)
                 .techStacks(techStacks)
+                .projectViewLog(projectViewLogHeader)
                 .build();
 
         // 성공 응답 반환

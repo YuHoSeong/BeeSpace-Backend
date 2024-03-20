@@ -11,11 +11,11 @@ import com.creavispace.project.domain.project.dto.response.PopularProjectReadRes
 import com.creavispace.project.domain.project.dto.response.ProjectResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectDeleteResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectReadResponseDto;
 import com.creavispace.project.domain.project.service.ProjectService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -88,13 +88,12 @@ public class ProjectController {
 
     @GetMapping(READ_PROJECT)
     @Operation(summary = "프로젝트 게시글 디테일")
-    public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> readProject(
+    public ResponseEntity<SuccessResponseDto<ProjectReadResponseDto>> readProject(
         @AuthenticationPrincipal Long memberId,
         @PathVariable("projectId") Long projectId,
-        HttpServletRequest request,
-        HttpServletResponse response
+        HttpServletRequest request
     ) {
-        return ResponseEntity.ok().body(projectService.readProject(memberId, projectId, request, response));
+        return ResponseEntity.ok().body(projectService.readProject(memberId, projectId, request));
     }
     
 }
