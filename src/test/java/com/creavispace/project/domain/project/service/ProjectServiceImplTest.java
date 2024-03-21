@@ -1,8 +1,6 @@
 package com.creavispace.project.domain.project.service;
 
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
-import com.creavispace.project.domain.common.entity.TechStack;
-import com.creavispace.project.domain.common.repository.TechStackRepository;
 import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.member.repository.MemberRepository;
 import com.creavispace.project.domain.project.dto.request.ProjectLinkRequestDto;
@@ -10,6 +8,9 @@ import com.creavispace.project.domain.project.dto.request.ProjectMemberRequestDt
 import com.creavispace.project.domain.project.dto.request.ProjectRequestDto;
 import com.creavispace.project.domain.project.dto.request.ProjectTechStackRequestDto;
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
+import com.creavispace.project.domain.techStack.entity.TechStack;
+import com.creavispace.project.domain.techStack.repository.TechStackRepository;
+
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.common.dto.PostType;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
-import com.creavispace.project.domain.common.entity.TechStack;
-import com.creavispace.project.domain.common.repository.TechStackRepository;
 import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.member.repository.MemberRepository;
 import com.creavispace.project.domain.project.dto.request.ProjectRequestDto;
@@ -39,6 +37,8 @@ import com.creavispace.project.domain.project.repository.ProjectLinkRepository;
 import com.creavispace.project.domain.project.repository.ProjectMemberRepository;
 import com.creavispace.project.domain.project.repository.ProjectRepository;
 import com.creavispace.project.domain.project.repository.ProjectTechStackRepository;
+import com.creavispace.project.domain.techStack.entity.TechStack;
+import com.creavispace.project.domain.techStack.repository.TechStackRepository;
 import com.creavispace.project.global.exception.CreaviCodeException;
 import com.creavispace.project.global.exception.GlobalErrorCode;
 

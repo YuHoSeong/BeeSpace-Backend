@@ -1,4 +1,6 @@
-package com.creavispace.project.domain.common.entity;
+package com.creavispace.project.domain.techStack.entity;
+
+import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,7 +10,7 @@ import lombok.*;
 
 @Entity
 @Getter
-@Builder(toBuilder = true)
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class TechStack extends BaseTimeEntity {

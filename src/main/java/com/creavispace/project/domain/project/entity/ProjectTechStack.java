@@ -1,7 +1,7 @@
 package com.creavispace.project.domain.project.entity;
 
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
-import com.creavispace.project.domain.common.entity.TechStack;
+import com.creavispace.project.domain.techStack.entity.TechStack;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
