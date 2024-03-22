@@ -5,12 +5,13 @@ import java.util.List;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.feedback.dto.request.FeedbackAnswerCreateRequestDto;
 import com.creavispace.project.domain.feedback.dto.request.FeedbackQuestionCreateRequestDto;
+import com.creavispace.project.domain.feedback.dto.request.FeedbackQuestionModifyRequestDto;
 import com.creavispace.project.domain.feedback.dto.response.FeedbackAnswerCreateResponseDto;
-import com.creavispace.project.domain.feedback.dto.response.FeedbackQuestionCreateResponseDto;
-import com.creavispace.project.domain.feedback.dto.response.FeedbackQuestionReadResponseDto;
+import com.creavispace.project.domain.feedback.dto.response.FeedbackQuestionResponseDto;
 
 public interface FeedbackService {
-    public SuccessResponseDto<List<FeedbackQuestionCreateResponseDto>> createFeedbackQuestion(Long projectId, List<FeedbackQuestionCreateRequestDto> dtos);
-    public SuccessResponseDto<List<FeedbackQuestionReadResponseDto>> readFeedbackQuestion(Long projectId);
-    public SuccessResponseDto<List<FeedbackAnswerCreateResponseDto>> createFeedbackAnswer(List<FeedbackAnswerCreateRequestDto> dtos);
+    public SuccessResponseDto<List<FeedbackQuestionResponseDto>> createFeedbackQuestion(Long memberId, Long projectId, List<FeedbackQuestionCreateRequestDto> dtos);
+    public SuccessResponseDto<List<FeedbackQuestionResponseDto>> modifyFeedbackQuestion(Long memberId, Long projectId, List<FeedbackQuestionModifyRequestDto> dtos);
+    public SuccessResponseDto<List<FeedbackQuestionResponseDto>> readFeedbackQuestion(Long projectId);
+    public SuccessResponseDto<FeedbackAnswerCreateResponseDto> createFeedbackAnswer(Long memberId, Long projectId, List<FeedbackAnswerCreateRequestDto> dtos);
 }

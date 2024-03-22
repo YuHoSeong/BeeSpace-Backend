@@ -17,6 +17,7 @@ import com.creavispace.project.domain.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/project")
@@ -48,6 +50,7 @@ public class ProjectController {
         @AuthenticationPrincipal Long memberId,
         @RequestBody ProjectRequestDto dto
     ) {
+        log.info("프로젝트 게시글 생성");
         return ResponseEntity.ok().body(projectService.createProject(memberId, dto));
     }
 
@@ -58,6 +61,7 @@ public class ProjectController {
         @PathVariable("projectId") Long projectId, 
         @RequestBody ProjectRequestDto dto
     ) {
+        
         return ResponseEntity.ok().body(projectService.modifyProject(memberId, projectId, dto));
     }
     

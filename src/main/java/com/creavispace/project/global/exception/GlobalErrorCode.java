@@ -21,7 +21,9 @@ public enum GlobalErrorCode {
     TYPE_NOT_FOUND(400,"게시글 타입을 찾을수 없습니다."),
     NOT_SEARCH_CONTENT(204, "검색 결과가 0건입니다."),
     ORDERBY_NOT_FOUND(400,"정렬 타입을 찾을수 없습니다."),
-    RECRUIT_END_IS_BEFORE_NOW(302, "모집 마감일이 오늘보다 이전 날짜 입니다.");
+    RECRUIT_END_IS_BEFORE_NOW(302, "모집 마감일이 오늘보다 이전 날짜 입니다."),
+    FEEDBACK_QUESTION_NOT_FOUND(400,"해당 피드백 질문이 존재하지 않습니다."),
+    CHOICE_ITEM_NOT_FOUND(400, "해당 선택지가 존재하지 않습니다.");
 
     private Integer code;
     private String message;

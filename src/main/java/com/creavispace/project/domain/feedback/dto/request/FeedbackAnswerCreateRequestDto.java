@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FeedbackAnswerCreateRequestDto {
     private Long questionId;
-    // enum으로 관리 변경
-    private String type;
     private String answer;
     private List<ChoiceItemRequestDto> selectedItems;
 }
