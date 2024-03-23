@@ -1,6 +1,7 @@
 package com.creavispace.project.domain.member.repository;
 
 import com.creavispace.project.domain.member.entity.Member;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,4 +11,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByMemberEmailAndMemberNameAndLoginId(String email, String loginId, String name);
 
     Optional<Member> findByMemberEmailAndLoginTypeAndId(String memberEmail, String loginType, Long memberId);
+    List<Member> findByNicknameContainingOrIdTagContaining(String search);
 }

@@ -26,4 +26,6 @@ public interface MemberService {
     String login(String memberEmail, String loginType, Long memberId);
 
     Optional<Member> findByEmailAndLoginTypeAndMemberId(String memberEmail, String loginType, Long memberId);
+
+    List<MemberResponseDto> findByNicknameContainingOrIdTagContaining(String search);
 }

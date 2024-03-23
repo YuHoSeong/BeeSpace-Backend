@@ -14,6 +14,7 @@ import lombok.Getter;
  * */
 @Getter
 public class MemberResponseDto {
+    private Long memberId;
     private String profileUrl;
     private String memberNickname;
     private String idTag;
@@ -23,6 +24,7 @@ public class MemberResponseDto {
     private List<String> memberInterestedStack;
 
     public MemberResponseDto(Member member) {
+        this.memberId = member.getId();
         this.profileUrl = member.getProfileUrl();
         this.memberNickname = member.getMemberNickname();
         this.idTag = member.getIdTag();

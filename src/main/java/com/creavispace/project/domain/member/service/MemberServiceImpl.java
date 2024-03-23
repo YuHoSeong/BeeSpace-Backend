@@ -7,6 +7,7 @@ import com.creavispace.project.domain.member.repository.MemberRepository;
 import com.creavispace.project.domain.mypage.dto.request.MyPageModifyRequestDto;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,4 +78,12 @@ public class MemberServiceImpl implements MemberService {
     public Optional<Member> findByEmailAndLoginTypeAndMemberId(String memberEmail, String loginType, Long memberId) {
         return memberRepository.findByMemberEmailAndLoginTypeAndId(memberEmail, loginType, memberId);
     }
+
+    @Override
+    public List<MemberResponseDto> findByNicknameContainingOrIdTagContaining(String search) {
+        List<Member> searchData = memberRepository.findByNicknameContainingOrIdTagContaining(search);
+        return searchData.stream().map(MemberResponseDto::new).collect(Collectors.toList());
+    }
+
+
 }
