@@ -56,12 +56,12 @@ public class FeedbackServiceImpl implements FeedbackService {
                 FeedbackQuestion feedbackQuestion = FeedbackQuestion.builder()
                 .project(project)
                 .question(dto.getQuestion())
-                .type(dto.getType())
+                .questionType(dto.getQuestionType())
                 .build();
 
                 feedbackQuestionRepository.save(feedbackQuestion);
 
-                if(dto.getType().equals("객관식") || dto.getType().equals("체크박스")){
+                if(dto.getQuestionType().equals("객관식") || dto.getQuestionType().equals("체크박스")){
                     List<ChoiceItem> choiceItems = dto.getChoiceItems().stream()
                         .map(choiceItem -> ChoiceItem.builder()
                             .feedbackQuestion(feedbackQuestion)
@@ -83,7 +83,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 return FeedbackQuestionResponseDto.builder()
                     .id(feedbackQuestion.getId())
                     .question(feedbackQuestion.getQuestion())
-                    .type(feedbackQuestion.getType())
+                    .questionType(feedbackQuestion.getQuestionType())
                     .choiceItems(choiceItems.stream()
                         .map(choiceItem -> ChoiceItemResponseDto.builder()
                             .id(choiceItem.getId())
@@ -138,13 +138,13 @@ public class FeedbackServiceImpl implements FeedbackService {
                     FeedbackQuestion feedbackQuestion = FeedbackQuestion.builder()
                     .project(project)
                     .question(dto.getQuestion())
-                    .type(dto.getType())
+                    .questionType(dto.getQuestionType())
                     .build();
     
                     feedbackQuestionRepository.save(feedbackQuestion);
     
                     // 객관식 or 체크박스일 경우 선택지 저장
-                    if(dto.getType().equals("객관식") || dto.getType().equals("체크박스")){
+                    if(dto.getQuestionType().equals("객관식") || dto.getQuestionType().equals("체크박스")){
                         List<ChoiceItem> choiceItems = dto.getChoiceItems().stream()
                             .map(choiceTiem -> ChoiceItem.builder()
                                 .feedbackQuestion(feedbackQuestion)
@@ -167,7 +167,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 return FeedbackQuestionResponseDto.builder()
                     .id(feedbackQuestion.getId())
                     .question(feedbackQuestion.getQuestion())
-                    .type(feedbackQuestion.getType())
+                    .questionType(feedbackQuestion.getQuestionType())
                     .choiceItems(choiceItems.stream()
                         .map(choiceItem -> ChoiceItemResponseDto.builder()
                             .id(choiceItem.getId())
@@ -192,7 +192,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 return FeedbackQuestionResponseDto.builder()
                 .id(feedbackQuestion.getId())
                 .question(feedbackQuestion.getQuestion())
-                .type(feedbackQuestion.getType())
+                .questionType(feedbackQuestion.getQuestionType())
                 .choiceItems(choiceItems.stream()
                     .map(choiceItem -> ChoiceItemResponseDto.builder()
                         .id(choiceItem.getId())
@@ -237,7 +237,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                     feedbackAnswerRepository.save(feedbackAnswer);
 
                     // 객관식이나 체크박스일 경우 선택지 답변 저장
-                    if(feedbackQuestion.getType().equals("객관식") || feedbackQuestion.getType().equals("체크박스")){
+                    if(feedbackQuestion.getQuestionType().equals("객관식") || feedbackQuestion.getQuestionType().equals("체크박스")){
                         List<SelectedItem> selectedItems = dto.getSelectedItems().stream()
                             .map(selectedItemDto -> {
                                 ChoiceItem choiceItem = choiceItemRepository.findById(selectedItemDto.getId()).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.CHOICE_ITEM_NOT_FOUND));

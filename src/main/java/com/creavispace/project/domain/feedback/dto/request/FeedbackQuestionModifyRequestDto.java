@@ -15,7 +15,7 @@ public class FeedbackQuestionModifyRequestDto {
     private Long questionId;
     private String question;
     // enum으로 관리 변경
-    private String type;
+    private String questionType;
     private List<String> choiceItems;
     
 }

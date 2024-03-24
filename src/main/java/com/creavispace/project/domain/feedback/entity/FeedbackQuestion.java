@@ -38,7 +38,7 @@ public class FeedbackQuestion extends BaseTimeEntity {
     private String question;
 
     @Column(nullable = false)
-    private String type;
+    private String questionType;
 
     @OneToMany(mappedBy = "feedbackQuestion", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ChoiceItem> choiceItems;
