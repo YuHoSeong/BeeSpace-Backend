@@ -80,10 +80,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<MemberResponseDto> findByNicknameContainingOrIdTagContaining(String search) {
-        List<Member> searchData = memberRepository.findByNicknameContainingOrIdTagContaining(search);
+    public List<MemberResponseDto> findByMemberNicknameOrIdTagContaining(String search) {
+        List<Member> searchData = memberRepository.findByMemberNicknameOrIdTagContaining(search);
         return searchData.stream().map(MemberResponseDto::new).collect(Collectors.toList());
     }
-
-
 }

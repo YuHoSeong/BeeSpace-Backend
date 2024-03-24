@@ -1,9 +1,7 @@
 package com.creavispace.project.domain.member.service;
 
-import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
 import com.creavispace.project.domain.member.dto.response.MemberResponseDto;
 import com.creavispace.project.domain.member.entity.Member;
-import com.creavispace.project.domain.member.dto.request.MemberUpdateRequestDto;
 import com.creavispace.project.domain.mypage.dto.request.MyPageModifyRequestDto;
 import java.util.List;
 import java.util.Optional;
@@ -27,5 +25,5 @@ public interface MemberService {
 
     Optional<Member> findByEmailAndLoginTypeAndMemberId(String memberEmail, String loginType, Long memberId);
 
-    List<MemberResponseDto> findByNicknameContainingOrIdTagContaining(String search);
+    List<MemberResponseDto> findByMemberNicknameOrIdTagContaining(String search);
 }

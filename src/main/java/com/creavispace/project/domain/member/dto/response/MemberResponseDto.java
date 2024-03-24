@@ -4,6 +4,7 @@ import com.creavispace.project.domain.member.entity.Member;
 import java.util.List;
 import lombok.Data;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * 사용자가 조회 할 수 있는 데이터
@@ -13,6 +14,7 @@ import lombok.Getter;
  * 자기소개
  * */
 @Getter
+@ToString
 public class MemberResponseDto {
     private Long memberId;
     private String profileUrl;
