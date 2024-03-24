@@ -42,7 +42,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             response.sendRedirect("http://localhost:3000/?token=" + randomTokenName);
         } else {
 //            response.sendRedirect("https://creavispace.vercel.app/");
-            response.sendRedirect("http://localgost:3000");
+            response.sendRedirect("http://localhost:3000");
 
         }
 
