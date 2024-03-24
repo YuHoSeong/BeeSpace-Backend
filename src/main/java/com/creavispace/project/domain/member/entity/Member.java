@@ -1,6 +1,7 @@
 package com.creavispace.project.domain.member.entity;
 
 import com.creavispace.project.config.auth.dto.OAuthAttributes;
+import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.member.Role;
 import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
 import jakarta.persistence.Column;
@@ -15,6 +16,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -30,10 +34,12 @@ import lombok.NoArgsConstructor;
 //이메일 인증
 //자기소개
 @Entity
+@Builder
 @Data
 @Table(name = "member")
 @NoArgsConstructor
-public class Member {
+@AllArgsConstructor
+public class Member extends BaseTimeEntity {
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,8 +60,6 @@ public class Member {
     @Column(nullable = false)
     private Role role;
     private String memberIntroduce;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
 
     private boolean expired;
     private boolean enabled;
@@ -72,8 +76,6 @@ public class Member {
         this.loginType = memberSaveRequestDto.getLoginType();
         this.role = memberSaveRequestDto.getRole();
         this.memberNickname = memberSaveRequestDto.getMemberNickname();
-        createdDate = LocalDateTime.now();
-        modifiedDate = LocalDateTime.now();
         expired = false;
         enabled = true;
     }
@@ -91,8 +93,6 @@ public class Member {
         this.memberPosition = "";
         this.profileUrl = "";
         this.memberIntroduce= "";
-        createdDate = LocalDateTime.now();
-        modifiedDate = LocalDateTime.now();
         expired = false;
         enabled = true;
 
