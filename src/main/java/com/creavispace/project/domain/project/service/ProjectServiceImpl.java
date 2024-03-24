@@ -123,7 +123,7 @@ public class ProjectServiceImpl implements ProjectService {
                     .map(techStackDto ->{
                         return ProjectLink.builder()
                                 .project(project)
-                                .type(techStackDto.getType())
+                                .linkType(techStackDto.getLinkType())
                                 .url(techStackDto.getUrl())
                                 .build();
                     })
@@ -161,7 +161,7 @@ public class ProjectServiceImpl implements ProjectService {
         // 링크 결과를 DTO로 변환
         List<ProjectLinkResponseDto> links = projectLinks.stream()
                 .map(projectLink -> ProjectLinkResponseDto.builder()
-                        .type(projectLink.getType())
+                        .linkType(projectLink.getLinkType())
                         .url(projectLink.getUrl())
                         .build())
                 .collect(Collectors.toList());
@@ -270,7 +270,7 @@ public class ProjectServiceImpl implements ProjectService {
                     .map(techStackDto ->{
                         return ProjectLink.builder()
                                 .project(project)
-                                .type(techStackDto.getType())
+                                .linkType(techStackDto.getLinkType())
                                 .url(techStackDto.getUrl())
                                 .build();
                     })
@@ -307,7 +307,7 @@ public class ProjectServiceImpl implements ProjectService {
         // 링크 결과를 DTO로 변환
         List<ProjectLinkResponseDto> links = projectLinks.stream()
                 .map(projectLink -> ProjectLinkResponseDto.builder()
-                        .type(projectLink.getType())
+                        .linkType(projectLink.getLinkType())
                         .url(projectLink.getUrl())
                         .build())
                 .collect(Collectors.toList());
@@ -483,7 +483,7 @@ public class ProjectServiceImpl implements ProjectService {
         // 프로젝트의 링크를 DTO로 변환
         List<ProjectLinkResponseDto> links = project.getLinks().stream()
                 .map(projectLink -> ProjectLinkResponseDto.builder()
-                        .type(projectLink.getType())
+                        .linkType(projectLink.getLinkType())
                         .url(projectLink.getUrl())
                         .build())
                 .collect(Collectors.toList());
@@ -557,7 +557,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .map(project -> {
                     List<ProjectLinkResponseDto> links = project.getLinks().stream()
                             .map(link -> ProjectLinkResponseDto.builder()
-                                    .type(link.getType())
+                                    .linkType(link.getLinkType())
                                     .url(link.getUrl())
                                     .build())
                             .collect(Collectors.toList());

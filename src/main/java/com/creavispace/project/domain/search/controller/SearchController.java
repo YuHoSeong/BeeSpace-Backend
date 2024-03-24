@@ -39,9 +39,9 @@ public class SearchController {
         @RequestParam(value = "size", required = false, defaultValue = "6") Integer size,
         @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
         @RequestParam(value = "text", required = true) String text,
-        @RequestParam(value = "type", required = false) String type
+        @RequestParam(value = "postType", required = false) String postType
     ){
-        return ResponseEntity.ok().body(searchService.readSearchList(size, page, text, type));
+        return ResponseEntity.ok().body(searchService.readSearchList(size, page, text, postType));
     }
 
 }

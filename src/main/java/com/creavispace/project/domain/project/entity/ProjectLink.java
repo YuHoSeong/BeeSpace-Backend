@@ -31,7 +31,7 @@ public class ProjectLink extends BaseTimeEntity {
 
     // enum으로 관리 변경
     @Column(nullable = false)
-    private String type;
+    private String linkType;
     
     @Column(nullable = false)
     private String url;

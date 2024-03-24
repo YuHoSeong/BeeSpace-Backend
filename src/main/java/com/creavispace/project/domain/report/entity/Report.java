@@ -31,7 +31,7 @@ public class Report extends BaseTimeEntity{
     private Member member;
 
     @Column(nullable = false)
-    private String reportKind;
+    private String category;
 
     @Column(nullable = false)
     private String postType;

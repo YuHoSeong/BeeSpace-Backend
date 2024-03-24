@@ -35,7 +35,7 @@ class ProjectServiceImplTest {
     void createProject() {
         ProjectLinkRequestDto linkRequestDto = ProjectLinkRequestDto.builder()
                 .url("")
-                .type("")
+                .linkType("")
                 .build();
 
         ProjectMemberRequestDto projectMemberRequestDto = ProjectMemberRequestDto.

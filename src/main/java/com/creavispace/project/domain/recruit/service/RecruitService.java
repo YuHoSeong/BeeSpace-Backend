@@ -11,7 +11,6 @@ import com.creavispace.project.domain.recruit.dto.response.RecruitReadResponseDt
 import com.creavispace.project.domain.recruit.dto.response.RecruitResponseDto;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 public interface RecruitService {
     public SuccessResponseDto<RecruitResponseDto> createRecruit(Long memberId, RecruitRequestDto dto);

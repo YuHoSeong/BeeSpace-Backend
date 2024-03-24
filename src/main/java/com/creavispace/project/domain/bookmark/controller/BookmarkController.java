@@ -32,9 +32,9 @@ public class BookmarkController {
     public ResponseEntity<SuccessResponseDto<BookmarkResponseDto>> bookmark(
         @AuthenticationPrincipal Long memberId,
         @RequestParam("postId") Long postId,
-        @RequestParam("type") String type
+        @RequestParam("postType") String postType
     ) {
-        return ResponseEntity.ok().body(bookmarkService.bookmarkToggle(memberId, postId, type));
+        return ResponseEntity.ok().body(bookmarkService.bookmarkToggle(memberId, postId, postType));
     }
     
     @GetMapping(READ_BOOKMARK)
@@ -42,9 +42,9 @@ public class BookmarkController {
     public ResponseEntity<SuccessResponseDto<BookmarkResponseDto>> readBookmark(
         @AuthenticationPrincipal Long memberId,
         @RequestParam("postId") Long postId,
-        @RequestParam("type") String type
+        @RequestParam("postType") String postType
     ){
-        return ResponseEntity.ok().body(bookmarkService.readBookmark(memberId, postId, type));
+        return ResponseEntity.ok().body(bookmarkService.readBookmark(memberId, postId, postType));
     }
     
 }
