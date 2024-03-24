@@ -3,7 +3,6 @@ package com.creavispace.project.config.auth;
 import com.creavispace.project.config.JwtFilter;
 import com.creavispace.project.domain.member.Role;
 import com.creavispace.project.domain.member.service.MemberService;
-import jakarta.servlet.http.HttpSession;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +26,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -64,19 +62,20 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, HttpSession session) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-        httpSecurity.csrf(AbstractHttpConfigurer::disable).cors(httpSecurityCorsConfigurer -> corsFilter())
+        httpSecurity.csrf(AbstractHttpConfigurer::disable).cors(httpSecurityCorsConfigurer -> corsFilter()).httpBasic(
+                        AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
-                                .requestMatchers("/","config/login", "member/login", "/join", "/swagger-ui/**", "/v3/api-docs/**")
+                                .requestMatchers("/api/auth/**","config/login", "/login/**", "member/login", "/join", "/swagger-ui/**", "/v3/api-docs/**")
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET, "/community/**", "/hashtag/**", "/project/**", "/comment/**", "/recruit/**", "/bookmark/**", "/like/**", "/search/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/member/**", "/review", "/file/**", "/like/**","/project/**", "/comment/**", "/recruit/**", "/bookmark/**", "/report/**")
                                 .hasRole(Role.MEMBER.name()).anyRequest()
                                 .authenticated())
                 .logout(logout -> logout.logoutSuccessHandler(new LogoutHandler()).logoutUrl("/logout"))
-                .oauth2Login(login -> login.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service)).successHandler(new LoginSuccessHandler(session)))
+                .oauth2Login(login -> login.loginPage("/").userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service)).successHandler(new LoginSuccessHandler(memberService)))
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtFilter(memberService, jwtSecret), UsernamePasswordAuthenticationFilter.class)
@@ -99,11 +98,7 @@ public class SecurityConfig {
                         "https://port-0-creavispace-backend-am952nlsse11uk.sel5.cloudtype.app/login/oauth2/code/naver"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
 
-        configuration.setAllowCredentials(false);
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
-        configuration.setMaxAge(6000L);
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

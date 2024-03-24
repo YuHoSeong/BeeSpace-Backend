@@ -84,4 +84,8 @@ public class MemberServiceImpl implements MemberService {
         List<Member> searchData = memberRepository.findByMemberNicknameOrIdTagContaining(search);
         return searchData.stream().map(MemberResponseDto::new).collect(Collectors.toList());
     }
+    @Override
+    public Optional<Member> findByLoginId(String loginId) {
+        return memberRepository.findByLoginId(loginId);
+    }
 }
