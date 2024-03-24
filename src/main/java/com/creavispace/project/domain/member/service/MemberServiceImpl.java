@@ -79,4 +79,9 @@ public class MemberServiceImpl implements MemberService {
     public Optional<Member> findByEmailAndLoginTypeAndMemberId(String memberEmail, String loginType, Long memberId) {
         return memberRepository.findByMemberEmailAndLoginTypeAndId(memberEmail, loginType, memberId);
     }
+
+    @Override
+    public Optional<Member> findByLoginId(String loginId) {
+        return memberRepository.findByLoginId(loginId);
+    }
 }
