@@ -23,7 +23,8 @@ public enum GlobalErrorCode {
     ORDERBY_NOT_FOUND(400,"정렬 타입을 찾을수 없습니다."),
     RECRUIT_END_IS_BEFORE_NOW(400, "모집 마감일이 오늘보다 이전 날짜 입니다."),
     FEEDBACK_QUESTION_NOT_FOUND(400,"해당 피드백 질문이 존재하지 않습니다."),
-    CHOICE_ITEM_NOT_FOUND(400, "해당 선택지가 존재하지 않습니다.");
+    CHOICE_ITEM_NOT_FOUND(400, "해당 선택지가 존재하지 않습니다."),
+    ALREADY_FEEDBACK_ANSWER(400, "이미 피드백한 프로젝트입니다.");
 
     private Integer code;
     private String message;

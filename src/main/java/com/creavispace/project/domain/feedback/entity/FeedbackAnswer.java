@@ -38,7 +38,6 @@ public class FeedbackAnswer extends BaseTimeEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(nullable = false)
     private String answer;
 
     @OneToMany(mappedBy = "feedbackAnswer", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)

@@ -207,6 +207,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+    @Transactional
     public SuccessResponseDto<FeedbackAnswerCreateResponseDto> createFeedbackAnswer(
             Long memberId, Long projectId, List<FeedbackAnswerCreateRequestDto> dtos) {
         // JWT에 저장된 회원이 존재하는지
@@ -222,6 +223,9 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .map(dto -> {
                     // 존재하는 질문인지
                     FeedbackQuestion feedbackQuestion = feedbackQuestionRepository.findById(dto.getQuestionId()).orElseThrow(() -> new CreaviCodeException(GlobalErrorCode.FEEDBACK_QUESTION_NOT_FOUND));
+                    
+                    // 답변했던 질문인지
+                    if(feedbackAnswerRepository.existsByFeedbackQuestionIdAndMemberId(dto.getQuestionId(), memberId)) throw new CreaviCodeException(GlobalErrorCode.ALREADY_FEEDBACK_ANSWER);
 
                     // 질문에 대한 답변 저장
                     FeedbackAnswer feedbackAnswer = FeedbackAnswer.builder()
