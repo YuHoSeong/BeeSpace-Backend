@@ -20,7 +20,6 @@ public class LoginController {
             @RequestParam("token") String tokenName) {
         System.out.println("LoginController.login");
         JwtDto token = JwtManager.findToken(tokenName);
-        // API 호출
 
         return ResponseEntity.status(HttpStatus.OK).body(token);
     }
