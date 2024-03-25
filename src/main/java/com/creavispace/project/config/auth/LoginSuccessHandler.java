@@ -39,7 +39,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             JwtDto jwtDto = loadJwt(member);
             JwtManager.storeToken(randomTokenName, jwtDto);
 //            response.sendRedirect("https://creavispace.vercel.app/?token=" + randomTokenName);
-            response.sendRedirect("http://localhost:3000/?token=" + randomTokenName);
+            response.sendRedirect("http://localhost:3000/login/?token=" + randomTokenName);
         } else {
 //            response.sendRedirect("https://creavispace.vercel.app/");
             response.sendRedirect("http://localhost:3000");
