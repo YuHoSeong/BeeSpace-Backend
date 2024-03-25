@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProjectLinkRequestDto {
     // enum 관리로 변경
-    private String type;
+    private String linkType;
     private String url;
 }

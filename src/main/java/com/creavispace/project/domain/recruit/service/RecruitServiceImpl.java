@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.common.dto.PostType;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
-import com.creavispace.project.domain.common.entity.TechStack;
-import com.creavispace.project.domain.common.repository.TechStackRepository;
 import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.member.repository.MemberRepository;
 import com.creavispace.project.domain.recruit.dto.request.RecruitPositionRequestDto;
@@ -22,6 +20,7 @@ import com.creavispace.project.domain.recruit.dto.response.DeadLineRecruitListRe
 import com.creavispace.project.domain.recruit.dto.response.RecruitDeleteResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitListReadResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitPositionResponseDto;
+import com.creavispace.project.domain.recruit.dto.response.RecruitReadResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitTechStackResponseDto;
 import com.creavispace.project.domain.recruit.entity.Recruit;
@@ -30,13 +29,13 @@ import com.creavispace.project.domain.recruit.entity.RecruitTechStack;
 import com.creavispace.project.domain.recruit.repository.RecruitPositionRepository;
 import com.creavispace.project.domain.recruit.repository.RecruitRepository;
 import com.creavispace.project.domain.recruit.repository.RecruitTechStackRepository;
+import com.creavispace.project.domain.techStack.entity.TechStack;
+import com.creavispace.project.domain.techStack.repository.TechStackRepository;
 import com.creavispace.project.global.exception.CreaviCodeException;
 import com.creavispace.project.global.exception.GlobalErrorCode;
 import com.creavispace.project.global.util.TimeUtil;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -136,7 +135,9 @@ public class RecruitServiceImpl implements RecruitService {
         RecruitResponseDto create = RecruitResponseDto.builder()
             .id(recruit.getId())
             .postType(PostType.RECRUIT.getName())
-            .memberId(memberId)
+            .memberId(recruit.getMember().getId())
+            .memberNickName(recruit.getMember().getMemberNickname())
+            .memberProfile(recruit.getMember().getProfileUrl())
             .viewCount(recruit.getViewCount())
             .category(recruit.getCategory())
             .contactWay(recruit.getContactWay())
@@ -243,6 +244,8 @@ public class RecruitServiceImpl implements RecruitService {
             .id(recruit.getId())
             .postType(PostType.RECRUIT.getName())
             .memberId(recruit.getMember().getId())
+            .memberNickName(recruit.getMember().getMemberNickname())
+            .memberProfile(recruit.getMember().getProfileUrl())
             .viewCount(recruit.getViewCount())
             .category(recruit.getCategory())
             .contactWay(recruit.getContactWay())
@@ -338,7 +341,7 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     @Transactional
-    public SuccessResponseDto<RecruitResponseDto> readRecruit(Long memberId, Long recruitId, HttpServletRequest request, HttpServletResponse response) {
+    public SuccessResponseDto<RecruitReadResponseDto> readRecruit(Long memberId, Long recruitId, HttpServletRequest request) {
         Optional<Recruit> optionalRecruit;
 
         // JWT 회원과 모집 게시글 작성자와 일치하는지
@@ -354,48 +357,33 @@ public class RecruitServiceImpl implements RecruitService {
 
         Recruit recruit = optionalRecruit.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
 
-        // 조회수 증가 (하루에 한번)
-        Cookie oldCookie = null;
-        Cookie[] cookies = request.getCookies();
-        // 쿠키가 있다면 key가 recruitView인 쿠키를 찾기
-        if(cookies != null){
-            for(Cookie cookie : cookies){
-                if(cookie.getName().equals("recruitView")){
-                    oldCookie = cookie;
-                }
-            }
-        }
-        // recruitView 쿠키가 있다면
-        if(oldCookie != null){
-            // 조회한 적 없는 모집 게시글일 경우
-            if(!oldCookie.getValue().contains("["+ recruitId.toString() + "]")){
-                // 조회수 +1
-                recruit.plusViewCount();
-                recruitRepository.save(recruit);
-                // recruitView 쿠기에 해당 모집 게시글ID 추가
-                oldCookie.setValue(oldCookie.getValue() + "_[" + recruitId + "]");
-                oldCookie.setPath("/");
-                oldCookie.setMaxAge(TimeUtil.getUntilMidnight());
-                response.addCookie(oldCookie);
-            }
-        }
-        // recruitView 쿠키가 없다면
-        else{
+        // 조회수 증가
+        String recruitViewLogHeader = request.getHeader("recruitView");
+        // 헤더에 recruitView 값이 없으면
+        if(recruitViewLogHeader == null){
             // 조회수 +1
             recruit.plusViewCount();
             recruitRepository.save(recruit);
-            // recruitView 쿠기 등록 후 모집 게시글ID 추가
-            Cookie newCookie = new Cookie("recruitView", "[" + recruitId + "]");
-            newCookie.setPath("/");
-            newCookie.setMaxAge(TimeUtil.getUntilMidnight());
-            response.addCookie(newCookie);
+            recruitViewLogHeader = "[" + recruitId + "]";
+        }
+        // 헤더에 recruitView 값이 있으면
+        else{
+            // 조회한적 없는 모집게시글일 경우
+            if(!recruitViewLogHeader.contains("[" + recruitId + "]")){
+                // 조회수 +1
+            recruit.plusViewCount();
+            recruitRepository.save(recruit);
+            recruitViewLogHeader += "_[" + recruitId + "]";
+            }
         }
 
         // 모집게시글 디테일 DTO
-        RecruitResponseDto read = RecruitResponseDto.builder()
+        RecruitReadResponseDto read = RecruitReadResponseDto.builder()
             .id(recruit.getId())
             .postType(PostType.RECRUIT.getName())
             .memberId(recruit.getMember().getId())
+            .memberNickName(recruit.getMember().getMemberNickname())
+            .memberProfile(recruit.getMember().getProfileUrl())
             .viewCount(recruit.getViewCount())
             .category(recruit.getCategory())
             .contactWay(recruit.getContactWay())
@@ -423,6 +411,7 @@ public class RecruitServiceImpl implements RecruitService {
                     .iconUrl(techStack.getTechStack().getIconUrl())
                     .build())
                 .collect(Collectors.toList()))
+            .recruitViewLog(recruitViewLogHeader)
             .build();
 
         // 성공 응답 반환

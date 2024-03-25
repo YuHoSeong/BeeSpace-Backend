@@ -23,16 +23,14 @@ import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.member.repository.MemberRepository;
 import com.creavispace.project.global.exception.CreaviCodeException;
 import com.creavispace.project.global.exception.GlobalErrorCode;
-import com.creavispace.project.global.util.TimeUtil;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.creavispace.project.domain.community.dto.response.CommunityDeleteResponseDto;
 import com.creavispace.project.domain.community.dto.response.CommunityHashTagDto;
+import com.creavispace.project.domain.community.dto.response.CommunityReadResponseDto;
 
 @Service
 @RequiredArgsConstructor
@@ -102,6 +100,8 @@ public class CommunityServiceImpl implements CommunityService{
             .postType(PostType.COMMUNITY.getName())
             .category(community.getCategory())
             .memberId(community.getMember().getId())
+            .memberNickName(community.getMember().getMemberNickname())
+            .memberProfile(community.getMember().getProfileUrl())
             .viewCount(community.getViewCount())
             .createdDate(community.getCreatedDate())
             .modifiedDate(community.getModifiedDate())
@@ -176,6 +176,8 @@ public class CommunityServiceImpl implements CommunityService{
             .postType(PostType.COMMUNITY.getName())
             .category(community.getCategory())
             .memberId(community.getMember().getId())
+            .memberNickName(community.getMember().getMemberNickname())
+            .memberProfile(community.getMember().getProfileUrl())
             .viewCount(community.getViewCount())
             .createdDate(community.getCreatedDate())
             .modifiedDate(community.getModifiedDate())
@@ -219,7 +221,7 @@ public class CommunityServiceImpl implements CommunityService{
 
     @Override
     @Transactional
-    public SuccessResponseDto<CommunityResponseDto> readCommunity(Long memberId, Long communityId, HttpServletRequest request, HttpServletResponse response) {
+    public SuccessResponseDto<CommunityReadResponseDto> readCommunity(Long memberId, Long communityId, HttpServletRequest request) {
         Optional<Community> optionalCommunity;
         // JWT 회원과 커뮤니티 게시글 작성자와 일치하는지
         boolean isWriter = communityRepository.existsByIdAndMemberId(communityId, memberId);
@@ -234,49 +236,32 @@ public class CommunityServiceImpl implements CommunityService{
 
         Community community = optionalCommunity.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
 
-        // 조회수 증가 (하루에 한번)
-        Cookie oldCookie = null;
-        Cookie[] cookies = request.getCookies();
-        // 쿠키가 있다면 key가 communityView인 쿠키를 찾기
-        if(cookies != null){
-            for(Cookie cookie : cookies){
-                if(cookie.getName().equals("communityView")){
-                    oldCookie = cookie;
-                }
-            }
-        }
-        // communityView 쿠키가 있다면
-        if(oldCookie != null){
-            // 조회한 적 없는 커뮤니티일 경우
-            if(!oldCookie.getValue().contains("["+ communityId.toString() + "]")){
-                // 조회수 +1
-                community.plusViewCount();
-                communityRepository.save(community);
-                // communityView 쿠기에 해당 커뮤니티ID 추가
-                oldCookie.setValue(oldCookie.getValue() + "_[" + communityId + "]");
-                oldCookie.setPath("/");
-                oldCookie.setMaxAge(TimeUtil.getUntilMidnight());
-                response.addCookie(oldCookie);
-            }
-        }
-        // communityView 쿠키가 없다면
-        else{
-            // 조회수 +1
+        // 조회수 증가
+        String communityViewLogHeader = request.getHeader("communityViewLog");
+        // 헤더에 communityViewLog 값이 없으면
+        if(communityViewLogHeader == null){
             community.plusViewCount();
             communityRepository.save(community);
-            // communityView 쿠기 등록 후 커뮤니티ID 추가
-            Cookie newCookie = new Cookie("communityView", "[" + communityId + "]");
-            newCookie.setPath("/");
-            newCookie.setMaxAge(TimeUtil.getUntilMidnight());
-            response.addCookie(newCookie);
+            communityViewLogHeader =  "["+ communityId + "]";
         }
-
+        // 헤더에 communityViewLog 값이 있으면
+        else{
+            // 조회한적이 없는 커뮤니티일 경우
+            if(!communityViewLogHeader.contains("["+ communityId + "]")){
+                community.plusViewCount();
+                communityRepository.save(community);
+                communityViewLogHeader +=  "_["+ communityId + "]";
+            }
+        }
+        
         // 커뮤니티 디테일 DTO변환
-        CommunityResponseDto read = CommunityResponseDto.builder()
+        CommunityReadResponseDto read = CommunityReadResponseDto.builder()
             .id(community.getId())
             .postType(PostType.COMMUNITY.getName())
             .category(community.getCategory())
             .memberId(community.getMember().getId())
+            .memberNickName(community.getMember().getMemberNickname())
+            .memberProfile(community.getMember().getProfileUrl())
             .viewCount(community.getViewCount())
             .createdDate(community.getCreatedDate())
             .modifiedDate(community.getModifiedDate())
@@ -288,6 +273,7 @@ public class CommunityServiceImpl implements CommunityService{
                     .hashTag(hashTag.getHashTag().getHashTag())
                     .build())
                 .collect(Collectors.toList()))
+            .communityViewLog(communityViewLogHeader)
             .build();
 
         // 성공 응답 반환

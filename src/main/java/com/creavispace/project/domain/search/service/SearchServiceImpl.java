@@ -38,14 +38,14 @@ public class SearchServiceImpl implements SearchService{
 
     @Override
     public SuccessResponseDto<List<SearchListReadResponseDto>> readSearchList(Integer size, Integer page, String text,
-            String type) {
+            String postType) {
         Pageable pageRequest = PageRequest.of(page-1, size);
         Page<SearchResultSet> pageable;
 
-        if(type == null){
+        if(postType == null){
             pageable = projectRepository.findIntegratedSearchData(text, pageRequest);
         }else{
-            switch (type) {
+            switch (postType) {
                 case "project":
                     pageable = projectRepository.findProjectSearchData(text, pageRequest);
                     break;
@@ -79,7 +79,7 @@ public class SearchServiceImpl implements SearchService{
                             .title(project.getTitle())
                             .links(project.getLinks().stream()
                                 .map(link -> ProjectLinkResponseDto.builder()
-                                    .type(link.getType())
+                                    .linkType(link.getLinkType())
                                     .url(link.getUrl())
                                     .build())
                                 .collect(Collectors.toList()))
@@ -113,6 +113,8 @@ public class SearchServiceImpl implements SearchService{
                             .postType("community")
                             .category(community.getCategory())
                             .memberId(community.getMember().getId())
+                            .memberNickName(community.getMember().getMemberNickname())
+                            .memberProfile(community.getMember().getProfileUrl())
                             .viewCount(community.getViewCount())
                             .createdDate(community.getCreatedDate())
                             .modifiedDate(community.getModifiedDate())

@@ -41,15 +41,15 @@ public class FileServiceImpl implements FileService {
 
     public SuccessResponseDto<UploadFileResponseDto> fileUpload(MultipartFile multipartFile) {
         String fileName = createFileName(multipartFile.getOriginalFilename()); //종복되지 않게 이름을 randomUUID()를 사용해서 생성함
-        String fileFormat = multipartFile.getContentType().substring(multipartFile.getContentType().lastIndexOf("/") + 1); //파일 확장자명 추출
+        // String fileFormat = multipartFile.getContentType().substring(multipartFile.getContentType().lastIndexOf("/") + 1); //파일 확장자명 추출
         
-        MultipartFile resizeImage = resizer(fileName, fileFormat, multipartFile, 400);
+        // MultipartFile resizeImage = resizer(fileName, fileFormat, multipartFile, 400);
 
         ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(resizeImage.getSize());
-        metadata.setContentType(resizeImage.getContentType());
+        metadata.setContentLength(multipartFile.getSize());
+        metadata.setContentType(multipartFile.getContentType());
 
-        try(InputStream inputStream = resizeImage.getInputStream()) {
+        try(InputStream inputStream = multipartFile.getInputStream()) {
             amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, metadata));
         } catch (Exception e) {
             new CreaviCodeException(GlobalErrorCode.S3_SERVER_NOT_FOUND);
@@ -59,13 +59,13 @@ public class FileServiceImpl implements FileService {
         return new SuccessResponseDto<UploadFileResponseDto>(true, "이미지가 저장되었습니다.", new UploadFileResponseDto(url));
     }
 
-    public ResponseEntity<?> deleteImage(String fileUrl) {
-        String splitStr = ".com/";
-        String fileName = fileUrl.substring(fileUrl.lastIndexOf(splitStr) + splitStr.length());
+    // public SuccessResponseDto<String> deleteImage(String fileUrl) {
+    //     String splitStr = ".com/";
+    //     String fileName = fileUrl.substring(fileUrl.lastIndexOf(splitStr) + splitStr.length());
 
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
-        return ResponseEntity.ok().body(new SuccessResponseDto(true, "이미지 삭제가 완료되었습니다.",fileUrl));
-    }
+    //     amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+    //     return new SuccessResponseDto<>(true, "이미지 삭제가 완료되었습니다.",fileUrl);
+    // }
 
     private String createFileName(String fileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
@@ -79,36 +79,36 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    @Transactional 
-    private MultipartFile resizer(String fileName, String fileFormat, MultipartFile originalImage, int width) {
+    // @Transactional 
+    // private MultipartFile resizer(String fileName, String fileFormat, MultipartFile originalImage, int width) {
 
-        try {
-            BufferedImage image = ImageIO.read(originalImage.getInputStream());// MultipartFile -> BufferedImage Convert 
+    //     try {
+    //         BufferedImage image = ImageIO.read(originalImage.getInputStream());// MultipartFile -> BufferedImage Convert 
 
-            int originWidth = image.getWidth();
-            int originHeight = image.getHeight();
+    //         int originWidth = image.getWidth();
+    //         int originHeight = image.getHeight();
 
-            // origin 이미지가 400보다 작으면 패스
-            if(originWidth < width)
-                return originalImage;
+    //         // origin 이미지가 400보다 작으면 패스
+    //         if(originWidth < width)
+    //             return originalImage;
 
-            MarvinImage imageMarvin = new MarvinImage(image);
+    //         MarvinImage imageMarvin = new MarvinImage(image);
 
-            Scale scale = new Scale();
-            scale.load();
-            scale.setAttribute("newWidth", width);
-            scale.setAttribute("newHeight", width * originHeight / originWidth);//비율유지를 위해 높이 유지
-            scale.process(imageMarvin.clone(), imageMarvin, null, null, false);
+    //         Scale scale = new Scale();
+    //         scale.load();
+    //         scale.setAttribute("newWidth", width);
+    //         scale.setAttribute("newHeight", width * originHeight / originWidth);//비율유지를 위해 높이 유지
+    //         scale.process(imageMarvin.clone(), imageMarvin, null, null, false);
 
-            BufferedImage imageNoAlpha = imageMarvin.getBufferedImageNoAlpha();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(imageNoAlpha, fileFormat, baos);
-            baos.flush();
+    //         BufferedImage imageNoAlpha = imageMarvin.getBufferedImageNoAlpha();
+    //         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    //         ImageIO.write(imageNoAlpha, fileFormat, baos);
+    //         baos.flush();
 
-            return new CustomMultipartFile(fileName,fileFormat,originalImage.getContentType(), baos.toByteArray());
+    //         return new CustomMultipartFile(fileName,fileFormat,originalImage.getContentType(), baos.toByteArray());
 
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일을 줄이는데 실패했습니다.");
-        }
-    }
+    //     } catch (IOException e) {
+    //         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일을 줄이는데 실패했습니다.");
+    //     }
+    // }
 }

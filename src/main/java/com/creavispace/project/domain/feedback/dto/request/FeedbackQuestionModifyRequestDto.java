@@ -1,4 +1,4 @@
-package com.creavispace.project.domain.feedback.dto.response;
+package com.creavispace.project.domain.feedback.dto.request;
 
 import java.util.List;
 
@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedbackQuestionReadResponseDto {
-    private Long id;
+public class FeedbackQuestionModifyRequestDto {
+    private Long questionId;
     private String question;
     // enum으로 관리 변경
-    private String type;
-    private List<ChoiceItemResponseDto> choiceItems;
+    private String questionType;
+    private List<String> choiceItems;
+    
 }

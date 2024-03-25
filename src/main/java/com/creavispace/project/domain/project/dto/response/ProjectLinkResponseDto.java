@@ -13,6 +13,6 @@ import lombok.ToString;
 @ToString
 public class ProjectLinkResponseDto {
     // enum 변경
-    private String type;
+    private String linkType;
     private String url;
 }

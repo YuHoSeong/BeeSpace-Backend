@@ -3,6 +3,9 @@ package com.creavispace.project.global.util;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
+import com.creavispace.project.global.exception.CreaviCodeException;
+import com.creavispace.project.global.exception.GlobalErrorCode;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -28,6 +31,11 @@ public class TimeUtil {
 
     public static LocalDate getRecruitEnd(String end, String format){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-        return LocalDate.parse(end, formatter);
+        LocalDate recruitEnd = LocalDate.parse(end, formatter);
+
+        if(recruitEnd.isBefore(LocalDate.now())){
+            throw new CreaviCodeException(GlobalErrorCode.RECRUIT_END_IS_BEFORE_NOW);
+        }
+        return recruitEnd;
     }
 }

@@ -33,9 +33,9 @@ public class LikeController {
     public ResponseEntity<SuccessResponseDto<LikeResponseDto>> likeToggle(
         @AuthenticationPrincipal Long memberId,    
         @RequestParam(value = "postId") Long postId,
-        @RequestParam(value = "type") String type
+        @RequestParam(value = "postType") String postType
     ) {
-        return ResponseEntity.ok().body(likeService.likeToggle(memberId, postId, type));
+        return ResponseEntity.ok().body(likeService.likeToggle(memberId, postId, postType));
     }
 
     @GetMapping(READ_LIKE)
@@ -43,18 +43,18 @@ public class LikeController {
     public ResponseEntity<SuccessResponseDto<LikeResponseDto>> readLike(
         @AuthenticationPrincipal Long memberId,
         @RequestParam(value = "postId") Long postId,
-        @RequestParam(value = "type") String type
+        @RequestParam(value = "postType") String postType
     ){
-        return ResponseEntity.ok().body(likeService.readLike(memberId, postId, type));
+        return ResponseEntity.ok().body(likeService.readLike(memberId, postId, postType));
     }
 
     @GetMapping(READ_LIKE_COUNT)
     @Operation(summary = "좋아요 수 조회 기능")
     public ResponseEntity<SuccessResponseDto<LikeCountResponseDto>> readlikeCount(
         @RequestParam(value = "postId") Long postId,
-        @RequestParam(value = "type") String type
+        @RequestParam(value = "postType") String postType
     ){
-        return ResponseEntity.ok().body(likeService.likeCount(postId, type));
+        return ResponseEntity.ok().body(likeService.likeCount(postId, postType));
     }
     
 }

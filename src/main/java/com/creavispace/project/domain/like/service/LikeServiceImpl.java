@@ -33,12 +33,12 @@ public class LikeServiceImpl implements LikeService{
 
     @Override
     @Transactional
-    public SuccessResponseDto<LikeResponseDto> likeToggle(Long memberId, Long postId, String type) {
+    public SuccessResponseDto<LikeResponseDto> likeToggle(Long memberId, Long postId, String postType) {
         LikeResponseDto data;
         String message;
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
-        switch (type) {
+        switch (postType) {
             case "project":
                 Project project = projectRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
                 
@@ -85,11 +85,11 @@ public class LikeServiceImpl implements LikeService{
     }
 
     @Override
-    public SuccessResponseDto<LikeResponseDto> readLike(Long memberId, Long postId, String type) {
+    public SuccessResponseDto<LikeResponseDto> readLike(Long memberId, Long postId, String postType) {
         LikeResponseDto data;
         memberRepository.findById(memberId).orElseThrow(() -> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
-        switch (type) {
+        switch (postType) {
             case "project":
                 projectRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
                 boolean isProjectLike = projectLikeRepository.existsByProjectIdAndMemberId(postId, memberId);
@@ -110,9 +110,9 @@ public class LikeServiceImpl implements LikeService{
     }
 
     @Override
-    public SuccessResponseDto<LikeCountResponseDto> likeCount(Long postId, String type) {
+    public SuccessResponseDto<LikeCountResponseDto> likeCount(Long postId, String postType) {
         int likeCount;
-        switch (type) {
+        switch (postType) {
             case "project":
                 likeCount = projectLikeRepository.countByProjectId(postId);
                 break;

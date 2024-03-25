@@ -40,12 +40,12 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     @Transactional
-    public SuccessResponseDto<BookmarkResponseDto> bookmarkToggle(Long memberId, Long postId, String type) {
+    public SuccessResponseDto<BookmarkResponseDto> bookmarkToggle(Long memberId, Long postId, String postType) {
         BookmarkResponseDto data;
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
-        switch (type) {
+        switch (postType) {
             case "project":
                 Project project = projectRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
                 ProjectBookmark projectBookmark = projectBookmarkRepository.findByProjectIdAndMemberId(postId, memberId);
@@ -105,12 +105,12 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public SuccessResponseDto<BookmarkResponseDto> readBookmark(Long memberId, Long postId, String type) {
+    public SuccessResponseDto<BookmarkResponseDto> readBookmark(Long memberId, Long postId, String postType) {
         BookmarkResponseDto data;
 
         memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
-        switch (type) {
+        switch (postType) {
             case "project":
                 projectRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
 

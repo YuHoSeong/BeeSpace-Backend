@@ -14,6 +14,6 @@ public class ReportResponseDto {
     // enum으로 관리 변경
     private String postType;
     // enum으로 관리 변경
-    private String reportKind;
+    private String category;
     private String content;
 }

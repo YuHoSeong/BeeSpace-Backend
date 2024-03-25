@@ -27,7 +27,7 @@ public class ReportServiceImpl implements ReportService{
 
         Report report = Report.builder()
             .member(member)
-            .reportKind(dto.getReportKind())
+            .category(dto.getCategory())
             .postType(dto.getPostType())
             .postId(dto.getPostId())
             .content(dto.getContent())
@@ -39,7 +39,7 @@ public class ReportServiceImpl implements ReportService{
         ReportResponseDto create = ReportResponseDto.builder()
             .postId(report.getPostId())
             .postType(report.getPostType())
-            .reportKind(report.getReportKind())
+            .category(report.getCategory())
             .content(report.getContent())
             .build();
         

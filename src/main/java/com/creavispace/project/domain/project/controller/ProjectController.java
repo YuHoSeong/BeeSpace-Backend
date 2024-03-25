@@ -11,12 +11,13 @@ import com.creavispace.project.domain.project.dto.response.PopularProjectReadRes
 import com.creavispace.project.domain.project.dto.response.ProjectResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectDeleteResponseDto;
 import com.creavispace.project.domain.project.dto.response.ProjectListReadResponseDto;
+import com.creavispace.project.domain.project.dto.response.ProjectReadResponseDto;
 import com.creavispace.project.domain.project.service.ProjectService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/project")
@@ -48,6 +50,7 @@ public class ProjectController {
         @AuthenticationPrincipal Long memberId,
         @RequestBody ProjectRequestDto dto
     ) {
+        log.info("프로젝트 게시글 생성");
         return ResponseEntity.ok().body(projectService.createProject(memberId, dto));
     }
 
@@ -58,6 +61,7 @@ public class ProjectController {
         @PathVariable("projectId") Long projectId, 
         @RequestBody ProjectRequestDto dto
     ) {
+        
         return ResponseEntity.ok().body(projectService.modifyProject(memberId, projectId, dto));
     }
     
@@ -88,13 +92,12 @@ public class ProjectController {
 
     @GetMapping(READ_PROJECT)
     @Operation(summary = "프로젝트 게시글 디테일")
-    public ResponseEntity<SuccessResponseDto<ProjectResponseDto>> readProject(
+    public ResponseEntity<SuccessResponseDto<ProjectReadResponseDto>> readProject(
         @AuthenticationPrincipal Long memberId,
         @PathVariable("projectId") Long projectId,
-        HttpServletRequest request,
-        HttpServletResponse response
+        HttpServletRequest request
     ) {
-        return ResponseEntity.ok().body(projectService.readProject(memberId, projectId, request, response));
+        return ResponseEntity.ok().body(projectService.readProject(memberId, projectId, request));
     }
     
 }

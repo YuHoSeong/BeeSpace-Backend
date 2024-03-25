@@ -40,9 +40,9 @@ public class CommentController {
     @Operation(summary = "댓글 리스트 조회")
     public ResponseEntity<SuccessResponseDto<List<CommentResponseDto>>> readCommentList(
         @RequestParam("postId") Long postId,
-        @RequestParam("type") String type
+        @RequestParam("postType") String postType
     ){
-        return ResponseEntity.ok().body(commentService.readCommentList(postId, type));
+        return ResponseEntity.ok().body(commentService.readCommentList(postId, postType));
     }
 
     @PostMapping(CREATE_COMMENT)
@@ -50,9 +50,9 @@ public class CommentController {
     public ResponseEntity<SuccessResponseDto<CommentResponseDto>> createComment(
         @AuthenticationPrincipal Long memberId,
         @RequestParam("postId") Long postId,
-        @RequestParam("type") String type,
+        @RequestParam("postType") String postType,
         @RequestBody CommentRequestDto requestBody) {
-        return ResponseEntity.ok().body(commentService.createComment(memberId, postId, type, requestBody));
+        return ResponseEntity.ok().body(commentService.createComment(memberId, postId, postType, requestBody));
     }
 
     @PutMapping(MODIFY_COMMENT)
@@ -60,10 +60,10 @@ public class CommentController {
     public ResponseEntity<SuccessResponseDto<CommentResponseDto>> modifyComment(
         @AuthenticationPrincipal Long memberId,
         @PathVariable("commentId") Long commentId,
-        @RequestParam("type") String type,
+        @RequestParam("postType") String postType,
         @RequestBody CommentRequestDto requestBody
     ) {
-        return ResponseEntity.ok().body(commentService.modifyComment(memberId, commentId, type, requestBody));
+        return ResponseEntity.ok().body(commentService.modifyComment(memberId, commentId, postType, requestBody));
     }
 
     @DeleteMapping(DELETE_COMMENT)
@@ -71,9 +71,9 @@ public class CommentController {
     public ResponseEntity<SuccessResponseDto<CommentDeleteResponseDto>> deleteComment(
         @AuthenticationPrincipal Long memberId,
         @PathVariable("commentId") Long commentId,
-        @RequestParam("type") String type
+        @RequestParam("postType") String postType
     ){
-        return ResponseEntity.ok().body(commentService.deleteComment(memberId, commentId, type));
+        return ResponseEntity.ok().body(commentService.deleteComment(memberId, commentId, postType));
     }
 
 }

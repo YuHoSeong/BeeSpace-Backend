@@ -19,12 +19,12 @@ import com.creavispace.project.domain.recruit.dto.request.RecruitRequestDto;
 import com.creavispace.project.domain.recruit.dto.response.DeadLineRecruitListReadResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitDeleteResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitListReadResponseDto;
+import com.creavispace.project.domain.recruit.dto.response.RecruitReadResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitResponseDto;
 import com.creavispace.project.domain.recruit.service.RecruitService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -81,13 +81,12 @@ public class RecruitController {
 
     @GetMapping(READ_RECRUIT)
     @Operation(summary = "모집 게시글 디테일")
-    public ResponseEntity<SuccessResponseDto<RecruitResponseDto>> readRecruit(
+    public ResponseEntity<SuccessResponseDto<RecruitReadResponseDto>> readRecruit(
         @AuthenticationPrincipal Long memberId,
         @PathVariable("recruitId") Long recruitId,
-        HttpServletRequest request,
-        HttpServletResponse response
+        HttpServletRequest request
     ){
-        return ResponseEntity.ok().body(recruitService.readRecruit(memberId, recruitId, request, response));
+        return ResponseEntity.ok().body(recruitService.readRecruit(memberId, recruitId, request));
     }
 
     @GetMapping(READ_DEADLINE_RECRUIT_LIST)
