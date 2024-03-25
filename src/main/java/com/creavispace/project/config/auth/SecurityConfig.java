@@ -96,7 +96,7 @@ public class SecurityConfig {
                 Arrays.asList("https://creavispace.vercel.app",
                         "localhost:8080/oauth2/authorization/naver",
                         "https://port-0-creavispace-backend-am952nlsse11uk.sel5.cloudtype.app/login",
-                        "localhost:3000/oauth2/authorization/login"));
+                        "localhost:3000/login"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
 
         configuration.setAllowCredentials(true);
