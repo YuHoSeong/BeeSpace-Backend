@@ -96,10 +96,11 @@ public class SecurityConfig {
                 Arrays.asList("https://creavispace.vercel.app",
                         "localhost:8080/oauth2/authorization/naver",
                         "https://port-0-creavispace-backend-am952nlsse11uk.sel5.cloudtype.app/login",
-                        "http://localhost:3000/login"));
+                        "http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
 
-        configuration.setAllowCredentials(true);
+
+        configuration.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
