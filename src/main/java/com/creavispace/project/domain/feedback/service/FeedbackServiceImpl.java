@@ -81,7 +81,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 List<ChoiceItem> choiceItems = choiceItemRepository.findByFeedbackQuestionId(feedbackQuestion.getId());
                 
                 return FeedbackQuestionResponseDto.builder()
-                    .id(feedbackQuestion.getId())
+                    .questionId(feedbackQuestion.getId())
                     .question(feedbackQuestion.getQuestion())
                     .questionType(feedbackQuestion.getQuestionType())
                     .choiceItems(choiceItems.stream()
@@ -167,7 +167,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 List<ChoiceItem> choiceItems = choiceItemRepository.findByFeedbackQuestionId(feedbackQuestion.getId());
 
                 return FeedbackQuestionResponseDto.builder()
-                    .id(feedbackQuestion.getId())
+                    .questionId(feedbackQuestion.getId())
                     .question(feedbackQuestion.getQuestion())
                     .questionType(feedbackQuestion.getQuestionType())
                     .choiceItems(choiceItems.stream()
@@ -192,7 +192,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             .map(feedbackQuestion -> {
                 List<ChoiceItem> choiceItems = choiceItemRepository.findByFeedbackQuestionId(feedbackQuestion.getId());
                 return FeedbackQuestionResponseDto.builder()
-                .id(feedbackQuestion.getId())
+                .questionId(feedbackQuestion.getId())
                 .question(feedbackQuestion.getQuestion())
                 .questionType(feedbackQuestion.getQuestionType())
                 .choiceItems(choiceItems.stream()
