@@ -114,8 +114,10 @@ public class FeedbackServiceImpl implements FeedbackService {
             throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);
         }
 
-        if(dtos.isEmpty()) return new SuccessResponseDto<>(true, "피드백 질문 추가/삭제 저장이 완료되었습니다.", new ArrayList<FeedbackQuestionResponseDto>());
-
+        if(dtos.isEmpty()) {
+            feedbackQuestionRepository.deleteByProjectId(projectId);
+            return new SuccessResponseDto<>(true, "피드백 질문 추가/삭제 저장이 완료되었습니다.", new ArrayList<FeedbackQuestionResponseDto>());
+        }
         // 수정할 피드백 질문 ID 그룹화
         List<Long> modifyFeedbackQuestionIds = dtos.stream()
             .filter(dto -> dto.getQuestionId() != null)
