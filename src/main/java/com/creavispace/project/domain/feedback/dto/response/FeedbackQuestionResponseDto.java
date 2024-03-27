@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeedbackQuestionResponseDto {
-    private Long id;
+    private Long questionId;
     private String question;
     // enum으로 관리 변경
     private String questionType;
