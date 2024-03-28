@@ -1,5 +1,8 @@
 package com.creavispace.project.domain.bookmark.service;
 
+import com.creavispace.project.domain.bookmark.dto.response.BookmarkContentsResponseDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -32,7 +35,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     private final ProjectBookmarkRepository projectBookmarkRepository;
     private final RecruitBookmarkRepository recruitBookmarkRepository;
-    private final CommunityBookmarkRepository communityBookmarkRepository; 
+    private final CommunityBookmarkRepository communityBookmarkRepository;
     private final MemberRepository memberRepository;
     private final ProjectRepository projectRepository;
     private final RecruitRepository recruitRepository;
@@ -80,7 +83,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                     data = BookmarkResponseDto.builder().bookmarkStatus(false).build();
                     return new SuccessResponseDto<BookmarkResponseDto>(true, "북마크 취소가 완료되었습니다.", data);
                 }
-        
+
             case "community":
                 Community community = communityRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
                 CommunityBookmark communityBookmark = communityBookmarkRepository.findByCommunityIdAndMemberId(postId, memberId);
@@ -98,7 +101,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                     data = BookmarkResponseDto.builder().bookmarkStatus(false).build();
                     return new SuccessResponseDto<BookmarkResponseDto>(true, "북마크 취소가 완료되었습니다.", data);
                 }
-        
+
             default:
                 throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
         }
@@ -121,7 +124,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                     data = BookmarkResponseDto.builder().bookmarkStatus(true).build();
                 }
                 break;
-        
+
             case "recruit":
                 recruitRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
 
@@ -132,7 +135,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                     data = BookmarkResponseDto.builder().bookmarkStatus(true).build();
                 }
                 break;
-        
+
             case "community":
                 communityRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
 
@@ -143,12 +146,44 @@ public class BookmarkServiceImpl implements BookmarkService {
                     data = BookmarkResponseDto.builder().bookmarkStatus(true).build();
                 }
                 break;
-        
+
             default:
                 throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
         }
-        
+
         return new SuccessResponseDto<BookmarkResponseDto>(true, "북마크 조회가 완료되었습니다.", data);
     }
-    
+
+    @Override
+    public SuccessResponseDto<BookmarkContentsResponseDto> readMyBookmark(Long memberId, String postType) throws JsonProcessingException {
+        BookmarkContentsResponseDto data;
+        memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+        switch (postType) {
+            case "project":
+                List<ProjectBookmark> projectBookmark = projectBookmarkRepository.findByMemberId(memberId);
+                data = new BookmarkContentsResponseDto(projectBookmark);
+                break;
+
+            case "recruit":
+
+                List<RecruitBookmark> recruitBookmark = recruitBookmarkRepository.findByMemberId(memberId);
+                data = new BookmarkContentsResponseDto(recruitBookmark);
+                break;
+
+            case "community":
+
+                List<CommunityBookmark> communityBookmark = communityBookmarkRepository.findByMemberId(memberId);
+                data = new BookmarkContentsResponseDto(communityBookmark);
+                break;
+
+            default:
+                throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
+        }
+
+        return new SuccessResponseDto<>(true, "북마크 조회가 완료되었습니다.", data);
+    }
+
+
+
 }

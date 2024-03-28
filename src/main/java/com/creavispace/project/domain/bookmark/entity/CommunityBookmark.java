@@ -3,6 +3,7 @@ package com.creavispace.project.domain.bookmark.entity;
 import com.creavispace.project.domain.community.entity.Community;
 import com.creavispace.project.domain.member.entity.Member;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,9 +28,10 @@ public class CommunityBookmark {
 
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
+    @JsonBackReference
     private Member member;
 
-    @ManyToOne(targetEntity = Community.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Community.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "community_id", nullable = false)
     private Community community;
 }

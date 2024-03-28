@@ -1,5 +1,6 @@
 package com.creavispace.project.domain.community.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
@@ -26,6 +27,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonSerialize
 public class Community extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

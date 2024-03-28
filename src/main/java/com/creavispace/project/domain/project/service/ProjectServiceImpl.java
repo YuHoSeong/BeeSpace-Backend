@@ -529,17 +529,8 @@ public class ProjectServiceImpl implements ProjectService {
     public SuccessResponseDto<List<ProjectListReadResponseDto>> readMyProjectList(Member member, Integer size,
                                                                                   Integer page, String sortType) {
         Pageable pageRequest = PageRequest.of(page - 1, size);
-        Page<Project> pageable = null;
+        Page<Project> pageable = getProjects(member.getId(), sortType, pageRequest);
 
-        if (sortType.equals("asc")) {
-            pageable = projectRepository.findAllByStatusTrueAndMemberOrderByCreatedDateAsc(pageRequest, member);
-        }
-        if (sortType.equals("desc")) {
-            pageable = projectRepository.findAllByStatusTrueAndMemberOrderByCreatedDateDesc(pageRequest, member);
-        }
-        if (pageable == null) {
-            pageable = projectRepository.findAllByStatusTrueAndMemberOrderByCreatedDateAsc(pageRequest, member);
-        }
 
 
         if (!pageable.hasContent()) {
@@ -550,6 +541,32 @@ public class ProjectServiceImpl implements ProjectService {
         List<ProjectListReadResponseDto> reads = getProjectListReadResponseDtos(projects);
 
         return new SuccessResponseDto<>(true, "프로젝트 게시글 리스트 조회가 완료되었습니다.", reads);
+    }
+    @Override
+    public SuccessResponseDto<List<ProjectListReadResponseDto>> readMyProjectList(Long memberId, Integer size,
+                                                                                  Integer page, String sortType) {
+        Pageable pageRequest = PageRequest.of(page - 1, size);
+        Page<Project> pageable = getProjects(memberId, sortType, pageRequest);
+
+        if (!pageable.hasContent()) {
+            throw new CreaviCodeException(GlobalErrorCode.NOT_PROJECT_CONTENT);
+        }
+        List<Project> projects = pageable.getContent();
+
+        List<ProjectListReadResponseDto> reads = getProjectListReadResponseDtos(projects);
+
+        return new SuccessResponseDto<>(true, "프로젝트 게시글 리스트 조회가 완료되었습니다.", reads);
+    }
+
+    private Page<Project> getProjects(Long memberId, String sortType, Pageable pageRequest) {
+        Page<Project> pageable = projectRepository.findAllByStatusTrueAndMemberIdOrderByCreatedDateAsc(pageRequest, memberId);
+        if (sortType.equals("asc")) {
+            pageable = projectRepository.findAllByStatusTrueAndMemberIdOrderByCreatedDateAsc(pageRequest, memberId);
+        }
+        if (sortType.equals("desc")) {
+            pageable = projectRepository.findAllByStatusTrueAndMemberIdOrderByCreatedDateDesc(pageRequest, memberId);
+        }
+        return pageable;
     }
 
     private static List<ProjectListReadResponseDto> getProjectListReadResponseDtos(List<Project> projects) {

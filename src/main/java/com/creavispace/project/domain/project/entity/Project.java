@@ -1,5 +1,7 @@
 package com.creavispace.project.domain.project.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 
 import com.creavispace.project.domain.bookmark.entity.ProjectBookmark;
@@ -28,6 +30,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonSerialize
 public class Project extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,21 +64,27 @@ public class Project extends BaseTimeEntity{
 
     private boolean status;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectLink> links;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectComment> comments;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectBookmark> bookmarks;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectLike> likes;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectMember> members;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectTechStack> techStacks;
 
@@ -96,5 +105,4 @@ public class Project extends BaseTimeEntity{
         this.viewCount++;
         this.weekViewCount++;
     }
-
 }

@@ -4,6 +4,8 @@ import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.project.entity.Project;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonSerialize
 public class ProjectBookmark extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +31,10 @@ public class ProjectBookmark extends BaseTimeEntity{
 
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
+    @JsonBackReference
     private Member member;
 
-    @ManyToOne(targetEntity = Project.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Project.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 

@@ -43,7 +43,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long>{
             nativeQuery = true)
     public Page<SearchResultSet> findIntegratedSearchData(@Param("text") String text, Pageable pageable);
 
-    Page<Project> findAllByStatusTrueAndMemberOrderByCreatedDateAsc(Pageable pageRequest, Member member);
-    Page<Project> findAllByStatusTrueAndMemberOrderByCreatedDateDesc(Pageable pageRequest, Member member);
+    Page<Project> findAllByStatusTrueAndMemberIdOrderByCreatedDateAsc(Pageable pageRequest, Member member);
+    Page<Project> findAllByStatusTrueAndMemberIdOrderByCreatedDateDesc(Pageable pageRequest, Member member);
+    Page<Project> findAllByStatusTrueAndMemberIdOrderByCreatedDateAsc(Pageable pageRequest, Long memberId);
+    Page<Project> findAllByStatusTrueAndMemberIdOrderByCreatedDateDesc(Pageable pageRequest, Long memberId);
 
 }

@@ -4,6 +4,7 @@ import com.creavispace.project.config.auth.dto.OAuthAttributes;
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.member.Role;
 import com.creavispace.project.domain.member.dto.request.MemberSaveRequestDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,15 +13,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 //이메일
 //비밀번호
@@ -35,7 +37,9 @@ import lombok.NoArgsConstructor;
 //자기소개
 @Entity
 @Builder
-@Data
+@ToString
+@Getter
+@Setter
 @Table(name = "member")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -45,28 +49,50 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //회원 관련 정보와 로그인 정보는 분리
     private Long id;
+
     @Column(nullable = false)
+    @JsonBackReference
     private String loginId;
+
     @Column(nullable = false, unique = false)
+    @JsonBackReference
     private String memberEmail;
+
     @Column(nullable = false)
+    @JsonBackReference
     private String memberName;
+
     @Column(nullable = false, unique = true)
     private String memberNickname;
+
+    @JsonBackReference
     private String profileUrl;
+
     @Column(nullable = false)
+    @JsonBackReference
     private String loginType;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @JsonBackReference
     private Role role;
+
+    @JsonBackReference
     private String memberIntroduce;
 
+    @JsonBackReference
     private boolean expired;
+
+    @JsonBackReference
     private boolean enabled;
 
+    @JsonBackReference
     private String idTag;
+    @JsonBackReference
     private String memberPosition;
+    @JsonBackReference
     private Integer memberCareer;
+    @JsonBackReference
     private List<String> interestedStack;
 
     public Member(MemberSaveRequestDto memberSaveRequestDto) {
