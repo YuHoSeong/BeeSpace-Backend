@@ -10,4 +10,6 @@ import com.creavispace.project.domain.comment.entity.ProjectComment;
 @Repository
 public interface ProjectCommentRepository extends JpaRepository<ProjectComment, Long> {
     public List<ProjectComment> findByProjectId(Long projectId);
+
+    List<ProjectComment> findByMemberId(Long memberId);
 }

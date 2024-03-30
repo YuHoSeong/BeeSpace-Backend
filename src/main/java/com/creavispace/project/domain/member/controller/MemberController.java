@@ -2,6 +2,8 @@ package com.creavispace.project.domain.member.controller;
 
 import com.creavispace.project.domain.bookmark.dto.response.BookmarkContentsResponseDto;
 import com.creavispace.project.domain.bookmark.service.BookmarkService;
+import com.creavispace.project.domain.comment.dto.response.CommentResponseDto;
+import com.creavispace.project.domain.comment.service.CommentService;
 import com.creavispace.project.domain.common.dto.SuccessResponseDto;
 import com.creavispace.project.domain.community.dto.response.CommunityResponseDto;
 import com.creavispace.project.domain.community.service.CommunityService;
@@ -35,6 +37,7 @@ public class MemberController {
     private final RecruitService recruitService;
     private final CommunityService communityService;
     private final BookmarkService bookmarkService;
+    private final CommentService commentService;
     private final FeedbackService feedbackService;
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -60,7 +63,6 @@ public class MemberController {
         SuccessResponseDto<List<ProjectListReadResponseDto>> memberProjectContents = projectService.readMyProjectList(
                 memberId, 6, page, sortType);
         return ResponseEntity.ok().body(memberProjectContents);
-
     }
 
     @GetMapping("/read/contents/recruit")
@@ -91,7 +93,7 @@ public class MemberController {
     }
 
     @GetMapping("/read/contents/bookmark")
-    @Operation(summary = "JsonString을 반환")
+    @Operation(summary = " 사용자 아이디로 사용자가 북마크한 게시물 검색")
     public ResponseEntity<SuccessResponseDto<BookmarkContentsResponseDto>> readMemberBookmarkContents(
             @RequestParam("memberId") Long memberId, @RequestParam Integer page,
             @RequestParam String sortType, @RequestParam String category) throws JsonProcessingException {
@@ -103,16 +105,26 @@ public class MemberController {
     }
 
 
-
     @GetMapping("/read/contents/feedback")
     @Operation(summary = "사용자 아이디로 사용자 프로필 조회")
-    public ResponseEntity<SuccessResponseDto<List<CommunityResponseDto>>> readMemberFeedbackContents(
-            @RequestParam("memberId") Long memberId, @RequestParam Integer page,
+    public ResponseEntity<SuccessResponseDto<List<ProjectListReadResponseDto>>> readMemberFeedbackContents(
+            @RequestParam("id") Long memberId, @RequestParam Integer page,
             @RequestParam String sortType) {
         //사용자 게시글 조회
         //프로젝트, 커뮤니티, 모집, 댓글
+        SuccessResponseDto<List<ProjectListReadResponseDto>> memberProjectContents = projectService.readMyProjectList(
+                memberId, 6, page, sortType);
+        return ResponseEntity.ok().body(memberProjectContents);
+    }
 
-        return null;
+    @GetMapping("/read/contents/comment")
+    public ResponseEntity<SuccessResponseDto<List<CommentResponseDto>>> readMemberComment(
+            @RequestParam("memberId") Long memberId, @RequestParam Integer page,
+            @RequestParam String sortType, @RequestParam String category) {
+        SuccessResponseDto<List<CommentResponseDto>> listSuccessResponseDto = commentService.readMyCommentList(memberId,
+                category);
+
+        return ResponseEntity.ok().body(listSuccessResponseDto);
     }
 
 
@@ -128,8 +140,6 @@ public class MemberController {
     public ResponseEntity<SuccessResponseDto<BookmarkContentsResponseDto>> test() throws JsonProcessingException {
         System.out.println("MemberController.test");
         SuccessResponseDto<BookmarkContentsResponseDto> bookmark = bookmarkService.readMyBookmark(4L, "project");
-
-        System.out.println(bookmark.getData().getBookmark());
         return ResponseEntity.ok().body(bookmark);
     }
 }

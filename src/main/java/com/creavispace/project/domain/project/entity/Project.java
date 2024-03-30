@@ -1,7 +1,6 @@
 package com.creavispace.project.domain.project.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 
 import com.creavispace.project.domain.bookmark.entity.ProjectBookmark;
@@ -30,7 +29,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonSerialize
 public class Project extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

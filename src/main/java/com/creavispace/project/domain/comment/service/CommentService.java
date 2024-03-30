@@ -12,4 +12,7 @@ public interface CommentService {
     public SuccessResponseDto<CommentResponseDto> createComment(Long memberId, Long postId, String postType, CommentRequestDto dto);
     public SuccessResponseDto<CommentResponseDto> modifyComment(Long memberId, Long commentId, String postType, CommentRequestDto dto);
     public SuccessResponseDto<CommentDeleteResponseDto> deleteComment(Long memberId, Long commentId, String postType);
+
+    //ky
+    SuccessResponseDto<List<CommentResponseDto>> readMyCommentList(Long memberId, String postType);
 }

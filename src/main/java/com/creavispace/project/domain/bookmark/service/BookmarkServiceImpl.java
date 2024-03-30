@@ -1,7 +1,8 @@
 package com.creavispace.project.domain.bookmark.service;
 
 import com.creavispace.project.domain.bookmark.dto.response.BookmarkContentsResponseDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.creavispace.project.domain.bookmark.entity.Bookmark;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -155,26 +156,28 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public SuccessResponseDto<BookmarkContentsResponseDto> readMyBookmark(Long memberId, String postType) throws JsonProcessingException {
+    public SuccessResponseDto<BookmarkContentsResponseDto> readMyBookmark(Long memberId, String postType) {
         BookmarkContentsResponseDto data;
+        List<Bookmark> bookmarks;
         memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
         switch (postType) {
             case "project":
                 List<ProjectBookmark> projectBookmark = projectBookmarkRepository.findByMemberId(memberId);
-                data = new BookmarkContentsResponseDto(projectBookmark);
+                bookmarks = new ArrayList<>(projectBookmark);
+                data = new BookmarkContentsResponseDto(bookmarks);
                 break;
 
             case "recruit":
-
                 List<RecruitBookmark> recruitBookmark = recruitBookmarkRepository.findByMemberId(memberId);
-                data = new BookmarkContentsResponseDto(recruitBookmark);
+                bookmarks = new ArrayList<>(recruitBookmark);
+                data = new BookmarkContentsResponseDto(bookmarks);
                 break;
 
             case "community":
-
                 List<CommunityBookmark> communityBookmark = communityBookmarkRepository.findByMemberId(memberId);
-                data = new BookmarkContentsResponseDto(communityBookmark);
+                bookmarks = new ArrayList<>(communityBookmark);
+                data = new BookmarkContentsResponseDto(bookmarks);
                 break;
 
             default:

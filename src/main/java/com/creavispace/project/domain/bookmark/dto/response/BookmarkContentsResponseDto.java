@@ -1,15 +1,16 @@
 package com.creavispace.project.domain.bookmark.dto.response;
 
-import com.creavispace.project.global.util.JsonMapper;
+import com.creavispace.project.domain.bookmark.entity.Bookmark;
+import java.util.List;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
 public class BookmarkContentsResponseDto {
-    String bookmark;
+    List<Bookmark> bookmark;
 
-    public BookmarkContentsResponseDto(Object bookmark) {
-        this.bookmark = JsonMapper.mapping(bookmark);
+    public BookmarkContentsResponseDto(List<Bookmark> bookmark) {
+        this.bookmark = bookmark;
     }
 }

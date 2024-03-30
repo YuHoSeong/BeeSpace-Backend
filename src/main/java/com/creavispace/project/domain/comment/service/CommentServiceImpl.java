@@ -310,4 +310,66 @@ public class CommentServiceImpl implements CommentService {
         return new SuccessResponseDto<CommentDeleteResponseDto>(true, "댓글 삭제가 완료되었습니다.", data);
     }
 
+    @Override
+    public SuccessResponseDto<List<CommentResponseDto>> readMyCommentList(Long memberId, String postType) {
+        List<CommentResponseDto> data;
+
+        switch (postType) {
+            case "project":
+                Project project = projectRepository.findById(memberId)
+                        .orElseThrow(() -> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
+                List<ProjectComment> projectComments = projectCommentRepository.findByMemberId(memberId);
+                data = projectComments.stream()
+                        .map(projectComment -> CommentResponseDto.builder()
+                                .contentsTitle(project.getTitle())
+                                .id(projectComment.getId())
+                                .memberId(projectComment.getMember().getId())
+                                .memberNickName(projectComment.getMember().getMemberNickname())
+                                .memberProfileUrl(projectComment.getMember().getProfileUrl())
+                                .modifiedDate(projectComment.getModifiedDate())
+                                .content(projectComment.getContent())
+                                .build())
+                        .collect(Collectors.toList());
+                break;
+
+            case "community":
+                Community community = communityRepository.findById(memberId)
+                        .orElseThrow(() -> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+                List<CommunityComment> communityComments = communityCommentRepository.findByCommunityId(memberId);
+                data = communityComments.stream()
+                        .map(communityComment -> CommentResponseDto.builder()
+                                .contentsTitle(community.getTitle())
+                                .id(communityComment.getId())
+                                .memberId(communityComment.getMember().getId())
+                                .memberNickName(communityComment.getMember().getMemberNickname())
+                                .memberProfileUrl(communityComment.getMember().getProfileUrl())
+                                .modifiedDate(communityComment.getModifiedDate())
+                                .content(communityComment.getContent())
+                                .build())
+                        .collect(Collectors.toList());
+                break;
+
+            case "recruit":
+                Recruit recruit = recruitRepository.findById(memberId)
+                        .orElseThrow(() -> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
+                List<RecruitComment> recruitComments = recruitCommentRepository.findByRecruitId(memberId);
+                data = recruitComments.stream()
+                        .map(recruitComment -> CommentResponseDto.builder()
+                                .contentsTitle(recruit.getTitle())
+                                .id(recruitComment.getId())
+                                .memberId(recruitComment.getMember().getId())
+                                .memberNickName(recruitComment.getMember().getMemberNickname())
+                                .memberProfileUrl(recruitComment.getMember().getProfileUrl())
+                                .modifiedDate(recruitComment.getModifiedDate())
+                                .content(recruitComment.getContent())
+                                .build())
+                        .collect(Collectors.toList());
+                break;
+            default:
+                throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
+        }
+
+        return new SuccessResponseDto<>(false, "댓글 리스트 조회가 완료되었습니다.", data);
+    }
+
 }

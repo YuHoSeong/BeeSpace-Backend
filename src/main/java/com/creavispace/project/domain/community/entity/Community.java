@@ -1,5 +1,6 @@
 package com.creavispace.project.domain.community.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 
@@ -51,9 +52,11 @@ public class Community extends BaseTimeEntity {
     private Boolean status;
 
     @OneToMany(mappedBy = "community")
+    @JsonBackReference
     private List<CommunityHashTag> communityHashTags;
 
     @OneToMany(mappedBy = "community")
+    @JsonBackReference
     private List<CommunityLike> communityLikes;
 
     public void modify(CommunityRequestDto dto){

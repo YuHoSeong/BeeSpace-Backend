@@ -13,7 +13,7 @@ import lombok.*;
 @Builder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class RecruitBookmark extends BaseTimeEntity {
+public class RecruitBookmark extends BaseTimeEntity implements Bookmark  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
