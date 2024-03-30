@@ -110,6 +110,7 @@ public class MemberController {
         return ResponseEntity.ok().body(bookmark);
     }
 
+
     @GetMapping("/read/contents/feedback")
     @Operation(summary = "사용자 아이디로 사용자 피드백 조회")
     public ResponseEntity<SuccessResponseDto<List<ProjectListReadResponseDto>>> readMemberFeedbackContents(
