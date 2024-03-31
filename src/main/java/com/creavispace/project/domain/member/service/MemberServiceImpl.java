@@ -88,4 +88,20 @@ public class MemberServiceImpl implements MemberService {
     public Optional<Member> findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId);
     }
+
+    @Override
+    public void expireMember(String jwt) {
+        Long memberId = JwtUtil.getUserInfo(jwt, jwtSecret).memberId();
+        Member member = member(memberRepository.findById(memberId));
+        member.setExpired(true);
+        member.setEnabled(false);
+        memberRepository.save(member);
+    }
+
+    private Member member(Optional<Member> memberOptional) {
+        if (memberOptional.isPresent()) {
+            return memberOptional.get();
+        }
+        throw new IllegalStateException();
+    }
 }

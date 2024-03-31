@@ -19,10 +19,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +34,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
+
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
     private final MemberService memberService;
     private final ProjectService projectService;
@@ -104,9 +110,8 @@ public class MemberController {
         return ResponseEntity.ok().body(bookmark);
     }
 
-
     @GetMapping("/read/contents/feedback")
-    @Operation(summary = "사용자 아이디로 사용자 프로필 조회")
+    @Operation(summary = "사용자 아이디로 사용자 피드백 조회")
     public ResponseEntity<SuccessResponseDto<List<ProjectListReadResponseDto>>> readMemberFeedbackContents(
             @RequestParam("id") Long memberId, @RequestParam Integer page,
             @RequestParam String sortType) {
@@ -117,7 +122,9 @@ public class MemberController {
         return ResponseEntity.ok().body(memberProjectContents);
     }
 
+
     @GetMapping("/read/contents/comment")
+    @Operation(summary = "사용자 아이디로 사용자 댓글 조회")
     public ResponseEntity<SuccessResponseDto<List<CommentResponseDto>>> readMemberComment(
             @RequestParam("memberId") Long memberId, @RequestParam Integer page,
             @RequestParam String sortType, @RequestParam String category) {
@@ -135,6 +142,13 @@ public class MemberController {
 
         return new DataResponseDto(userData);
     }
+
+    @PostMapping("/expire")
+    @Operation(summary = "회원 탈퇴")
+    public void expireMember(@RequestBody(required = true) String jwt) {
+        memberService.expireMember(jwt);
+    }
+
 
     @GetMapping("/read/contents/test")
     public ResponseEntity<SuccessResponseDto<BookmarkContentsResponseDto>> test() throws JsonProcessingException {

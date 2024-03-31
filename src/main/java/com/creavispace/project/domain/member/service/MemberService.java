@@ -27,4 +27,6 @@ public interface MemberService {
 
     List<MemberResponseDto> findByMemberNicknameOrIdTagContaining(String search);
     Optional<Member> findByLoginId(String loginId);
+
+    void expireMember(String jwt);
 }
