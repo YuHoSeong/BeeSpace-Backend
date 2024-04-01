@@ -6,9 +6,14 @@ import java.util.List;
 
 import com.creavispace.project.domain.bookmark.entity.RecruitBookmark;
 import com.creavispace.project.domain.comment.entity.RecruitComment;
+import com.creavispace.project.domain.common.dto.type.RecruitCategory;
+import com.creavispace.project.domain.common.dto.type.RecruitContactWay;
+import com.creavispace.project.domain.common.dto.type.RecruitProceedWay;
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.recruit.dto.request.RecruitRequestDto;
+import com.creavispace.project.global.exception.GlobalErrorCode;
+import com.creavispace.project.global.util.CustomValueOf;
 import com.creavispace.project.global.util.TimeUtil;
 
 import jakarta.persistence.*;
@@ -33,18 +38,21 @@ public class Recruit extends BaseTimeEntity {
     private Member member;
 
     @Column(nullable = false)
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private RecruitCategory category;
 
     private int amount;
 
-    private String proceedWay;
+    @Enumerated(EnumType.STRING)
+    private RecruitProceedWay proceedWay;
 
     private int workDay;
 
     private LocalDate end;
 
     @Column(nullable = false)
-    private String contactWay;
+    @Enumerated(EnumType.STRING)
+    private RecruitContactWay contactWay;
 
     @Column(nullable = false)
     private String contact;
@@ -77,12 +85,12 @@ public class Recruit extends BaseTimeEntity {
     private List<RecruitBookmark> bookmarks;
 
     public void modify(RecruitRequestDto dto){
-        this.category = dto.getCategory();
+        this.category = CustomValueOf.valueOf(RecruitCategory.class, dto.getCategory(), GlobalErrorCode.NOT_FOUND_RECRUIT_CATEGORY);
         this.amount = dto.getAmount();
         this.workDay = dto.getWorkDay();
         this.contact = dto.getContact();
-        this.contactWay = dto.getContactWay();
-        this.proceedWay = dto.getProceedWay();
+        this.contactWay = CustomValueOf.valueOf(RecruitContactWay.class, dto.getContactWay(), GlobalErrorCode.NOT_FOUND_RECRUIT_CONTACTWAY);
+        this.proceedWay = CustomValueOf.valueOf(RecruitProceedWay.class, dto.getProceedWay(), GlobalErrorCode.NOT_FOUND_RECRUIT_PROCEEDWAY);
         this.end = TimeUtil.getRecruitEnd(dto.getEnd(), dto.getEndFormat());
         this.title = dto.getTitle();
         this.content = dto.getContent();
