@@ -23,5 +23,4 @@ public interface ProjectService {
 
     SuccessResponseDto<List<ProjectListReadResponseDto>> readMyProjectList(Member member, Integer size, Integer page, String sortType);
     SuccessResponseDto<List<ProjectListReadResponseDto>> readMyProjectList(Long memberId, Integer size, Integer page, String sortType);
-
 }

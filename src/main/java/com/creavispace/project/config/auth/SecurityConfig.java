@@ -72,7 +72,7 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET, "/community/**", "/hashtag/**", "/project/**", "/comment/**", "/recruit/**", "/bookmark/**", "/like/**", "/search/**","/techStack/**","/feedback/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/member/**", "/review", "/file/**", "/like/**","/project/**", "/comment/**", "/recruit/**", "/bookmark/**", "/report/**", "/feedback/**")
-                                .hasRole(Role.MEMBER.name()).anyRequest()
+                                .hasAnyRole(Role.MEMBER.name(), Role.ADMIN.name()).anyRequest()
                                 .authenticated())
                 .logout(logout -> logout.logoutSuccessHandler(new LogoutHandler()).logoutUrl("/logout"))
                 .oauth2Login(login -> login.loginPage("/").userInfoEndpoint(endPoint -> endPoint.userService(customOauth2Service)).successHandler(new LoginSuccessHandler(memberService)))

@@ -559,14 +559,16 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     private Page<Project> getProjects(Long memberId, String sortType, Pageable pageRequest) {
-        Page<Project> pageable = projectRepository.findAllByStatusTrueAndMemberIdOrderByCreatedDateAsc(pageRequest, memberId);
+        Page<Project> pageable;
         if (sortType.equals("asc")) {
             pageable = projectRepository.findAllByStatusTrueAndMemberIdOrderByCreatedDateAsc(pageRequest, memberId);
+            return pageable;
         }
         if (sortType.equals("desc")) {
             pageable = projectRepository.findAllByStatusTrueAndMemberIdOrderByCreatedDateDesc(pageRequest, memberId);
+            return pageable;
         }
-        return pageable;
+        return projectRepository.findAllByStatusTrueAndMemberIdOrderByCreatedDateAsc(pageRequest, memberId);
     }
 
     private static List<ProjectListReadResponseDto> getProjectListReadResponseDtos(List<Project> projects) {

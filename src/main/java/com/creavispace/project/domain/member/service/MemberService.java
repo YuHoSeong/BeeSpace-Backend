@@ -5,6 +5,7 @@ import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.mypage.dto.request.MyPageModifyRequestDto;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 
 public interface MemberService {
     Member save(Member member);
@@ -19,7 +20,7 @@ public interface MemberService {
 
     boolean emailExsists(String memberEmail);
 
-    List<Member> findAllMembers();
+    Page<Member> findAllMembers(Integer size, Integer page, String sortType);
 
     String login(String memberEmail, String loginType, Long memberId);
 
