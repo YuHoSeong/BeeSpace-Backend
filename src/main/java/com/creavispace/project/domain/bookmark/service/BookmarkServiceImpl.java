@@ -53,8 +53,8 @@ public class BookmarkServiceImpl implements BookmarkService {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
-        switch (postType) {
-            case "project":
+        switch (postType.name()) {
+            case "PROJECT":
                 Project project = projectRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
                 ProjectBookmark projectBookmark = projectBookmarkRepository.findByProjectIdAndMemberId(postId, memberId);
 
@@ -72,7 +72,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                     data = BookmarkResponseDto.builder().bookmarkStatus(false).build();
                 }
                 break;
-            case "recruit":
+            case "RECRUIT":
                 Recruit recruit = recruitRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
                 RecruitBookmark recruitBookmark = recruitBookmarkRepository.findByRecruitIdAndMemberId(postId, memberId);
 
@@ -90,7 +90,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                     data = BookmarkResponseDto.builder().bookmarkStatus(false).build();
                 }
                 break;
-            case "community":
+            case "COMMUNITY":
                 Community community = communityRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
                 CommunityBookmark communityBookmark = communityBookmarkRepository.findByCommunityIdAndMemberId(postId, memberId);
 
@@ -121,8 +121,8 @@ public class BookmarkServiceImpl implements BookmarkService {
 
         memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
-        switch (postType.getName()) {
-            case "project":
+        switch (postType.name()) {
+            case "PROJECT":
                 projectRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
 
                 ProjectBookmark projectBookmark = projectBookmarkRepository.findByProjectIdAndMemberId(postId, memberId);
@@ -133,7 +133,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                 }
                 break;
         
-            case "recruit":
+            case "RECRUIT":
                 recruitRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
 
                 RecruitBookmark recruitBookmark = recruitBookmarkRepository.findByRecruitIdAndMemberId(postId, memberId);
@@ -144,7 +144,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                 }
                 break;
         
-            case "community":
+            case "COMMUNITY":
                 communityRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
 
                 CommunityBookmark communityBookmark = communityBookmarkRepository.findByCommunityIdAndMemberId(postId, memberId);
