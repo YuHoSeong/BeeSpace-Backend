@@ -3,7 +3,7 @@ package com.creavispace.project.domain.community.service;
 import com.creavispace.project.domain.member.entity.Member;
 import java.util.List;
 
-import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.response.SuccessResponseDto;
 import com.creavispace.project.domain.community.dto.request.CommunityRequestDto;
 import com.creavispace.project.domain.community.dto.response.CommunityResponseDto;
 

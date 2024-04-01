@@ -2,7 +2,7 @@ package com.creavispace.project.domain.bookmark.service;
 
 import com.creavispace.project.domain.bookmark.dto.response.BookmarkContentsResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.BookmarkResponseDto;
-import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.response.SuccessResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface BookmarkService {
