@@ -38,6 +38,10 @@ public class MemberServiceImpl implements MemberService {
         member.setMemberCareer(updateParam.career());
         member.setInterestedStack(updateParam.interestedStack());
         member.setProfileUrl(updateParam.profileUrl());
+
+        if (!member.isEnabled()) {
+            member.setEnabled(true);
+        }
         memberRepository.save(member);
     }
 

@@ -103,7 +103,7 @@ public class Member extends BaseTimeEntity {
         this.role = memberSaveRequestDto.getRole();
         this.memberNickname = memberSaveRequestDto.getMemberNickname();
         expired = false;
-        enabled = true;
+        enabled = false;
     }
 
     public Member(MemberSaveRequestDto dto, OAuthAttributes oAuthAttributes) {
@@ -120,8 +120,7 @@ public class Member extends BaseTimeEntity {
         this.profileUrl = "";
         this.memberIntroduce= "";
         expired = false;
-        enabled = true;
-
+        enabled = false;
     }
 
     public String getRoleKey() {
