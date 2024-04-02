@@ -1,5 +1,7 @@
 package com.creavispace.project.domain.community.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 
 import com.creavispace.project.domain.common.dto.type.CommunityCategory;
@@ -31,6 +33,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonSerialize
 public class Community extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,9 +58,11 @@ public class Community extends BaseTimeEntity {
     private Boolean status;
 
     @OneToMany(mappedBy = "community")
+    @JsonBackReference
     private List<CommunityHashTag> communityHashTags;
 
     @OneToMany(mappedBy = "community")
+    @JsonBackReference
     private List<CommunityLike> communityLikes;
 
     public void modify(CommunityRequestDto dto){

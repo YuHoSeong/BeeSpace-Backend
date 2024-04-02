@@ -1,5 +1,6 @@
 package com.creavispace.project.domain.recruit.service;
 
+import com.creavispace.project.domain.member.entity.Member;
 import java.util.List;
 
 import com.creavispace.project.domain.common.dto.response.SuccessResponseDto;
@@ -20,4 +21,8 @@ public interface RecruitService {
     public SuccessResponseDto<List<RecruitListReadResponseDto>> readRecruitList(Integer size, Integer page, RecruitCategory category);
     public SuccessResponseDto<RecruitReadResponseDto> readRecruit(Long memberId, Long recruitId, HttpServletRequest request);
     public SuccessResponseDto<List<DeadLineRecruitListReadResponseDto>> readDeadlineRecruitList();
+
+    //ky
+    SuccessResponseDto<List<RecruitListReadResponseDto>> readMyRecruitList(Member member, Integer size, Integer page, String category, String sortType);
+    SuccessResponseDto<List<RecruitListReadResponseDto>> readMyRecruitList(Long memberId, Integer size, Integer page, String sortType);
 }

@@ -13,7 +13,7 @@ import lombok.*;
 @Builder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class RecruitComment extends BaseTimeEntity {
+public class RecruitComment extends BaseTimeEntity implements Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

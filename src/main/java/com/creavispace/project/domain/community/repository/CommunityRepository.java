@@ -124,4 +124,13 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
 
     @Query(value = "SELECT 'community' AS postType, c.id AS postId, c.created_date AS createdDate FROM community c WHERE (c.content LIKE %:text% OR c.title LIKE %:text%) AND c.status = true ORDER BY created_date DESC", nativeQuery = true)
     public Page<SearchResultSet> findCommunitySearchData(String text, Pageable pageable);
+
+
+    //ky
+    public Page<Community> findAllByMemberIdAndStatusTrueOrderByCreatedDateAsc(Long memberId, Pageable pageable);
+    public Page<Community> findAllByMemberIdAndStatusTrueOrderByCreatedDateDesc(Long memberId, Pageable pageable);
+
+
+    Optional<Community> findById(Long memberId);
+
 }

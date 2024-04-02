@@ -1,7 +1,13 @@
 package com.creavispace.project.domain.bookmark.service;
 
+import com.creavispace.project.domain.bookmark.dto.response.BookmarkContentsResponseDto;
+import com.creavispace.project.domain.bookmark.entity.Bookmark;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.creavispace.project.domain.bookmark.dto.response.BookmarkResponseDto;
@@ -35,7 +41,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     private final ProjectBookmarkRepository projectBookmarkRepository;
     private final RecruitBookmarkRepository recruitBookmarkRepository;
-    private final CommunityBookmarkRepository communityBookmarkRepository; 
+    private final CommunityBookmarkRepository communityBookmarkRepository;
     private final MemberRepository memberRepository;
     private final ProjectRepository projectRepository;
     private final RecruitRepository recruitRepository;
@@ -58,6 +64,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                     ProjectBookmark saveBookmark = ProjectBookmark.builder()
                         .member(member)
                         .project(project)
+                            .contentsCreatedDate(project.getCreatedDate())
                         .build();
                     projectBookmarkRepository.save(saveBookmark);
                     message = "북마크 등록이 완료되었습니다.";
@@ -76,6 +83,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                     RecruitBookmark saveBookmark = RecruitBookmark.builder()
                         .member(member)
                         .recruit(recruit)
+                            .contentsCreatedDate(recruit.getCreatedDate())
                         .build();
                     recruitBookmarkRepository.save(saveBookmark);
                     message = "북마크 등록이 완료되었습니다.";
@@ -94,6 +102,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                     CommunityBookmark saveBookmark = CommunityBookmark.builder()
                         .member(member)
                         .community(community)
+                        .contentsCreatedDate(community.getCreatedDate())
                         .build();
                     communityBookmarkRepository.save(saveBookmark);
                     message = "북마크 등록이 완료되었습니다.";
@@ -154,9 +163,69 @@ public class BookmarkServiceImpl implements BookmarkService {
             default:
                 throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
         }
-        
-        log.info("/comment/service : readBookmark success data = {}", data);
+
+      log.info("/comment/service : readBookmark success data = {}", data);
         return new SuccessResponseDto<BookmarkResponseDto>(true, "북마크 조회가 완료되었습니다.", data);
     }
-    
+
+    @Override
+    public SuccessResponseDto<BookmarkContentsResponseDto> readMyBookmark(Long memberId, Integer page, Integer size, String postType, String sortType) {
+        Pageable pageRequest = PageRequest.of(page - 1, size);
+        BookmarkContentsResponseDto data;
+        List<Bookmark> bookmarks;
+        memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
+
+        switch (postType) {
+            case "project":
+                List<ProjectBookmark> projectBookmark = null;
+                if (sortType.equalsIgnoreCase("asc")) {
+                    projectBookmark = projectBookmarkRepository.findByMemberIdOrderByContentsCreatedDateAsc(memberId, pageRequest);
+                }
+                if (sortType.equalsIgnoreCase("desc")) {
+                    projectBookmark = projectBookmarkRepository.findByMemberIdOrderByContentsCreatedDateDesc(memberId, pageRequest);
+                }
+                if (projectBookmark == null) {
+                    projectBookmark = projectBookmarkRepository.findByMemberIdOrderByContentsCreatedDateDesc(memberId, pageRequest);
+                }
+                bookmarks = new ArrayList<>(projectBookmark);
+                data = new BookmarkContentsResponseDto(bookmarks);
+                break;
+
+            case "recruit":
+                List<RecruitBookmark> recruitBookmark = null;
+                if (sortType.equalsIgnoreCase("asc")) {
+                    recruitBookmark = recruitBookmarkRepository.findByMemberIdOrderByContentsCreatedDateAsc(memberId, pageRequest);
+                }
+                if (sortType.equalsIgnoreCase("desc")) {
+                    recruitBookmark = recruitBookmarkRepository.findByMemberIdOrderByContentsCreatedDateDesc(memberId, pageRequest);
+                }
+                if (recruitBookmark == null) {
+                    recruitBookmark = recruitBookmarkRepository.findByMemberIdOrderByContentsCreatedDateDesc(memberId, pageRequest);
+                }
+                bookmarks = new ArrayList<>(recruitBookmark);
+                data = new BookmarkContentsResponseDto(bookmarks);
+                break;
+
+            case "community":
+                List<CommunityBookmark> communityBookmark = null;
+                if (sortType.equalsIgnoreCase("asc")) {
+                    communityBookmark = communityBookmarkRepository.findByMemberIdOrderByContentsCreatedDateAsc(memberId, pageRequest);
+                }
+                if (sortType.equalsIgnoreCase("desc")) {
+                    communityBookmark = communityBookmarkRepository.findByMemberIdOrderByContentsCreatedDateDesc(memberId, pageRequest);
+                }
+                if (communityBookmark == null) {
+                    communityBookmark = communityBookmarkRepository.findByMemberIdOrderByContentsCreatedDateDesc(memberId, pageRequest);
+                }
+
+                bookmarks = new ArrayList<>(communityBookmark);
+                data = new BookmarkContentsResponseDto(bookmarks);
+                break;
+
+            default:
+                throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
+        }
+
+        return new SuccessResponseDto<>(true, "북마크 조회가 완료되었습니다.", data);
+    }
 }

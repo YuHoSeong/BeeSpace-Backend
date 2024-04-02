@@ -13,4 +13,8 @@ public interface CommentService {
     public SuccessResponseDto<CommentResponseDto> createComment(Long memberId, Long postId, PostType postType, CommentRequestDto dto);
     public SuccessResponseDto<CommentResponseDto> modifyComment(Long memberId, Long commentId, PostType postType, CommentRequestDto dto);
     public SuccessResponseDto<CommentDeleteResponseDto> deleteComment(Long memberId, Long commentId, PostType postType);
+
+    //ky
+    SuccessResponseDto<List<CommentResponseDto>> readMyContentsList(Long memberId, Integer page, Integer size,
+                                                                    String postType, String category);
 }

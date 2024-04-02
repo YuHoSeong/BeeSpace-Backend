@@ -68,7 +68,7 @@ public class SecurityConfig {
                         AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/admin/**").hasRole(Role.ADMIN.name())
-                                .requestMatchers("/api/auth/**","config/login", "/login/**", "member/login", "/join", "/swagger-ui/**", "/v3/api-docs/**")
+                                .requestMatchers("/member/read/contents/**","/api/auth/**","config/login", "/login/**", "member/login", "/join", "/swagger-ui/**", "/v3/api-docs/**")
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET, "/community/**", "/hashtag/**", "/project/**", "/comment/**", "/recruit/**", "/bookmark/**", "/like/**", "/search/**","/feedback/**", "/tackStack/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/member/**", "/review", "/file/**", "/like/**","/project/**", "/comment/**", "/recruit/**", "/bookmark/**", "/report/**", "/community/**","/feedback/**", "/tackStack/**")

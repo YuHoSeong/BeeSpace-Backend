@@ -49,5 +49,4 @@ public class FeedbackQuestion extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "feedbackQuestion", fetch = FetchType.LAZY)
     private List<ChoiceItem> choiceItems;
-
 }

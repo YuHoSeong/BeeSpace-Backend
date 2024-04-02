@@ -38,6 +38,10 @@ public class MemberServiceImpl implements MemberService {
         member.setMemberCareer(updateParam.career());
         member.setInterestedStack(updateParam.interestedStack());
         member.setProfileUrl(updateParam.profileUrl());
+
+        if (!member.isEnabled()) {
+            member.setEnabled(true);
+        }
         memberRepository.save(member);
     }
 
@@ -87,5 +91,21 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Optional<Member> findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId);
+    }
+
+    @Override
+    public void expireMember(String jwt) {
+        Long memberId = JwtUtil.getUserInfo(jwt, jwtSecret).memberId();
+        Member member = member(memberRepository.findById(memberId));
+        member.setExpired(true);
+        member.setEnabled(false);
+        memberRepository.save(member);
+    }
+
+    private Member member(Optional<Member> memberOptional) {
+        if (memberOptional.isPresent()) {
+            return memberOptional.get();
+        }
+        throw new IllegalStateException();
     }
 }

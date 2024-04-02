@@ -1,5 +1,7 @@
 package com.creavispace.project.domain.recruit.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 
 import com.creavispace.project.domain.bookmark.entity.RecruitBookmark;
@@ -24,6 +26,7 @@ import java.time.LocalDate;
 @Builder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@JsonSerialize
 public class Recruit extends BaseTimeEntity {
 
     @Id
@@ -66,15 +69,19 @@ public class Recruit extends BaseTimeEntity {
     private int viewCount;
 
     @OneToMany(mappedBy = "recruit")
+    @JsonBackReference
     private List<RecruitPosition> positions;
 
     @OneToMany(mappedBy = "recruit")
+    @JsonBackReference
     private List<RecruitTechStack> techStacks;
 
     @OneToMany(mappedBy = "recruit")
+    @JsonBackReference
     private List<RecruitComment> comments;
 
     @OneToMany(mappedBy = "recruit")
+    @JsonBackReference
     private List<RecruitBookmark> bookmarks;
 
     public void modify(RecruitRequestDto dto){

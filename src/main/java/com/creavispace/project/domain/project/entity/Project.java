@@ -98,7 +98,7 @@ public class Project extends BaseTimeEntity{
     public void disable(){
         this.status = false;
     }
-    
+
     public void plusViewCount(){
         this.viewCount++;
         this.weekViewCount++;
@@ -107,7 +107,7 @@ public class Project extends BaseTimeEntity{
     public void feedbackTrue(){
         this.feedback = true;
     }
-    
+
     public void feedbackFalse(){
         this.feedback = false;
     }

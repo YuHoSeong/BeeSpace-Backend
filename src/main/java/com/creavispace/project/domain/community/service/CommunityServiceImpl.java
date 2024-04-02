@@ -401,5 +401,60 @@ public class CommunityServiceImpl implements CommunityService{
         return new SuccessResponseDto<>(true, "커뮤니티 게시글 리스트 조회가 완료되었습니다.", data);
                 
     }
-    
+
+    @Override
+    public SuccessResponseDto<List<CommunityResponseDto>> readMyCommunityList(Long memberId, Integer size, Integer page,
+                                                                              String orderby) {
+        Pageable pageRequest = PageRequest.of(page-1, size);
+
+        Page<Community> pageable = getCommunities(memberId, orderby, pageRequest);
+
+
+        // 조건에 맞는 커뮤니티 게시글이 존재하는지
+        if(!pageable.hasContent()) throw new CreaviCodeException(GlobalErrorCode.NOT_COMMUNITY_CONTENT);
+        List<Community> communities = pageable.getContent();
+
+        // 조건에 맞는 게시글 리스트 DTO 변환
+        List<CommunityResponseDto> reads = communities.stream()
+                .map(community -> CommunityResponseDto.builder()
+                        .id(community.getId())
+                        .postType(PostType.COMMUNITY.name())
+                        .category(community.getCategory().name())
+                        .memberId(community.getMember().getId())
+                        .viewCount(community.getViewCount())
+                        .createdDate(community.getCreatedDate())
+                        .modifiedDate(community.getModifiedDate())
+                        .title(community.getTitle())
+                        .content(community.getContent())
+                        .hashTags(community.getCommunityHashTags().stream()
+                                .map(communityHashTag -> CommunityHashTagDto.builder()
+                                        .hashTagId(communityHashTag.getHashTag().getId())
+                                        .hashTag(communityHashTag.getHashTag().getHashTag())
+                                        .build())
+                                .collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
+
+        // 성공 응답 반환
+        return new SuccessResponseDto<>(true, "커뮤니티 게시글 리스트 조회가 완료되었습니다.", reads);
+
+    }
+
+    @Override
+    public SuccessResponseDto<List<CommunityResponseDto>> readMyCommunityList(Member member, Integer size, Integer page,
+                                                                              String orderby) {
+        return null;
+    }
+
+    private Page<Community> getCommunities(Long memberId, String orderby, Pageable pageRequest) {
+        Page<Community> pageable = communityRepository.findAllByMemberIdAndStatusTrueOrderByCreatedDateAsc(memberId, pageRequest);
+        if (orderby.toLowerCase().equals("asc")) {
+            pageable = communityRepository.findAllByMemberIdAndStatusTrueOrderByCreatedDateAsc(memberId, pageRequest);
+        }
+        if (orderby.toLowerCase().equals("desc")) {
+            pageable = communityRepository.findAllByMemberIdAndStatusTrueOrderByCreatedDateDesc(memberId, pageRequest);
+        }
+        return pageable;
+    }
+
 }

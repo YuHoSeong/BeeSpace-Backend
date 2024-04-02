@@ -1,5 +1,6 @@
 package com.creavispace.project.domain.community.service;
 
+import com.creavispace.project.domain.member.entity.Member;
 import java.util.List;
 
 import com.creavispace.project.domain.common.dto.response.SuccessResponseDto;
@@ -19,4 +20,8 @@ public interface CommunityService {
     public SuccessResponseDto<CommunityDeleteResponseDto> deleteCommunity(Long memberId, Long communityId);
     public SuccessResponseDto<CommunityReadResponseDto> readCommunity(Long memberId, Long communityId, HttpServletRequest request);
     public SuccessResponseDto<List<CommunityResponseDto>> readCommunityList(Integer size, Integer page, CommunityCategory category, String hashTag, OrderBy orderby);
+
+    //ky
+     SuccessResponseDto<List<CommunityResponseDto>> readMyCommunityList(Long memberId, Integer size, Integer page, String orderby);
+     SuccessResponseDto<List<CommunityResponseDto>> readMyCommunityList(Member member, Integer size, Integer page, String orderby);
 }

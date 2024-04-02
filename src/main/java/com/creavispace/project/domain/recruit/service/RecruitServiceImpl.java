@@ -471,5 +471,103 @@ public class RecruitServiceImpl implements RecruitService {
         return new SuccessResponseDto<>(true, "마감 모집 리스트 조회가 완료되었습니다.", data);
 
     }
-    
+
+    //ky
+
+    @Override
+    public SuccessResponseDto<List<RecruitListReadResponseDto>> readMyRecruitList(Member member, Integer size,
+                                                                                  Integer page, String category,
+                                                                                  String sortType) {
+        Pageable pageRequest = PageRequest.of(page-1, size);
+        Page<Recruit> pageable;
+
+        // 카테고리가 존재한다면
+        if(category != null){
+            pageable = recruitRepository.findAllByStatusTrueAndCategory(category, pageRequest);
+        }
+        // 카테고리가 없다면
+        else{
+            pageable = recruitRepository.findAllByStatusTrue(pageRequest);
+        }
+
+        // 조회된 게시글이 있는지
+        if(!pageable.hasContent()) throw new CreaviCodeException(GlobalErrorCode.NOT_RECRUIT_CONTENT);
+        List<Recruit> recruits = pageable.getContent();
+
+        // 모집 게시글 리스트 DTO
+        List<RecruitListReadResponseDto> reads = recruits.stream()
+                .map(recruit -> RecruitListReadResponseDto.builder()
+                        .id(recruit.getId())
+                        .postType(PostType.RECRUIT.name())
+                        .category(recruit.getCategory().name())
+                        .title(recruit.getTitle())
+                        .content(recruit.getContent())
+                        .amount(recruit.getAmount())
+                        .now(recruit.getPositions().stream()
+                                .mapToInt(position -> position.getNow())
+                                .sum())
+                        .techStacks(recruit.getTechStacks().stream()
+                                .map(techStack -> RecruitTechStackResponseDto.builder()
+                                        .techStackId(techStack.getTechStack().getId())
+                                        .techStack(techStack.getTechStack().getTechStack())
+                                        .iconUrl(techStack.getTechStack().getIconUrl())
+                                        .build())
+                                .collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
+
+        // 성공 응답 반환
+        return new SuccessResponseDto<>(true,"모집 게시글 리스트 조회가 완료되었습니다.", reads);
+    }
+
+    @Override
+    public SuccessResponseDto<List<RecruitListReadResponseDto>> readMyRecruitList(Long memberId, Integer size,
+                                                                                  Integer page, String sortType) {
+        Pageable pageRequest = PageRequest.of(page-1, size);
+        Page<Recruit> pageable;
+
+            pageable = getRecruit(memberId, sortType, pageRequest);
+
+        // 조회된 게시글이 있는지
+        if(!pageable.hasContent()) throw new CreaviCodeException(GlobalErrorCode.NOT_RECRUIT_CONTENT);
+        List<Recruit> recruits = pageable.getContent();
+
+        // 모집 게시글 리스트 DTO
+        List<RecruitListReadResponseDto> reads = recruits.stream()
+                .map(recruit -> RecruitListReadResponseDto.builder()
+                        .id(recruit.getId())
+                        .postType(PostType.RECRUIT.name())
+                        .category(recruit.getCategory().name())
+                        .title(recruit.getTitle())
+                        .content(recruit.getContent())
+                        .amount(recruit.getAmount())
+                        .now(recruit.getPositions().stream()
+                                .mapToInt(position -> position.getNow())
+                                .sum())
+                        .techStacks(recruit.getTechStacks().stream()
+                                .map(techStack -> RecruitTechStackResponseDto.builder()
+                                        .techStackId(techStack.getTechStack().getId())
+                                        .techStack(techStack.getTechStack().getTechStack())
+                                        .iconUrl(techStack.getTechStack().getIconUrl())
+                                        .build())
+                                .collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
+
+        // 성공 응답 반환
+        return new SuccessResponseDto<>(true,"모집 게시글 리스트 조회가 완료되었습니다.", reads);
+    }
+
+    private Page<Recruit> getRecruit(Long memberId, String sortType, Pageable pageRequest) {
+        Page<Recruit> pageable = recruitRepository.findByMemberIdAndStatusTrueOrderByCreatedDateAsc(memberId, pageRequest);
+        if (sortType.toLowerCase().equals("asc")) {
+            pageable = recruitRepository.findByMemberIdAndStatusTrueOrderByCreatedDateAsc(memberId, pageRequest);
+        }
+        if (sortType.toLowerCase().equals("desc")) {
+            pageable = recruitRepository.findByMemberIdAndStatusTrueOrderByCreatedDateDesc(memberId, pageRequest);
+        }
+        return pageable;
+    }
+
+
 }

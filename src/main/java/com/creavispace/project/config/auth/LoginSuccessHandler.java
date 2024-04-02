@@ -56,7 +56,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         String jwt = memberService.login(member.getMemberEmail(), member.getLoginType(), member.getId());
         Long memberId = member.getId();
 
-
-        return new JwtDto(jwt, memberId);
+        return new JwtDto(jwt, memberId, member.isEnabled());
     }
 }

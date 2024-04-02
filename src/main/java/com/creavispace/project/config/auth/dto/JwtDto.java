@@ -6,10 +6,12 @@ import lombok.Getter;
 public class JwtDto {
     String jwt;
     Long memberId;
+    boolean memberEnabled;
 
-    public JwtDto(String jwt, Long memberId) {
+    public JwtDto(String jwt, Long memberId, boolean memberEnabled) {
         this.jwt = jwt;
         this.memberId = memberId;
+        this.memberEnabled = memberEnabled;
     }
 
 
