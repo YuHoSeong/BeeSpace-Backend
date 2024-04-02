@@ -4,7 +4,7 @@ import com.creavispace.project.domain.bookmark.dto.response.BookmarkContentsResp
 import com.creavispace.project.domain.bookmark.service.BookmarkService;
 import com.creavispace.project.domain.comment.dto.response.CommentResponseDto;
 import com.creavispace.project.domain.comment.service.CommentService;
-import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.response.SuccessResponseDto;
 import com.creavispace.project.domain.community.dto.response.CommunityResponseDto;
 import com.creavispace.project.domain.community.service.CommunityService;
 import com.creavispace.project.domain.feedback.service.FeedbackService;
