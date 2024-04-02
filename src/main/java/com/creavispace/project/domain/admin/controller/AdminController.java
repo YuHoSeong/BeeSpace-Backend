@@ -2,7 +2,7 @@ package com.creavispace.project.domain.admin.controller;
 
 
 import com.creavispace.project.config.auth.utils.JwtUtil;
-import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.response.SuccessResponseDto;
 import com.creavispace.project.domain.community.dto.response.CommunityResponseDto;
 import com.creavispace.project.domain.community.service.CommunityService;
 import com.creavispace.project.domain.member.Role;
@@ -51,25 +51,28 @@ public class AdminController {
 
     @GetMapping("/contents/project")
     public ResponseEntity<SuccessResponseDto<List<ProjectListReadResponseDto>>> projectContentsList(
+            @RequestParam Integer size,
             @RequestParam Integer page) {
-        SuccessResponseDto<List<ProjectListReadResponseDto>> projectList = projectService.readProjectList(6, page,
-                "project");
+        SuccessResponseDto<List<ProjectListReadResponseDto>> projectList = projectService.readProjectList(size, page,
+                null);
         return ResponseEntity.ok().body(projectList);
     }
 
     @GetMapping("/contents/recruit")
     public ResponseEntity<SuccessResponseDto<List<RecruitListReadResponseDto>>> recruitContentsList(
+            @RequestParam Integer size,
             @RequestParam Integer page) {
-        SuccessResponseDto<List<RecruitListReadResponseDto>> recruitList = recruitService.readRecruitList(6, page,
-                "recruit");
+        SuccessResponseDto<List<RecruitListReadResponseDto>> recruitList = recruitService.readRecruitList(size, page,
+                null);
         return ResponseEntity.ok().body(recruitList);
     }
 
     @GetMapping("/contents/community")
     public ResponseEntity<SuccessResponseDto<List<CommunityResponseDto>>> communityContentsList(
+            @RequestParam Integer size,
             @RequestParam Integer page) {
-        SuccessResponseDto<List<CommunityResponseDto>> recruitList = communityService.readCommunityList(6, page,
-                "community", null, null);
+        SuccessResponseDto<List<CommunityResponseDto>> recruitList = communityService.readCommunityList(size, page,
+                null, null, null);
         return ResponseEntity.ok().body(recruitList);
     }
 

@@ -1,7 +1,5 @@
 package com.creavispace.project.domain.member.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.creavispace.project.domain.member.dto.response.MemberResponseDto;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -22,6 +20,6 @@ class MemberServiceImplTest {
 
     @Test
     void findContents() {
-        memberService.findAllMembers();
+        memberService.findAllMembers(1, 1, "asc");
     }
 }
