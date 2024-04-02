@@ -2,6 +2,7 @@ package com.creavispace.project.domain.comment.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +13,6 @@ public interface ProjectCommentRepository extends JpaRepository<ProjectComment, 
     public List<ProjectComment> findByProjectId(Long projectId);
 
     List<ProjectComment> findByMemberId(Long memberId);
+
+    List<ProjectComment> findByMemberId(Long memberId, Pageable pageRequest);
 }

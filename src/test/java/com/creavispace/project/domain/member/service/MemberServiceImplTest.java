@@ -19,4 +19,9 @@ class MemberServiceImplTest {
         List<MemberResponseDto> data = memberService.findByMemberNicknameOrIdTagContaining("0");
         System.out.println("data = " + data);
     }
+
+    @Test
+    void findContents() {
+        memberService.findAllMembers();
+    }
 }

@@ -13,6 +13,6 @@ public interface BookmarkService {
 
 
     //ky
-    public SuccessResponseDto<BookmarkContentsResponseDto> readMyBookmark(Long memberId, String postType)
+    public SuccessResponseDto<BookmarkContentsResponseDto> readMyBookmark(Long memberId, Integer page, Integer size, String postType, String sortType)
             throws JsonProcessingException;
 }

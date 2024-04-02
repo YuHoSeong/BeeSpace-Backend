@@ -577,6 +577,24 @@ public class ProjectServiceImpl implements ProjectService {
         return new SuccessResponseDto<>(true, "프로젝트 게시글 리스트 조회가 완료되었습니다.", reads);
     }
 
+    @Override
+    public SuccessResponseDto<List<ProjectListReadResponseDto>> readMyProjectFeedBackList(Long memberId, Integer size,
+                                                                                          Integer page,
+                                                                                          String sortType) {
+        Pageable pageRequest = PageRequest.of(page - 1, size);
+        Page<Project> pageable = getProjects(memberId, sortType, pageRequest);
+
+        if (!pageable.hasContent()) {
+            throw new CreaviCodeException(GlobalErrorCode.NOT_PROJECT_CONTENT);
+        }
+        List<Project> projects = pageable.getContent().stream().filter(Project::isFeedback).collect(
+                Collectors.toList());
+
+        List<ProjectListReadResponseDto> reads = getProjectListReadResponseDtos(projects);
+
+        return new SuccessResponseDto<>(true, "프로젝트 게시글 리스트 조회가 완료되었습니다.", reads);
+    }
+
     private Page<Project> getProjects(Long memberId, String sortType, Pageable pageRequest) {
         Page<Project> pageable = projectRepository.findAllByStatusTrueAndMemberIdOrderByCreatedDateAsc(pageRequest, memberId);
         if (sortType.equals("asc")) {

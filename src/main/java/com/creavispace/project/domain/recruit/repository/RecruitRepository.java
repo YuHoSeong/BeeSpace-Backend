@@ -26,4 +26,7 @@ public interface RecruitRepository extends JpaRepository<Recruit, Long> {
     //ky
     Page<Recruit> findByMemberIdAndStatusTrueOrderByCreatedDateAsc(Long memberId, Pageable pageRequest);
     Page<Recruit> findByMemberIdAndStatusTrueOrderByCreatedDateDesc(Long memberId, Pageable pageRequest);
+
+    Optional<Recruit> findById(Long memberId);
+
 }

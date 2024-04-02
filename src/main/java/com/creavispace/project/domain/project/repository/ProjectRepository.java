@@ -48,4 +48,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long>{
     Page<Project> findAllByStatusTrueAndMemberIdOrderByCreatedDateAsc(Pageable pageRequest, Long memberId);
     Page<Project> findAllByStatusTrueAndMemberIdOrderByCreatedDateDesc(Pageable pageRequest, Long memberId);
 
+    Optional<Project> findById(Long memberId);
+
 }

@@ -131,4 +131,6 @@ public interface CommunityRepository extends JpaRepository<Community, Long> {
     public Page<Community> findAllByMemberIdAndStatusTrueOrderByCreatedDateDesc(Long memberId, Pageable pageable);
 
 
+    Optional<Community> findById(Long memberId);
+
 }
