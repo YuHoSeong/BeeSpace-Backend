@@ -164,7 +164,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                 throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
         }
 
-        log.info("/comment/service : readBookmark success data = {}", data);
+      log.info("/comment/service : readBookmark success data = {}", data);
         return new SuccessResponseDto<BookmarkResponseDto>(true, "북마크 조회가 완료되었습니다.", data);
     }
 
