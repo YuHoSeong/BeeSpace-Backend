@@ -1,6 +1,5 @@
 package com.creavispace.project.domain.project.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.List;
 
 import com.creavispace.project.domain.bookmark.entity.ProjectBookmark;
@@ -67,27 +66,23 @@ public class Project extends BaseTimeEntity{
 
     private boolean status;
 
-    @JsonBackReference
+    private boolean feedback;
+
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectLink> links;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectComment> comments;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectBookmark> bookmarks;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectLike> likes;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectMember> members;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectTechStack> techStacks;
 
@@ -103,9 +98,18 @@ public class Project extends BaseTimeEntity{
     public void disable(){
         this.status = false;
     }
-    
+
     public void plusViewCount(){
         this.viewCount++;
         this.weekViewCount++;
     }
+
+    public void feedbackTrue(){
+        this.feedback = true;
+    }
+
+    public void feedbackFalse(){
+        this.feedback = false;
+    }
+
 }
