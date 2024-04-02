@@ -1,17 +1,21 @@
 package com.creavispace.project.domain.project.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.List;
 
 import com.creavispace.project.domain.bookmark.entity.ProjectBookmark;
 import com.creavispace.project.domain.comment.entity.ProjectComment;
+import com.creavispace.project.domain.common.dto.type.ProjectCategory;
 import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.like.entity.ProjectLike;
 import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.project.dto.request.ProjectRequestDto;
+import com.creavispace.project.global.exception.GlobalErrorCode;
+import com.creavispace.project.global.util.CustomValueOf;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,9 +44,9 @@ public class Project extends BaseTimeEntity{
 
     private String field;
 
-    // enum으로 관리 변경
     @Column(nullable = false)
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private ProjectCategory category;
 
     @Column(length = 200, nullable = false)
     private String title;
@@ -62,32 +66,28 @@ public class Project extends BaseTimeEntity{
 
     private boolean status;
 
-    @JsonBackReference
+    private boolean feedback;
+
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectLink> links;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectComment> comments;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectBookmark> bookmarks;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectLike> likes;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectMember> members;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectTechStack> techStacks;
 
     public void modify(ProjectRequestDto dto){
-        this.category = dto.getCategory();
+        this.category = CustomValueOf.valueOf(ProjectCategory.class, dto.getCategory(), GlobalErrorCode.NOT_FOUND_PROJECT_CATEGORY);
         this.title = dto.getTitle();
         this.content = dto.getContent();
         this.field = dto.getField();
@@ -98,9 +98,18 @@ public class Project extends BaseTimeEntity{
     public void disable(){
         this.status = false;
     }
-    
+
     public void plusViewCount(){
         this.viewCount++;
         this.weekViewCount++;
     }
+
+    public void feedbackTrue(){
+        this.feedback = true;
+    }
+
+    public void feedbackFalse(){
+        this.feedback = false;
+    }
+
 }

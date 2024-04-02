@@ -3,7 +3,8 @@ package com.creavispace.project.domain.recruit.service;
 import com.creavispace.project.domain.member.entity.Member;
 import java.util.List;
 
-import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.response.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.type.RecruitCategory;
 import com.creavispace.project.domain.recruit.dto.request.RecruitRequestDto;
 import com.creavispace.project.domain.recruit.dto.response.DeadLineRecruitListReadResponseDto;
 import com.creavispace.project.domain.recruit.dto.response.RecruitDeleteResponseDto;
@@ -17,7 +18,7 @@ public interface RecruitService {
     public SuccessResponseDto<RecruitResponseDto> createRecruit(Long memberId, RecruitRequestDto dto);
     public SuccessResponseDto<RecruitResponseDto> modifyRecruit(Long memberId, Long recruitId, RecruitRequestDto dto);
     public SuccessResponseDto<RecruitDeleteResponseDto> deleteRecruit(Long memberId, Long recruitId);
-    public SuccessResponseDto<List<RecruitListReadResponseDto>> readRecruitList(Integer size, Integer page, String category);
+    public SuccessResponseDto<List<RecruitListReadResponseDto>> readRecruitList(Integer size, Integer page, RecruitCategory category);
     public SuccessResponseDto<RecruitReadResponseDto> readRecruit(Long memberId, Long recruitId, HttpServletRequest request);
     public SuccessResponseDto<List<DeadLineRecruitListReadResponseDto>> readDeadlineRecruitList();
 

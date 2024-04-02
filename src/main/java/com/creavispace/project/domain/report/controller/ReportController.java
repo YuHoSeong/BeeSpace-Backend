@@ -7,14 +7,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.response.SuccessResponseDto;
 import com.creavispace.project.domain.report.dto.request.ReportRequestDto;
 import com.creavispace.project.domain.report.dto.response.ReportResponseDto;
 import com.creavispace.project.domain.report.service.ReportService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/report")
@@ -30,6 +32,7 @@ public class ReportController {
         @AuthenticationPrincipal Long memberId,
         @RequestBody ReportRequestDto requestBody
     ){
+        log.info("/report/controller : 신고하기");
         return ResponseEntity.ok().body(reportService.createReport(memberId, requestBody));
     }
 }

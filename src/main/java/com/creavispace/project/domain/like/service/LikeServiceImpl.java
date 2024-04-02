@@ -2,7 +2,8 @@ package com.creavispace.project.domain.like.service;
 
 import org.springframework.stereotype.Service;
 
-import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.response.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.type.PostType;
 import com.creavispace.project.domain.community.entity.Community;
 import com.creavispace.project.domain.community.repository.CommunityRepository;
 import com.creavispace.project.domain.like.dto.response.LikeCountResponseDto;
@@ -20,7 +21,9 @@ import com.creavispace.project.global.exception.GlobalErrorCode;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LikeServiceImpl implements LikeService{
@@ -33,13 +36,15 @@ public class LikeServiceImpl implements LikeService{
 
     @Override
     @Transactional
-    public SuccessResponseDto<LikeResponseDto> likeToggle(Long memberId, Long postId, String postType) {
-        LikeResponseDto data;
+    public SuccessResponseDto<LikeResponseDto> likeToggle(Long memberId, Long postId, PostType postType) {
+        LikeResponseDto data = null;
         String message;
+
+        // 회원이 존재하는지
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
-        switch (postType) {
-            case "project":
+        switch (postType.name()) {
+            case "PROJECT":
                 Project project = projectRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
                 
                 ProjectLike projectLike = projectLikeRepository.findByProjectIdAndMemberId(postId, memberId);
@@ -58,7 +63,7 @@ public class LikeServiceImpl implements LikeService{
                     data = new LikeResponseDto(false);
                 }
                 break;
-            case "community":
+            case "COMMUNITY":
                 Community community = communityRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
 
                 CommunityLike communityLike = communityLikeRepository.findByCommunityIdAndMemberId(postId, memberId);
@@ -81,22 +86,26 @@ public class LikeServiceImpl implements LikeService{
                 throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
         }
 
+        log.info("/like/service : likeToggle success data = {}", data);
+        // 성공 응답 반환
         return new SuccessResponseDto<>(true, message, data);
     }
 
     @Override
-    public SuccessResponseDto<LikeResponseDto> readLike(Long memberId, Long postId, String postType) {
-        LikeResponseDto data;
+    public SuccessResponseDto<LikeResponseDto> readLike(Long memberId, Long postId, PostType postType) {
+        LikeResponseDto data = null;
+
+        // 회원이 존재하는지
         memberRepository.findById(memberId).orElseThrow(() -> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
-        switch (postType) {
-            case "project":
+        switch (postType.name()) {
+            case "PROJECT":
                 projectRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
                 boolean isProjectLike = projectLikeRepository.existsByProjectIdAndMemberId(postId, memberId);
                 data = new LikeResponseDto(isProjectLike);
                 break;
         
-            case "community":
+            case "COMMUNITY":
                 communityRepository.findByIdAndStatusTrue(postId).orElseThrow(() -> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
                 boolean isCommunityLike = communityLikeRepository.existsByCommunityIdAndMemberId(postId, memberId);
                 data = new LikeResponseDto(isCommunityLike);
@@ -106,18 +115,22 @@ public class LikeServiceImpl implements LikeService{
                 throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
         }
 
+        log.info("/like/service : readLike success data = {}", data);
+        // 성공 응답 반환
         return new SuccessResponseDto<>(true, "좋아요 조회가 완료되었습니다.", data);
     }
 
     @Override
-    public SuccessResponseDto<LikeCountResponseDto> likeCount(Long postId, String postType) {
-        int likeCount;
-        switch (postType) {
-            case "project":
+    public SuccessResponseDto<LikeCountResponseDto> likeCount(Long postId, PostType postType) {
+        LikeCountResponseDto data = null;
+        int likeCount = 0;
+
+        switch (postType.name()) {
+            case "PROJECT":
                 likeCount = projectLikeRepository.countByProjectId(postId);
                 break;
         
-            case "community":
+            case "COMMUNITY":
                 likeCount = communityLikeRepository.countByCommunityId(postId);
                 break;
         
@@ -125,7 +138,11 @@ public class LikeServiceImpl implements LikeService{
                 throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
         }
 
-        return new SuccessResponseDto<>(Boolean.TRUE, "좋아요 수 조회가 완료되었습니다.", new LikeCountResponseDto(likeCount));
+        data = new LikeCountResponseDto(likeCount);
+
+        log.info("/like/service : likeCount success data = {}", data);
+        // 성공 응답 반환
+        return new SuccessResponseDto<>(Boolean.TRUE, "좋아요 수 조회가 완료되었습니다.", data);
     }
     
 }

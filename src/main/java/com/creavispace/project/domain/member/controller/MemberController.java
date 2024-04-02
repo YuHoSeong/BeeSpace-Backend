@@ -4,7 +4,7 @@ import com.creavispace.project.domain.bookmark.dto.response.BookmarkContentsResp
 import com.creavispace.project.domain.bookmark.service.BookmarkService;
 import com.creavispace.project.domain.comment.dto.response.CommentResponseDto;
 import com.creavispace.project.domain.comment.service.CommentService;
-import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.response.SuccessResponseDto;
 import com.creavispace.project.domain.community.dto.response.CommunityResponseDto;
 import com.creavispace.project.domain.community.service.CommunityService;
 import com.creavispace.project.domain.feedback.service.FeedbackService;
@@ -16,8 +16,6 @@ import com.creavispace.project.domain.project.service.ProjectService;
 import com.creavispace.project.domain.recruit.dto.response.RecruitListReadResponseDto;
 import com.creavispace.project.domain.recruit.service.RecruitService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.util.List;
@@ -46,14 +44,9 @@ public class MemberController {
     private final CommentService commentService;
     private final FeedbackService feedbackService;
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final JavaTimeModule javaTimeModule = new JavaTimeModule();
-
     @GetMapping("/read/profile")
     @Operation(summary = "사용자 아이디로 사용자 프로필 조회")
-    public MemberResponseDto readMember(@RequestParam("id") Long memberId) {
-        //사용자 게시글 조회
-        //프로젝트, 커뮤니티, 모집, 댓글
+    public MemberResponseDto readMember(@RequestParam("memberId") Long memberId) {
         System.out.println("MemberController.readMember");
         MemberResponseDto member = memberService.findById(memberId);
         return member;
@@ -62,25 +55,21 @@ public class MemberController {
     @GetMapping("/read/contents/project")
     @Operation(summary = "사용자 아이디와 일치하는 프로젝트 게시물 조회")
     public ResponseEntity<SuccessResponseDto<List<ProjectListReadResponseDto>>> readMemberProjectContents(
-            @RequestParam("id") Long memberId, @RequestParam Integer page,
+            @RequestParam("memberId") Long memberId, @RequestParam Integer page, @RequestParam Integer size,
             @RequestParam String sortType) {
-        //사용자 게시글 조회
-        //프로젝트, 커뮤니티, 모집, 댓글
         SuccessResponseDto<List<ProjectListReadResponseDto>> memberProjectContents = projectService.readMyProjectList(
-                memberId, 6, page, sortType);
+                memberId, size, page, sortType);
         return ResponseEntity.ok().body(memberProjectContents);
     }
 
     @GetMapping("/read/contents/recruit")
     @Operation(summary = "사용자 아이디와 일치하는 모집 게시물 조회")
     public ResponseEntity<SuccessResponseDto<List<RecruitListReadResponseDto>>> readMemberRecruitContents(
-            @RequestParam("memberId") Long memberId, @RequestParam Integer page,
+            @RequestParam("memberId") Long memberId, @RequestParam Integer page, @RequestParam Integer size,
             @RequestParam String sortType) {
-        //사용자 게시글 조회
-        //프로젝트, 커뮤니티, 모집, 댓글
 
         SuccessResponseDto<List<RecruitListReadResponseDto>> memberRecruitContents = recruitService.readMyRecruitList(
-                memberId, 6, page, sortType);
+                memberId, size, page, sortType);
 
         return ResponseEntity.ok().body(memberRecruitContents);
     }
@@ -88,52 +77,47 @@ public class MemberController {
     @GetMapping("/read/contents/community")
     @Operation(summary = "사용자 아이디와 일치하는 커뮤니티 게시물 조회")
     public ResponseEntity<SuccessResponseDto<List<CommunityResponseDto>>> readMemberCommunityContents(
-            @RequestParam("memberId") Long memberId, @RequestParam Integer page,
+            @RequestParam("memberId") Long memberId, @RequestParam Integer page, @RequestParam Integer size,
             @RequestParam String sortType) {
-        //사용자 게시글 조회
-        //프로젝트, 커뮤니티, 모집, 댓글
 
         SuccessResponseDto<List<CommunityResponseDto>> memberCommunityContents = communityService.readMyCommunityList(
-                memberId, 6, page, sortType);
+                memberId, size, page, sortType);
         return ResponseEntity.ok().body(memberCommunityContents);
     }
 
-    @GetMapping("/read/contents/bookmark")
+    @GetMapping("/read/bookmark")
     @Operation(summary = " 사용자 아이디로 사용자가 북마크한 게시물 검색")
     public ResponseEntity<SuccessResponseDto<BookmarkContentsResponseDto>> readMemberBookmarkContents(
-            @RequestParam("memberId") Long memberId, @RequestParam Integer page,
+            @RequestParam("memberId") Long memberId, @RequestParam Integer page, @RequestParam Integer size,
             @RequestParam String sortType, @RequestParam String category) throws JsonProcessingException {
-        //사용자 게시글 조회
-        //프로젝트, 커뮤니티, 모집, 댓글
-        SuccessResponseDto<BookmarkContentsResponseDto> bookmark = bookmarkService.readMyBookmark(memberId, category);
+        SuccessResponseDto<BookmarkContentsResponseDto> bookmark = bookmarkService.readMyBookmark(memberId, page, size,
+                category, sortType);
 
         return ResponseEntity.ok().body(bookmark);
     }
 
-    @GetMapping("/read/contents/feedback")
+    @GetMapping("/read/feedback")
     @Operation(summary = "사용자 아이디로 사용자 피드백 조회")
     public ResponseEntity<SuccessResponseDto<List<ProjectListReadResponseDto>>> readMemberFeedbackContents(
-            @RequestParam("id") Long memberId, @RequestParam Integer page,
+            @RequestParam("memberId") Long memberId, @RequestParam Integer page, @RequestParam Integer size,
             @RequestParam String sortType) {
-        //사용자 게시글 조회
-        //프로젝트, 커뮤니티, 모집, 댓글
-        SuccessResponseDto<List<ProjectListReadResponseDto>> memberProjectContents = projectService.readMyProjectList(
-                memberId, 6, page, sortType);
+        SuccessResponseDto<List<ProjectListReadResponseDto>> memberProjectContents = projectService.readMyProjectFeedBackList(
+                memberId, size, page, sortType);
         return ResponseEntity.ok().body(memberProjectContents);
     }
 
 
-    @GetMapping("/read/contents/comment")
+    @GetMapping("/read/comment")
     @Operation(summary = "사용자 아이디로 사용자 댓글 조회")
     public ResponseEntity<SuccessResponseDto<List<CommentResponseDto>>> readMemberComment(
-            @RequestParam("memberId") Long memberId, @RequestParam Integer page,
+            @RequestParam("memberId") Long memberId, @RequestParam Integer page, @RequestParam Integer size,
             @RequestParam String sortType, @RequestParam String category) {
-        SuccessResponseDto<List<CommentResponseDto>> listSuccessResponseDto = commentService.readMyCommentList(memberId,
+        SuccessResponseDto<List<CommentResponseDto>> listSuccessResponseDto = commentService.readMyContentsList(memberId,
+                page, size, sortType,
                 category);
 
         return ResponseEntity.ok().body(listSuccessResponseDto);
     }
-
 
     @GetMapping("/search")
     @Operation(summary = "닉네임 또는 아이디 태그를 포함하는 사용자 검색")
@@ -147,13 +131,5 @@ public class MemberController {
     @Operation(summary = "회원 탈퇴")
     public void expireMember(@RequestBody(required = true) String jwt) {
         memberService.expireMember(jwt);
-    }
-
-
-    @GetMapping("/read/contents/test")
-    public ResponseEntity<SuccessResponseDto<BookmarkContentsResponseDto>> test() throws JsonProcessingException {
-        System.out.println("MemberController.test");
-        SuccessResponseDto<BookmarkContentsResponseDto> bookmark = bookmarkService.readMyBookmark(4L, "project");
-        return ResponseEntity.ok().body(bookmark);
     }
 }

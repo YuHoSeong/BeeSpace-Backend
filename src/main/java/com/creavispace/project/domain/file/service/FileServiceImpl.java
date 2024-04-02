@@ -20,7 +20,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.response.SuccessResponseDto;
 import com.creavispace.project.domain.file.dto.response.UploadFileResponseDto;
 import com.creavispace.project.domain.file.entity.CustomMultipartFile;
 import com.creavispace.project.global.exception.CreaviCodeException;
@@ -28,8 +28,10 @@ import com.creavispace.project.global.exception.GlobalErrorCode;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import marvin.image.MarvinImage;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
@@ -52,10 +54,11 @@ public class FileServiceImpl implements FileService {
         try(InputStream inputStream = multipartFile.getInputStream()) {
             amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, metadata));
         } catch (Exception e) {
-            new CreaviCodeException(GlobalErrorCode.S3_SERVER_NOT_FOUND);
+            throw new CreaviCodeException(GlobalErrorCode.S3_SERVER_NOT_FOUND);
         }
 
         String url = amazonS3.getUrl(bucket, fileName).toString();
+        log.info("/file/service : fileUpload success url = {}", url);
         return new SuccessResponseDto<UploadFileResponseDto>(true, "이미지가 저장되었습니다.", new UploadFileResponseDto(url));
     }
 

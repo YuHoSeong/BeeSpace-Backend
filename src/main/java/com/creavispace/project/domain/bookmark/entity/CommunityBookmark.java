@@ -1,5 +1,6 @@
 package com.creavispace.project.domain.bookmark.entity;
 
+import com.creavispace.project.domain.common.entity.BaseTimeEntity;
 import com.creavispace.project.domain.community.entity.Community;
 import com.creavispace.project.domain.member.entity.Member;
 
@@ -11,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommunityBookmark implements Bookmark {
+public class CommunityBookmark extends BaseTimeEntity implements Bookmark {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,4 +36,6 @@ public class CommunityBookmark implements Bookmark {
     @ManyToOne(targetEntity = Community.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "community_id", nullable = false)
     private Community community;
+
+    private LocalDateTime contentsCreatedDate;
 }

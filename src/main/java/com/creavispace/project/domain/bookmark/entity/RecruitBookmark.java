@@ -6,6 +6,7 @@ import com.creavispace.project.domain.recruit.entity.Recruit;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.*;
 
 @Entity
@@ -27,4 +28,5 @@ public class RecruitBookmark extends BaseTimeEntity implements Bookmark  {
     @JsonBackReference
     private Member member;
 
+    private LocalDateTime contentsCreatedDate;
 }

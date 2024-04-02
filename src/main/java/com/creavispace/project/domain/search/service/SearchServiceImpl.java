@@ -8,7 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.creavispace.project.domain.common.dto.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.response.SuccessResponseDto;
+import com.creavispace.project.domain.common.dto.type.PostType;
 import com.creavispace.project.domain.community.dto.response.CommunityHashTagDto;
 import com.creavispace.project.domain.community.dto.response.CommunityResponseDto;
 import com.creavispace.project.domain.community.entity.Community;
@@ -27,7 +28,9 @@ import com.creavispace.project.global.exception.CreaviCodeException;
 import com.creavispace.project.global.exception.GlobalErrorCode;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SearchServiceImpl implements SearchService{
@@ -38,23 +41,24 @@ public class SearchServiceImpl implements SearchService{
 
     @Override
     public SuccessResponseDto<List<SearchListReadResponseDto>> readSearchList(Integer size, Integer page, String text,
-            String postType) {
+            PostType postType) {
+        List<SearchListReadResponseDto> data = null;
         Pageable pageRequest = PageRequest.of(page-1, size);
         Page<SearchResultSet> pageable;
 
         if(postType == null){
             pageable = projectRepository.findIntegratedSearchData(text, pageRequest);
         }else{
-            switch (postType) {
-                case "project":
+            switch (postType.name()) {
+                case "PROJECT":
                     pageable = projectRepository.findProjectSearchData(text, pageRequest);
                     break;
             
-                case "recruit":
+                case "RECRUIT":
                     pageable = recruitRepository.findRecruitSearchData(text, pageRequest);
                     break;
             
-                case "community":
+                case "COMMUNITY":
                     pageable = communityRepository.findCommunitySearchData(text, pageRequest);
                     break;
             
@@ -66,16 +70,16 @@ public class SearchServiceImpl implements SearchService{
         if(!pageable.hasContent()) throw new CreaviCodeException(GlobalErrorCode.NOT_SEARCH_CONTENT);
         List<SearchResultSet> searchResults = pageable.getContent();
 
-        List<SearchListReadResponseDto> searchs = searchResults.stream()
+        data = searchResults.stream()
             .map(searchResult -> {
                 Long postId = searchResult.getPostId();
                 switch (searchResult.getPostType()) {
-                    case "project":
+                    case "PROJECT":
                         Project project = projectRepository.findByIdAndStatusTrue(postId).orElseThrow(() -> new CreaviCodeException(GlobalErrorCode.PROJECT_NOT_FOUND));
                         return ProjectListReadResponseDto.builder()
                             .id(project.getId())
-                            .postType("project")
-                            .category(project.getCategory())
+                            .postType(PostType.PROJECT.name())
+                            .category(project.getCategory().name())
                             .title(project.getTitle())
                             .links(project.getLinks().stream()
                                 .map(link -> ProjectLinkResponseDto.builder()
@@ -86,12 +90,12 @@ public class SearchServiceImpl implements SearchService{
                             .thumbnail(project.getThumbnail())
                             .bannerContent(project.getBannerContent())
                             .build();
-                    case "recruit":
+                    case "RECRUIT":
                         Recruit recruit = recruitRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.RECRUIT_NOT_FOUND));
                         return RecruitListReadResponseDto.builder()
                             .id(recruit.getId())
-                            .postType("recruit")
-                            .category(recruit.getCategory())
+                            .postType(PostType.RECRUIT.name())
+                            .category(recruit.getCategory().name())
                             .title(recruit.getTitle())
                             .content(recruit.getContent())
                             .amount(recruit.getAmount())
@@ -106,12 +110,12 @@ public class SearchServiceImpl implements SearchService{
                                     .build())
                                 .collect(Collectors.toList()))
                             .build();
-                    case "community":
+                    case "COMMUNITY":
                         Community community = communityRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
                         return CommunityResponseDto.builder()
                             .id(community.getId())
-                            .postType("community")
-                            .category(community.getCategory())
+                            .postType(PostType.COMMUNITY.name())
+                            .category(community.getCategory().name())
                             .memberId(community.getMember().getId())
                             .memberNickName(community.getMember().getMemberNickname())
                             .memberProfile(community.getMember().getProfileUrl())
@@ -130,11 +134,12 @@ public class SearchServiceImpl implements SearchService{
                     default:
                         throw new CreaviCodeException(GlobalErrorCode.TYPE_NOT_FOUND);
                 }
-                
             })
             .collect(Collectors.toList());
 
-        return new SuccessResponseDto<>(true, "통합 검색 리스트 조회가 완료되었습니다.", searchs);
+        log.info("/search/service : readSearchList success data = {}", data);
+        // 성공 응답 반환
+        return new SuccessResponseDto<>(true, "통합 검색 리스트 조회가 완료되었습니다.", data);
     }
 
 }
