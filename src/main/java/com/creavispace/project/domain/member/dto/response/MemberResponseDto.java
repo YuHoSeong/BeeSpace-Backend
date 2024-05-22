@@ -26,6 +26,7 @@ public class MemberResponseDto {
     private final String memberIntroduce;
     private final List<TechStackListReadResponseDto> memberInterestedStack;
     private final String message;
+    private final boolean enabled;
 
     public MemberResponseDto(Member member) {
         this.memberId = member.getId();
@@ -35,6 +36,7 @@ public class MemberResponseDto {
         this.memberPosition = member.getMemberPosition();
         memberIntroduce = null;
         memberInterestedStack = null;
+        this.enabled = member.isEnabled();
         this.message = "데이터 조회 성공";
     }
     public MemberResponseDto(Member member, List<TechStack> techStacks) {
@@ -45,6 +47,7 @@ public class MemberResponseDto {
         this.memberPosition = member.getMemberPosition();
         this.memberIntroduce = member.getMemberIntroduce();
         this.memberInterestedStack = convertStack(techStacks);
+        this.enabled = member.isEnabled();
         this.message = "데이터 조회 성공";
     }
 
