@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "recruit_id"}))
-public class RecruitBookmark extends BaseTimeEntity implements Bookmark  {
+public class RecruitBookmark extends BaseTimeEntity implements Bookmark {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,10 +27,11 @@ public class RecruitBookmark extends BaseTimeEntity implements Bookmark  {
     @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     @JsonBackReference
-    private Member member;
+    Member member;
 
     @Setter
-    private boolean enable;
+    boolean enable;
 
-    private LocalDateTime contentsCreatedDate;
+    LocalDateTime contentsCreatedDate;
+
 }

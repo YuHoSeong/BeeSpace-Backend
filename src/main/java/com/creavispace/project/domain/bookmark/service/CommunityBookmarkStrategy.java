@@ -1,11 +1,11 @@
 package com.creavispace.project.domain.bookmark.service;
 
+import com.creavispace.project.common.dto.type.PostType;
 import com.creavispace.project.domain.bookmark.dto.response.BookmarkContentsResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.BookmarkResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.CommunityBookmarkResponseDto;
 import com.creavispace.project.domain.bookmark.entity.CommunityBookmark;
 import com.creavispace.project.domain.bookmark.repository.CommunityBookmarkRepository;
-import com.creavispace.project.common.dto.type.PostType;
 import com.creavispace.project.domain.community.dto.response.CommunityHashTagDto;
 import com.creavispace.project.domain.community.entity.Community;
 import com.creavispace.project.domain.community.repository.CommunityRepository;
@@ -13,21 +13,19 @@ import com.creavispace.project.domain.hashTag.entity.CommunityHashTag;
 import com.creavispace.project.domain.hashTag.repository.CommunityHashTagRepository;
 import com.creavispace.project.domain.hashTag.repository.HashTagRepository;
 import com.creavispace.project.domain.member.entity.Member;
-import com.creavispace.project.common.exception.CreaviCodeException;
-import com.creavispace.project.common.exception.GlobalErrorCode;
+import com.creavispace.project.domain.member.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
 public class CommunityBookmarkStrategy implements BookmarkStrategy {
 
+    private final MemberRepository memberRepository;
     private final CommunityRepository communityRepository;
     private final CommunityBookmarkRepository communityBookmarkRepository;
     private final HashTagRepository hashTagRepository;
@@ -36,20 +34,21 @@ public class CommunityBookmarkStrategy implements BookmarkStrategy {
     @Override
     public BookmarkResponseDto bookmarkToggle(Long postId, Member member) {
         BookmarkResponseDto data = null;
-        Community community = communityRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
-        CommunityBookmark communityBookmark = communityBookmarkRepository.findByCommunityIdAndMemberId(postId, member.getId());
+        Community community = communityRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new EntityNotFoundException("Community not found with id: "+postId));
 
-        if(communityBookmark == null){
-            CommunityBookmark saveBookmark = CommunityBookmark.builder()
+        Optional<CommunityBookmark> communityBookmarkOptional = communityBookmarkRepository.findByCommunityIdAndMemberId(postId, member.getId());
+
+        if(communityBookmarkOptional.isEmpty()){
+            CommunityBookmark communityBookmark = CommunityBookmark.builder()
                 .member(member)
                 .community(community)
                 .contentsCreatedDate(community.getCreatedDate())
                     .enable(true)
                 .build();
-            communityBookmarkRepository.save(saveBookmark);
+            communityBookmarkRepository.save(communityBookmark);
             data = BookmarkResponseDto.builder().bookmarkStatus(true).build();
         }else{
-            communityBookmarkRepository.deleteById(communityBookmark.getId());
+            communityBookmarkRepository.deleteById(communityBookmarkOptional.get().getId());
             data = BookmarkResponseDto.builder().bookmarkStatus(false).build();
         }
         return data;
@@ -58,10 +57,10 @@ public class CommunityBookmarkStrategy implements BookmarkStrategy {
     @Override
     public BookmarkResponseDto readBookmark(Long postId, String memberId) {
         BookmarkResponseDto data = null;
-        communityRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.COMMUNITY_NOT_FOUND));
+        communityRepository.findByIdAndStatusTrue(postId).orElseThrow(()-> new EntityNotFoundException("Community not found with id: "+postId));
 
-        CommunityBookmark communityBookmark = communityBookmarkRepository.findByCommunityIdAndMemberId(postId, memberId);
-        if(communityBookmark == null){
+        Optional<CommunityBookmark> communityBookmarkOptional = communityBookmarkRepository.findByCommunityIdAndMemberId(postId, memberId);
+        if(communityBookmarkOptional.isEmpty()){
             data = BookmarkResponseDto.builder().bookmarkStatus(false).build();
         }else{
             data = BookmarkResponseDto.builder().bookmarkStatus(true).build();

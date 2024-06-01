@@ -20,17 +20,18 @@ public class ProjectBookmark extends BaseTimeEntity implements Bookmark {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    @JsonBackReference
-    private Member member;
-
     @ManyToOne(targetEntity = Project.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
-    @Setter
-    private boolean enable;
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    @JsonBackReference
+    Member member;
 
-    private LocalDateTime contentsCreatedDate;
+    @Setter
+    boolean enable;
+
+    LocalDateTime contentsCreatedDate;
+
 }

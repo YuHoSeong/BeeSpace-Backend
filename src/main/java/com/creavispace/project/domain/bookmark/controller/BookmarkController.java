@@ -1,24 +1,14 @@
 package com.creavispace.project.domain.bookmark.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.creavispace.project.common.dto.response.SuccessResponseDto;
 import com.creavispace.project.domain.bookmark.dto.response.BookmarkResponseDto;
 import com.creavispace.project.domain.bookmark.service.BookmarkService;
-import com.creavispace.project.common.dto.response.SuccessResponseDto;
-import com.creavispace.project.common.dto.type.PostType;
-import com.creavispace.project.common.exception.GlobalErrorCode;
-import com.creavispace.project.common.utils.CustomValueOf;
-
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
@@ -40,8 +30,7 @@ public class BookmarkController {
         @RequestParam("postType") String postType
     ) {
         log.info("/bookmark/controller : 북마크 토글 기능");
-        PostType postTypeEnum = CustomValueOf.valueOf(PostType.class, postType, GlobalErrorCode.NOT_FOUND_POST_TYPE);
-        return ResponseEntity.ok().body(bookmarkService.bookmarkToggle(memberId, postId, postTypeEnum));
+        return ResponseEntity.ok().body(bookmarkService.bookmarkToggle(memberId, postId, postType));
     }
     
     @GetMapping(READ_BOOKMARK)
@@ -52,8 +41,7 @@ public class BookmarkController {
         @RequestParam("postType") String postType
     ){
         log.info("/bookmark/controller : 북마크 상태 조회 기능");
-        PostType postTypeEnum = CustomValueOf.valueOf(PostType.class, postType, GlobalErrorCode.NOT_FOUND_POST_TYPE);
-        return ResponseEntity.ok().body(bookmarkService.readBookmark(memberId, postId, postTypeEnum));
+        return ResponseEntity.ok().body(bookmarkService.readBookmark(memberId, postId, postType));
     }
     
 }

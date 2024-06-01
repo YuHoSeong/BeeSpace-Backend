@@ -12,13 +12,17 @@ server:
 ---
 
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
   config:
     activate:
       on-profile: local
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+logging:
+  level:
+    root: info
 
 server:
   port: 8080
