@@ -1,22 +1,24 @@
 package com.creavispace.project.config;
 
-import com.creavispace.project.domain.jwt.dto.JwtDto;
 import com.creavispace.project.common.utils.JwtManager;
 import com.creavispace.project.domain.jwt.Entity.Jwt;
+import com.creavispace.project.domain.jwt.dto.JwtDto;
 import com.creavispace.project.domain.jwt.service.JwtService;
 import com.creavispace.project.domain.member.entity.Member;
 import com.creavispace.project.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import static com.creavispace.project.common.utils.UsableConst.*;
+
+import java.io.IOException;
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.creavispace.project.common.utils.UsableConst.AUTH_SUCCESS;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -44,11 +46,11 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             JwtDto jwtDto = loadJwt(member);
             JwtManager.storeToken(randomTokenName, jwtDto);
             createRefreshToken(jwtDto);
-//            response.sendRedirect("https://creavispace.vercel.app/?token=" + randomTokenName);
-            response.sendRedirect("http://localhost:3000/login/?token=" + randomTokenName);
+            response.sendRedirect("https://creavispace.vercel.app/?token=" + randomTokenName);
+//            response.sendRedirect("http://localhost:3000/login/?token=" + randomTokenName);
         } else {
-//            response.sendRedirect("https://creavispace.vercel.app/");
-            response.sendRedirect("http://localhost:3000");
+            response.sendRedirect("https://creavispace.vercel.app/");
+//            response.sendRedirect("http://localhost:3000");
         }
 
 //        getRedirectStrategy().sendRedirect(request, response, "https://creavispace.vercel.app?access_token=" + session.getAttribute("accessToken"));
