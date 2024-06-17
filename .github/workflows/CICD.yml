@@ -49,5 +49,5 @@ jobs:
           script_stop: true
           script: |
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/beespace:latest
-            sudo docker-compose -f docker-compose-blue.yml up -d
+            sudo docker-compose up -d
 
