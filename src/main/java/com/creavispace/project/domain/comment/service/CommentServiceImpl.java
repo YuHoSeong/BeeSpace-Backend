@@ -56,6 +56,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public SuccessResponseDto<CommentResponseDto> createComment(String memberId, Long postId, PostType postType, CommentRequestDto dto) {
+        System.out.println("dto = " + dto.toString());
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member member = optionalMember.orElseThrow(()-> new CreaviCodeException(GlobalErrorCode.MEMBER_NOT_FOUND));
 
