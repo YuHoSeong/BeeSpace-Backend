@@ -115,7 +115,7 @@ public class SecurityConfig {
         System.out.println("SecurityConfig.corsFilter");
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(
-                Arrays.asList("https://creavispace.vercel.app",
+                Arrays.asList("https://beespace.vercel.app",
                         "http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT"));
         configuration.setAllowCredentials(false);
