@@ -43,6 +43,8 @@ public class FileServiceImpl implements FileService {
         try(InputStream inputStream = multipartFile.getInputStream()) {
             amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, metadata));
         } catch (Exception e) {
+            e.printStackTrace();
+            log.info(e.getMessage());
             throw new CreaviCodeException(GlobalErrorCode.S3_SERVER_NOT_FOUND);
         }
 
