@@ -89,6 +89,8 @@ public class CommunityController {
     ){
         log.info("/community/controller : 커뮤니티 게시글 리스트 조회 / 인기 태그 게시글 조회");
         log.info("================================="+pageRequest.getSort().toString());
+        System.out.println("category = " + category);
+        System.out.println("hashTag = " + hashTag);
         CommunityCategory categoryEnum = CustomValueOf.valueOf(CommunityCategory.class, category, GlobalErrorCode.NOT_FOUND_COMMUNITY_CATEGORY);
         return ResponseEntity.ok().body(communityService.readCommunityList(categoryEnum, hashTag, pageRequest));
     }
