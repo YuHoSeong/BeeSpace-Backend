@@ -46,7 +46,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             JwtDto jwtDto = loadJwt(member);
             JwtManager.storeToken(randomTokenName, jwtDto);
             createRefreshToken(jwtDto);
-            response.sendRedirect("https://beespace.vercel.app/login/?token=" + randomTokenName);
+            response.sendRedirect("https://beespace.vercel.app/login?token=" + randomTokenName);
 //            response.sendRedirect("http://localhost:3000/login/?token=" + randomTokenName);
         } else {
             response.sendRedirect("https://beespace.vercel.app/");
