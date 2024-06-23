@@ -467,7 +467,9 @@ public class ProjectServiceImpl implements ProjectService {
         if (project.size() == 0) {
             return null;
         }
-        long count = project.stream().filter(p -> !memberId.equals(p.getMember().getId()) && p.getMember().getRole().equals(Role.ADMIN)).count();
+        long count = project.stream()
+                .filter(p -> !memberId.equals(p.getMember().getId()) && p.getMember().getRole().equals(Role.ADMIN))
+                .count();
         // 삭제할 권한이 있는지
         if(count != 0 && !member.getRole().equals(Role.ADMIN)){
             throw new CreaviCodeException(GlobalErrorCode.NOT_PERMISSMISSION);

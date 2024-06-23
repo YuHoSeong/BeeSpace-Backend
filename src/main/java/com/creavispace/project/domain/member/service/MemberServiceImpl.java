@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -135,6 +136,24 @@ public class MemberServiceImpl implements MemberService {
         member.setEnabled(true);
         member.setRole(Role.MEMBER);
         memberRepository.save(member);
+    }
+
+    @Scheduled(fixedDelay = 1000 * 60 * 60 * 24 * 30L)
+    private void deleteMember(String memberId) {
+        delete(memberId);
+    }
+
+    private void delete(String memberId) {
+        Optional<Member> memberOpt = memberRepository.findById(memberId);
+        if (memberOpt.isEmpty()) {
+            return;
+        }
+
+        Member member = memberOpt.get();
+        if (member.isEnabled() || !member.isExpired()) {
+            return;
+        }
+        memberRepository.delete(member);
     }
 
     @Override

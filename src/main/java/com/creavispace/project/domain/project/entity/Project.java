@@ -79,7 +79,7 @@ public class Project extends BaseTimeEntity implements Post {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectTechStack> techStacks;
 
-    public void modify(ProjectRequestDto dto){
+    public void modify(ProjectRequestDto dto) {
         this.category = CustomValueOf.valueOf(ProjectCategory.class, dto.getCategory(), GlobalErrorCode.NOT_FOUND_PROJECT_CATEGORY);
         this.title = dto.getTitle();
         this.content = dto.getContent();
@@ -88,33 +88,43 @@ public class Project extends BaseTimeEntity implements Post {
         this.bannerContent = dto.getBannerContent();
     }
 
-    public boolean disable(){
+    public boolean disable() {
         this.status = !status;
         return status;
     }
 
-    public void plusViewCount(){
+    public boolean disableAll() {
+        this.status = false;
+        return status;
+    }
+
+    public boolean enableAll() {
+        this.status = true;
+        return status;
+    }
+
+    public void plusViewCount() {
         this.viewCount++;
         this.weekViewCount++;
     }
 
-    public void feedbackTrue(){
+    public void feedbackTrue() {
         this.feedback = true;
     }
 
-    public void feedbackFalse(){
+    public void feedbackFalse() {
         this.feedback = false;
     }
 
-    public void resetWeekViewCount(){
+    public void resetWeekViewCount() {
         this.weekViewCount = 0;
     }
 
-    public void pulsLikeCount(){
+    public void pulsLikeCount() {
         this.likeCount++;
     }
 
-    public void minusLikeCount(){
+    public void minusLikeCount() {
         this.likeCount--;
     }
 
