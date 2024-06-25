@@ -138,7 +138,6 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
-    @Scheduled(fixedDelay = 1000 * 60 * 60 * 24 * 30L)
     private void deleteMember(String memberId) {
         delete(memberId);
     }
